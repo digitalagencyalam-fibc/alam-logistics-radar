@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- PWA Settings for VIP App Feel (Zero URL) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#030712">
+    <link rel="manifest" href="manifest.json">
+   
+    <title>Alam Digital Agency - VIP Radar</title>
+   
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+   
+    <style>
+        /* SUPER AMOLED DARK THEME & PRISM GLASSMORPHISM */
+        :root {
+            --bg-color: #030712;
+            --glass-bg: rgba(10, 15, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-green: #00ff88;
+            --neon-blue: #00d4ff;
+            --danger-red: #ff3366;
+            --text-main: #f3f4f6;
+            --text-muted: #8b949e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            /* Prism ambient glow in background */
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.15) 0%, rgba(3, 7, 18, 1) 50%);
+        }
+
+        /* VIP HEADER */
+        header {
+            padding: 22px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0px 0px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTAINER (The Shisha/Prism Effect) */
+        .container {
+            padding: 25px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .card-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 17px;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        /* INPUT GROUPS */
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            color: #c9d1d9;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            color: #ffffff;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* SCAN BUTTON HACK */
+        .scan-wrapper {
+            position: relative;
+        }
+       
+        .scan-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-green);
+            font-size: 22px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 136, 0.5));
+        }
+
+        /* VIP ACTION BUTTON */
+        .btn-authorize {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.15));
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .btn-authorize:active {
+            transform: scale(0.96);
+            background: rgba(0, 255, 136, 0.25);
+        }
+
+        /* STATUS MESSAGE */
+        #status-box {
+            display: none;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            margin-top: 20px;
+            border: 1px solid;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+       
+        .status-error {
+            background: rgba(255, 51, 102, 0.1);
+            border-color: var(--danger-red) !important;
+            color: var(--danger-red);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+        }
+
+        /* LOADING ANIMATION */
+        .loader {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(0, 255, 136, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--neon-green);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+       
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* VIP FOOTER (ALAM DIGITAL AGENCY BRANDING) */
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(3, 7, 18, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #9ca3af, var(--neon-green), #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .footer-tagline {
+            font-size: 11px;
+            color: #6e7681;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-title">ALAM DIGITAL AGENCY</div>
+        <div class="brand-subtitle">VIP Transit Radar Engine</div>
+    </header>
+
+    <div class="container">
+       
+        <div class="glass-card">
+            <div class="card-header">
+                <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
+            </div>
+           
+            <form id="radar-form">
+                <!-- Vehicle No -->
+                <div class="input-group">
+                    <label>VEHICLE NUMBER (PART-B)</label>
+                    <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
+                </div>
+
+                <!-- E-Way Bill & Scanner -->
+                <div class="input-group">
+                    <label>E-WAY BILL NUMBER</label>
+                    <div class="scan-wrapper">
+                        <input type="number" id="EWay_Bill_No" placeholder="12 Digit Scan Code" required>
+                        <span class="scan-icon" onclick="fakeScan('EWay_Bill_No')">📷</span>
+                    </div>
+                </div>
+
+                <!-- Expiry Time -->
+                <div class="input-group">
+                    <label>E-WAY BILL EXPIRY (CRITICAL)</label>
+                    <input type="datetime-local" id="EWB_Expiry_Time" required>
+                </div>
+
+                <!-- CPCB Barcode -->
+                <div class="input-group">
+                    <label>CPCB TRACEABILITY CODE</label>
+                    <div class="scan-wrapper">
+                        <input type="text" id="CPCB_Barcode_ID" placeholder="Scan EPR Tag" required>
+                        <span class="scan-icon" onclick="fakeScan('CPCB_Barcode_ID')">📷</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-authorize" id="submit-btn">
+                    <span id="btn-text">AUTHORIZE DISPATCH</span>
+                    <div class="loader" id="btn-loader"></div>
+                </button>
+            </form>
+
+            <div id="status-box"></div>
+        </div>
+
+    </div>
+
+    <!-- THE VIP FOOTER -->
+    <footer>
+        <div class="footer-brand">© 2026 ALAM DIGITAL AGENCY</div>
+        <div class="footer-tagline">Enterprise Compliance Command Center</div>
+    </footer>
+
+    <script>
+        // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL !!!
+        const APPS_SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
+
+        document.getElementById('radar-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+           
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const loader = document.getElementById('btn-loader');
+            const statusBox = document.getElementById('status-box');
+           
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            btn.style.pointerEvents = 'none';
+            statusBox.style.display = 'none';
+
+            // Gather Data Exactly Matching the 10-Column Locked Memory
+            const payload = {
+                Invoice_Number: "AUTO-GEN",
+                Vehicle_Number: document.getElementById('Vehicle_Number').value,
+                EWay_Bill_No: document.getElementById('EWay_Bill_No').value,
+                EWB_Expiry_Time: document.getElementById('EWB_Expiry_Time').value,
+                CPCB_Barcode_ID: document.getElementById('CPCB_Barcode_ID').value,
+                Bag_Weight_KG: "Pending Check"
+            };
+
+            // W3C Standard Asynchronous API Call (Zero Overload)
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                loader.style.display = 'none';
+                btnText.style.display = 'block';
+                btnText.innerText = "RADAR ACTIVE ✓";
+                btn.style.border = "1px solid #00ff88";
+               
+                statusBox.className = "status-success";
+                statusBox.innerText = "🟢 Consignment Secured. Radar Monitoring Active.";
+                statusBox.style.display = "block";
+               
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Premium vibration pattern
+               
+                document.getElementById('radar-form').reset();
+                setTimeout(() => {
+                    btnText.innerText = "AUTHORIZE DISPATCH";
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.border = "1px solid var(--neon-green)";
+                    statusBox.style.display = "none";
+                }, 3500);
+            })
+            .catch(error => {
+                loader.style.display = 'none';
+                btnText.style.display = 'block';
+                btn.style.pointerEvents = 'auto';
+               
+                statusBox.className = "status-error";
+                statusBox.innerText = "⚠️ Network Glitch. Retry Scan.";
+                statusBox.style.display = "block";
+            });
+        });
+
+        // Dummy Scan Function
+        function fakeScan(fieldId) {
+            if(navigator.vibrate) navigator.vibrate(50);
+            if(fieldId === 'EWay_Bill_No') {
+                document.getElementById(fieldId).value = "241" + Math.floor(Math.random() * 900000000);
+            } else {
+                document.getElementById(fieldId).value = "CPCB-X" + Math.floor(Math.random() * 9999);
+            }
+        }
+    </script>
+</body>
+</html>
+
+ 
