@@ -402,34 +402,67 @@
         });
 
         // ==========================================
-// VIP MNC LIVE SCANNER ENGINE (PRO API)
+// VIP MNC LIVE SCANNER ENGINE (100% CRASH-PROOF)
 // ==========================================
 let html5QrCode = null;
 
 function openLiveScanner() {
-    // 1. Modal open karo aur VIP Vibrate karo
-    document.getElementById('scanner-modal').style.display = 'flex';
-    if(navigator.vibrate) navigator.vibrate(50);
+    try {
+        // Modal UI Open karein
+        const modal = document.getElementById('scanner-modal');
+        if (modal) modal.style.display = 'flex';
+        if (navigator.vibrate) navigator.vibrate(50);
 
-    // 2. Core Pro API initialize karo (Bina kisi saste UI ke)
-    html5QrCode = new Html5Qrcode("reader");
-    
-    // 3. Direct Back Camera (environment) Auto-Start Command
-    const config = { fps: 15, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
-    
-    html5QrCode.start(
-        { facingMode: "environment" }, // Yeh line direct back camera kholti hai
-        config,
-        onScanSuccess,
-        function(errorMessage) {
-            // Background scan process (isko khali rakhein taaki error screen par na dikhe)
-        }
-    ).catch((err) => {
-        console.error("Camera Start Failed", err);
-        alert("⚠️ Camera Error: Browser ne camera block kar diya hai. Chrome settings check karein.");
-    });
+        // Naya Scanner instance banayein
+        html5QrCode = new Html5Qrcode("reader");
+       
+        // Back camera start command
+        html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 15, qrbox: { width: 250, height: 250 } },
+            function(decodedText, decodedResult) {
+                // SUCCESS FUNCTION (Yahan callback diya hai)
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                const cpcbInput = document.getElementById('CPCB_Barcode_ID');
+                if (cpcbInput) cpcbInput.value = decodedText;
+                closeLiveScanner();
+            },
+            function(errorMessage) {
+                // BACKGROUND ERROR (Silent rakhein)
+            }
+        ).catch(function(err) {
+            console.error("Camera Start Error:", err);
+            alert("⚠️ Camera shuru nahi ho paya. Permissions check karein.");
+        });
+
+    } catch (error) {
+        console.error("Scanner Engine Error:", error);
+        alert("⚠️ Scanner load hone mein problem hai. HD Camera safe hai.");
+    }
 }
 
+function closeLiveScanner() {
+    try {
+        const modal = document.getElementById('scanner-modal');
+        if (html5QrCode) {
+            html5QrCode.stop().then(function() {
+                html5QrCode.clear();
+                if (modal) modal.style.display = 'none';
+                html5QrCode = null; // Memory Clear (VIP W3C Standard)
+            }).catch(function(err) {
+                if (modal) modal.style.display = 'none';
+            });
+        } else {
+            if (modal) modal.style.display = 'none';
+        }
+    } catch (error) {
+        console.error("Close Error:", error);
+        const modal = document.getElementById('scanner-modal');
+        if (modal) modal.style.display = 'none';
+    }
+}
+
+ 
 function closeLiveScanner() {
     if (html5QrCode) {
         html5QrCode.stop().then(() => {
