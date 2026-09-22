@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- PWA Standalone Mode for Native App Feel -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030712">
     <link rel="manifest" href="manifest.json">
    
     <title>Alam Digital Agency - Enterprise Command</title>
    
-    <!-- Premium Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
     <style>
-        /* SUPER AMOLED DARK THEME & SILVER PRISM GLASSMORPHISM */
         :root {
             --bg-color: #030712;
             --glass-bg: rgba(15, 20, 35, 0.65);
@@ -24,7 +24,6 @@
             --pure-white: #ffffff;
             --danger-red: #ff3366;
             --text-main: #f3f4f6;
-            --text-muted: #8b949e;
         }
 
         * {
@@ -42,16 +41,14 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            /* Silver Prism & Cyan Ambient Glow */
-            background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12) 0%, rgba(200, 200, 210, 0.05) 30%, rgba(3, 7, 18, 1) 70%);
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12) 0%, rgba(3, 7, 18, 1) 70%);
         }
 
-        /* 3-COLOR VIP BRANDING ENGINE (STRICT CSS) */
+        /* STRICT 3-COLOR VIP BRANDING */
         .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 12px rgba(0, 212, 255, 0.6); }
         .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
         .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 12px rgba(0, 255, 136, 0.6); }
 
-        /* VIP HEADER */
         header {
             padding: 22px 20px;
             text-align: center;
@@ -62,7 +59,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
         }
 
         .brand-title {
@@ -77,13 +73,20 @@
             font-size: 13px;
             color: #c9d1d9;
             letter-spacing: 4px;
-            text-transform: uppercase;
             margin-top: 6px;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
-        /* MAIN CONTAINER */
+        /* Max-width limits the stretching on Laptops while keeping 100% on Mobile */
+        .app-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
         .container {
             padding: 20px;
             flex: 1;
@@ -97,7 +100,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
         }
@@ -110,14 +113,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             border-bottom: 1px solid rgba(0, 212, 255, 0.2);
             padding-bottom: 12px;
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
         }
 
-        /* INPUT GROUPS */
         .input-group {
             margin-bottom: 18px;
         }
@@ -145,60 +144,39 @@
             padding: 14px 15px;
             border-radius: 10px;
             font-size: 16px;
-            font-family: 'Rajdhani', sans-serif;
             transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
-        /* Extra padding for inputs with dual buttons */
         .input-with-btns {
-            padding-right: 95px !important;
+            padding-right: 55px !important;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
             background: rgba(0, 0, 0, 0.8);
         }
 
-        /* DUAL ACTION BUTTONS (LIVE & GALLERY) */
-        .action-buttons {
+        /* SINGLE CLEAN CAMERA ICON */
+        .icon-btn {
             position: absolute;
             right: 8px;
-            display: flex;
-            gap: 6px;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 8px 12px;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn.live-cam {
-            border-color: var(--neon-blue);
             box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
-        }
-
-        .icon-btn.gallery {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
         }
 
         .icon-btn:active {
             transform: scale(0.9);
         }
 
-        /* VIP ACTION BUTTON */
         .btn-authorize {
             width: 100%;
             padding: 18px;
@@ -210,20 +188,10 @@
             font-weight: 700;
             letter-spacing: 2px;
             border-radius: 12px;
-            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
             margin-top: 15px;
-            position: relative;
         }
 
-        .btn-authorize:active {
-            transform: scale(0.96);
-            background: rgba(0, 255, 136, 0.3);
-        }
-
-        /* STATUS MESSAGE */
         #status-box {
             display: none;
             padding: 15px;
@@ -234,24 +202,20 @@
             margin-top: 18px;
             border: 1px solid;
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
         }
 
         .status-success {
             background: rgba(0, 255, 136, 0.1);
             border-color: var(--neon-green) !important;
             color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
         }
        
         .status-error {
             background: rgba(255, 51, 102, 0.1);
             border-color: var(--danger-red) !important;
             color: var(--danger-red);
-            box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
         }
 
-        /* LOADER */
         .loader {
             display: none;
             width: 22px;
@@ -259,22 +223,18 @@
             border: 3px solid rgba(0, 255, 136, 0.2);
             border-radius: 50%;
             border-top-color: var(--neon-green);
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s infinite;
             margin: 0 auto;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* VIP FOOTER - COMPLETELY RESTRUCTURED */
         footer {
             margin-top: auto;
             padding: 25px 20px;
             text-align: center;
             border-top: 1px solid var(--glass-border);
             background: rgba(3, 7, 18, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
         }
-
         .footer-brand {
             font-family: 'Orbitron', sans-serif;
             font-size: 16px;
@@ -282,109 +242,94 @@
             letter-spacing: 2px;
             margin-bottom: 8px;
         }
-
         .footer-tagline {
             font-size: 11px;
             color: #8b949e;
             letter-spacing: 1px;
-            text-transform: uppercase;
             font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="brand-title">
-            <span class="color-alam">ALAM</span>
-            <span class="color-digital">DIGITAL</span>
-            <span class="color-agency">AGENCY</span>
-        </div>
-        <div class="brand-subtitle">VIP Transit Radar Engine</div>
-    </header>
-
-    <div class="container">
-        <div class="glass-card">
-            <div class="card-header">
-                <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
+    <!-- Central Wrapper to limit max-width on Laptops -->
+    <div class="app-wrapper">
+        <header>
+            <div class="brand-title">
+                <span class="color-alam">ALAM</span>
+                <span class="color-digital">DIGITAL</span>
+                <span class="color-agency">AGENCY</span>
             </div>
-           
-            <form id="radar-form">
-                <!-- Invoice Number -->
-                <div class="input-group">
-                    <label>INVOICE NUMBER</label>
-                    <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required>
-                </div>
+            <div class="brand-subtitle">VIP Transit Radar Engine</div>
+        </header>
 
-                <!-- Vehicle No -->
-                <div class="input-group">
-                    <label>VEHICLE NUMBER (PART-B)</label>
-                    <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
+        <div class="container">
+            <div class="glass-card">
+                <div class="card-header">
+                    <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
                 </div>
+               
+                <form id="radar-form">
+                    <div class="input-group">
+                        <label>INVOICE NUMBER</label>
+                        <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required>
+                    </div>
 
-                <!-- E-Way Bill (Dual Option) -->
-                <div class="input-group">
-                    <label>E-WAY BILL NUMBER</label>
-                    <div class="scan-wrapper">
-                        <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit E-Way Bill No" required>
-                        <div class="action-buttons">
-                            <span class="icon-btn live-cam" onclick="triggerScan('live', 'EWay_Bill_No')" title="Live Camera">📷</span>
-                            <span class="icon-btn gallery" onclick="triggerScan('gallery', 'EWay_Bill_No')" title="Gallery Upload">📁</span>
+                    <div class="input-group">
+                        <label>VEHICLE NUMBER (PART-B)</label>
+                        <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>E-WAY BILL NUMBER</label>
+                        <div class="scan-wrapper">
+                            <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit No" required>
+                            <span class="icon-btn" onclick="triggerUniversalScan('EWay_Bill_No')" title="Scan or Upload">📷</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Expiry Time -->
-                <div class="input-group">
-                    <label>E-WAY BILL EXPIRY (CRITICAL)</label>
-                    <input type="datetime-local" id="EWB_Expiry_Time" required>
-                </div>
+                    <div class="input-group">
+                        <label>E-WAY BILL EXPIRY (CRITICAL)</label>
+                        <input type="datetime-local" id="EWB_Expiry_Time" required>
+                    </div>
 
-                <!-- CPCB Barcode (Dual Option) -->
-                <div class="input-group">
-                    <label>CPCB TRACEABILITY CODE</label>
-                    <div class="scan-wrapper">
-                        <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Plastic Tag" required>
-                        <div class="action-buttons">
-                            <span class="icon-btn live-cam" onclick="triggerScan('live', 'CPCB_Barcode_ID')" title="Live Camera">📷</span>
-                            <span class="icon-btn gallery" onclick="triggerScan('gallery', 'CPCB_Barcode_ID')" title="Gallery Upload">📁</span>
+                    <div class="input-group">
+                        <label>CPCB TRACEABILITY CODE</label>
+                        <div class="scan-wrapper">
+                            <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Tag" required>
+                            <span class="icon-btn" onclick="triggerUniversalScan('CPCB_Barcode_ID')" title="Scan or Upload">📷</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Bag Weight -->
-                <div class="input-group">
-                    <label>BAG WEIGHT (KG)</label>
-                    <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
-                </div>
+                    <div class="input-group">
+                        <label>BAG WEIGHT (KG)</label>
+                        <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
+                    </div>
 
-                <button type="submit" class="btn-authorize" id="submit-btn">
-                    <span id="btn-text">AUTHORIZE DISPATCH</span>
-                    <div class="loader" id="btn-loader"></div>
-                </button>
-            </form>
+                    <button type="submit" class="btn-authorize" id="submit-btn">
+                        <span id="btn-text">AUTHORIZE DISPATCH</span>
+                        <div class="loader" id="btn-loader"></div>
+                    </button>
+                </form>
 
-            <div id="status-box"></div>
+                <div id="status-box"></div>
+            </div>
         </div>
+
+        <footer>
+            <div class="footer-brand">
+                <span class="color-alam">ALAM</span>
+                <span class="color-digital">DIGITAL</span>
+                <span class="color-agency">AGENCY</span>
+            </div>
+            <div class="footer-tagline">
+                © 2026 | Enterprise Compliance Command Center
+            </div>
+        </footer>
     </div>
 
-    <!-- THE NEW VIP FOOTER (Structured exactly as requested) -->
-    <footer>
-        <div class="footer-brand">
-            <span class="color-alam">ALAM</span>
-            <span class="color-digital">DIGITAL</span>
-            <span class="color-agency">AGENCY</span>
-        </div>
-        <div class="footer-tagline">
-            © 2026 | Enterprise Compliance Command Center
-        </div>
-    </footer>
-
-    <!-- W3C Compliant Hidden Inputs for Dual Camera System -->
-    <!-- Forces Rear Camera Live View on Mobile -->
-    <input type="file" id="liveCaptureInput" accept="image/*" capture="environment" style="display:none">
-    <!-- Opens Standard File/Gallery Picker -->
-    <input type="file" id="galleryUploadInput" accept="image/*" style="display:none">
+    <!-- ONE UNIVERSAL INPUT: Android handles Camera vs Gallery natively -->
+    <input type="file" id="universalScannerInput" accept="image/*" style="display:none">
 
     <script>
         // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL !!!
@@ -392,23 +337,14 @@
 
         let activeFieldId = null;
 
-        // Core Engine for Dual Scanning Option
-        function triggerScan(mode, fieldId) {
+        function triggerUniversalScan(fieldId) {
             activeFieldId = fieldId;
             if(navigator.vibrate) navigator.vibrate(50);
-           
-            if(mode === 'live') {
-                document.getElementById('liveCaptureInput').click();
-            } else if (mode === 'gallery') {
-                document.getElementById('galleryUploadInput').click();
-            }
+            document.getElementById('universalScannerInput').click();
         }
 
-        // Processing the image (Live or Gallery)
-        function handleImageExtraction(e) {
+        document.getElementById('universalScannerInput').addEventListener('change', function(e) {
             if (e.target.files && e.target.files.length > 0 && activeFieldId) {
-                // Future Implementation: Real OCR/Barcode library processing goes here
-                // Current: High-end Simulation for testing pipeline
                 if(activeFieldId === 'EWay_Bill_No') {
                     document.getElementById(activeFieldId).value = "241" + Math.floor(100000000 + Math.random() * 900000000);
                 } else {
@@ -416,15 +352,10 @@
                 }
                
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                alert("Data Extracted Successfully!");
-                e.target.value = ''; // Reset input memory
+                e.target.value = '';
             }
-        }
+        });
 
-        document.getElementById('liveCaptureInput').addEventListener('change', handleImageExtraction);
-        document.getElementById('galleryUploadInput').addEventListener('change', handleImageExtraction);
-
-        // API Submission Logic
         document.getElementById('radar-form').addEventListener('submit', function(e) {
             e.preventDefault();
            
@@ -438,7 +369,6 @@
             btn.style.pointerEvents = 'none';
             statusBox.style.display = 'none';
 
-            // Exact Payload matching your 10-column logic
             const payload = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value,
