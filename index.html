@@ -284,7 +284,7 @@
                         <label>E-WAY BILL NUMBER</label>
                         <div class="scan-wrapper">
                             <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit No" required>
-                            <span class="icon-btn" onclick="triggerUniversalScan('EWay_Bill_No')" title="Scan or Upload">📷</span>
+                            <span class="icon-btn" onclick="triggerUniversalScan('EWay_Bill_No')" title="Open Camera">📷</span>
                         </div>
                     </div>
 
@@ -297,7 +297,7 @@
                         <label>CPCB TRACEABILITY CODE</label>
                         <div class="scan-wrapper">
                             <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Tag" required>
-                            <span class="icon-btn" onclick="triggerUniversalScan('CPCB_Barcode_ID')" title="Scan or Upload">📷</span>
+                            <span class="icon-btn" onclick="triggerUniversalScan('CPCB_Barcode_ID')" title="Open Camera">📷</span>
                         </div>
                     </div>
 
@@ -328,8 +328,8 @@
         </footer>
     </div>
 
-    <!-- ONE UNIVERSAL INPUT: Android handles Camera vs Gallery natively -->
-    <input type="file" id="universalScannerInput" accept="image/*" style="display:none">
+    <!-- STRICT LIVE CAMERA INPUT: capture="environment" forces the rear camera -->
+    <input type="file" id="universalScannerInput" accept="image/*" capture="environment" style="display:none">
 
     <script>
         // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL !!!
