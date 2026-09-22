@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000"> <!-- AMOLED BLACK -->
+    <meta name="theme-color" content="#000000">
    
     <title>Alam Digital Agency - Executive Core</title>
    
@@ -107,11 +107,12 @@
         .live-pulse-container {
             display: flex; align-items: center; gap: 8px;
             font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; color: var(--neon-green);
-            background: rgba(0, 255, 136, 0.1); padding: 5px 12px; border-radius: 20px;
+            background: rgba(0, 255, 136, 0.1); padding: 5px 14px; border-radius: 20px;
             border: 1px solid rgba(0, 255, 136, 0.3);
+            letter-spacing: 1px;
         }
         .pulse-dot {
-            width: 10px; height: 10px; background: var(--neon-green); border-radius: 50%;
+            width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%;
             animation: pulse-ring 1.5s infinite;
         }
         @keyframes pulse-ring {
@@ -222,14 +223,15 @@
                 </div>
             </div>
 
-            <!-- 3. VIP MD COMMAND CENTER (AMOLED EDITION + OLA MAPS LIVE) -->
+            <!-- 3. VIP MD COMMAND CENTER -->
             <div id="view-md">
                 <div class="md-card">
                     <div class="md-header">
                         <div style="display:flex; flex-direction:column; gap:5px;">
                             <span class="color-prism md-header-title">EXECUTIVE DASHBOARD</span>
+                            <!-- CLEAN & COMPACT LIVE MAP BADGE -->
                             <div class="live-pulse-container">
-                                <div class="pulse-dot"></div> OLA MAPS SYNC ACTIVE
+                                <div class="pulse-dot"></div> LIVE MAP
                             </div>
                         </div>
                         <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
@@ -274,9 +276,6 @@
     <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
     <script>
-        // ==========================================
-        // 🚨 FIREBASE & OLA MAPS CONFIGURATION 🚨
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
             authDomain: "alam-enterprise-engine.firebaseapp.com",
@@ -290,10 +289,8 @@
         const database = firebase.database();
         const dispatchRef = database.ref('Alam_Radar_Dispatches');
 
-        // OLA MAPS API KEY INJECTED
         const OLA_MAPS_KEY = "ImKaM6zSkUXy6zQrsRn7a6lsZKAZsgHU";
 
-        // Test Ola Maps Routing Connectivity (Zero Cost Free Tier Check)
         async function testOlaMapsRouting() {
             try {
                 const response = await fetch(`https://api.olamaps.io/routing/v1/directions?origin=28.638555,76.965502&destination=28.539669,77.051907&api_key=${OLA_MAPS_KEY}`, {
@@ -425,6 +422,7 @@
                     }]
                 },
                 options: {
+                    responsive: timeDiff => {},
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'bottom', labels: { color: '#ffffff', font: { size: 13, weight: 'bold' } } }
