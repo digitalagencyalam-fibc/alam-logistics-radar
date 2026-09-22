@@ -401,35 +401,52 @@
             }
         });
 
-        // PhonePe VIP Live Scanner (CPCB Tag)
-        let html5QrcodeScanner = null;
+        // ==========================================
+// VIP MNC LIVE SCANNER ENGINE (PRO API)
+// ==========================================
+let html5QrCode = null;
 
-        function openLiveScanner() {
-            document.getElementById('scanner-modal').style.display = 'flex';
-            if(navigator.vibrate) navigator.vibrate(50);
+function openLiveScanner() {
+    // 1. Modal open karo aur VIP Vibrate karo
+    document.getElementById('scanner-modal').style.display = 'flex';
+    if(navigator.vibrate) navigator.vibrate(50);
 
-            html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", { fps: 10, qrbox: {width: 250, height: 250}, aspectRatio: 1.0 }, false
-            );
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    // 2. Core Pro API initialize karo (Bina kisi saste UI ke)
+    html5QrCode = new Html5Qrcode("reader");
+    
+    // 3. Direct Back Camera (environment) Auto-Start Command
+    const config = { fps: 15, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+    
+    html5QrCode.start(
+        { facingMode: "environment" }, // Yeh line direct back camera kholti hai
+        config,
+        onScanSuccess,
+        function(errorMessage) {
+            // Background scan process (isko khali rakhein taaki error screen par na dikhe)
         }
+    ).catch((err) => {
+        console.error("Camera Start Failed", err);
+        alert("⚠️ Camera Error: Browser ne camera block kar diya hai. Chrome settings check karein.");
+    });
+}
 
-        function closeLiveScanner() {
-            if(html5QrcodeScanner) {
-                html5QrcodeScanner.clear().then(() => {
-                    document.getElementById('scanner-modal').style.display = 'none';
-                });
-            } else {
-                document.getElementById('scanner-modal').style.display = 'none';
-            }
-        }
+function closeLiveScanner() {
+    if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+            document.getElementById('scanner-modal').style.display = 'none';
+        }).catch((err) => {
+            document.getElementById('scanner-modal').style.display = 'none';
+        });
+    } else {
+        document.getElementById('scanner-modal').style.display = 'none';
+    }
+}
 
-        function onScanSuccess(decodedText, decodedResult) {
-            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            document.getElementById('CPCB_Barcode_ID').value = decodedText;
-            closeLiveScanner();
-        }
-
+function onScanSuccess(decodedText, decodedResult) {
+    if(navigator.vibrate) navigator.vibrate([100, 50, 100]); // Success vibration
+    document.getElementById('CPCB_Barcode_ID').value = decodedText; // Input box mein data dalna
+    closeLiveScanner(); // Scan hote hi automatically camera band!
         function onScanFailure(error) {}
 
         // ==========================================
