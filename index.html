@@ -9,13 +9,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030712">
    
-    <title>Alam Digital Agency - Transit Radar</title>
+    <title>Alam Digital Agency - Enterprise Core</title>
    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
-    <!-- FIREBASE REALTIME DATABASE SDKs (The 1 Millisecond Engine) -->
+    <!-- FIREBASE SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+   
+    <!-- CHART.JS for MD Dashboard Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -26,13 +29,17 @@
             --neon-blue: #00d4ff;
             --pure-white: #ffffff;
             --danger-red: #ff3366;
+            --warning-gold: #ffb800;
             --text-main: #f3f4f6;
+           
+            /* VIP MD Prism Colors */
+            --prism-silver: linear-gradient(135deg, #e0e0e0, #f5f5f5, #b0b0b0);
+            --md-glass-bg: rgba(10, 14, 25, 0.85);
+            --md-border: rgba(192, 192, 192, 0.4); /* Silver border */
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Rajdhani', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -41,8 +48,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow-x: hidden;
             background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12) 0%, rgba(3, 7, 18, 1) 70%);
         }
@@ -50,201 +56,109 @@
         .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 12px rgba(0, 212, 255, 0.6); }
         .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
         .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 12px rgba(0, 255, 136, 0.6); }
+        .color-silver { background: var(--prism-silver); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(200, 200, 200, 0.5); }
 
         header {
-            padding: 22px 20px;
-            text-align: center;
+            padding: 22px 20px; text-align: center;
             border-bottom: 1px solid var(--glass-border);
             background: rgba(3, 7, 18, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .brand-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .brand-title { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .brand-subtitle { font-size: 13px; color: #c9d1d9; letter-spacing: 4px; margin-top: 6px; font-weight: 600; }
 
-        .brand-subtitle {
-            font-size: 13px;
-            color: #c9d1d9;
-            letter-spacing: 4px;
-            margin-top: 6px;
-            font-weight: 600;
-        }
+        .app-wrapper { max-width: 600px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; flex: 1; }
+        .container { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+       
+        /* ------------------------------------- */
+        /* VIEWS: Login, Incharge, MD            */
+        /* ------------------------------------- */
+        #view-login, #view-incharge, #view-md { display: none; }
+        #view-login { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 60vh; }
 
-        .app-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
+        /* Login Security Screen */
+        .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px; width: 90%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .pin-box h2 { font-family: 'Orbitron'; font-size: 18px; color: var(--neon-blue); margin-bottom: 20px; letter-spacing: 2px;}
+        .pin-input { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 15px; border-radius: 10px; font-family: 'Orbitron'; }
+        .pin-input:focus { outline: none; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
+       
+        /* Glass Card (Incharge Form) - Original Style */
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .card-header { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--neon-blue); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 12px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 13px; color: #e6edf3; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
+        .scan-wrapper { position: relative; display: flex; align-items: center; }
+        .input-group input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border); color: #fff; padding: 14px 15px; border-radius: 10px; font-size: 16px; }
+        .input-group input:focus { outline: none; border-color: var(--neon-blue); }
+        .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 12px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+        .btn-authorize { width: 100%; padding: 18px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2)); border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 17px; font-weight: 700; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; }
+       
+        #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
+        .status-success { background: rgba(0, 255, 136, 0.1); border-color: var(--neon-green); color: var(--neon-green); }
 
-        .container {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+        /* ------------------------------------- */
+        /* VIP MD DASHBOARD (Luxury Prism Style) */
+        /* ------------------------------------- */
+        .md-card {
+            background: var(--md-glass-bg);
+            border: 1px solid var(--md-border);
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255,255,255,0.05);
+            margin-bottom: 20px;
         }
-
-        .card-header {
+       
+        .md-header {
             font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            color: var(--neon-blue);
-            margin-bottom: 22px;
+            font-size: 18px;
+            margin-bottom: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 12px;
         }
 
-        .input-group {
-            margin-bottom: 18px;
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: #e6edf3;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .scan-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-group input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            color: #ffffff;
-            padding: 14px 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .input-with-btns {
-            padding-right: 55px !important;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .icon-btn {
-            position: absolute;
-            right: 8px;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn.scanner-btn {
-            border-color: var(--neon-green);
-            color: var(--neon-green);
-            background: rgba(0, 255, 136, 0.1);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
-        }
-
-        .icon-btn:active {
-            transform: scale(0.9);
-        }
-
-        .btn-authorize {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2));
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 2px;
+        .stat-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        #status-box {
-            display: none;
             padding: 15px;
-            border-radius: 10px;
             text-align: center;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 18px;
-            border: 1px solid;
-            font-family: 'Orbitron', sans-serif;
         }
 
-        .status-success {
-            background: rgba(0, 255, 136, 0.1);
-            border-color: var(--neon-green) !important;
-            color: var(--neon-green);
-        }
+        .stat-title { font-size: 11px; color: #a0a0a0; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px;}
+        .stat-value { font-family: 'Orbitron'; font-size: 28px; font-weight: 900; }
        
-        .status-error {
-            background: rgba(255, 51, 102, 0.1);
-            border-color: var(--danger-red) !important;
-            color: var(--danger-red);
+        .val-safe { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.4); }
+        .val-risk { color: var(--danger-red); text-shadow: 0 0 10px rgba(255,51,102,0.4); }
+        .val-total { background: var(--prism-silver); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        footer {
-            margin-top: auto;
-            padding: 25px 20px;
-            text-align: center;
-            border-top: 1px solid var(--glass-border);
-            background: rgba(3, 7, 18, 0.9);
-        }
-        .footer-brand {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .footer-tagline {
-            font-size: 11px;
-            color: #8b949e;
-            letter-spacing: 1px;
-            font-weight: 600;
+        footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(3, 7, 18, 0.9); }
+        .footer-brand { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; }
+        .footer-tagline { font-size: 11px; color: #8b949e; letter-spacing: 1px; font-weight: 600; }
+       
+        .logout-btn {
+            background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red);
+            padding: 5px 10px; border-radius: 5px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer;
         }
     </style>
 </head>
@@ -257,61 +171,94 @@
                 <span class="color-digital">DIGITAL</span>
                 <span class="color-agency">AGENCY</span>
             </div>
-            <div class="brand-subtitle">VIP Transit Radar Engine</div>
+            <div class="brand-subtitle" id="top-subtitle">Security Gateway</div>
         </header>
 
         <div class="container">
-            <div class="glass-card">
-                <div class="card-header">
-                    <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
+           
+            <!-- 1. LOGIN SCREEN -->
+            <div id="view-login">
+                <div class="pin-box">
+                    <h2>ENTER SECURITY PIN</h2>
+                    <input type="password" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="checkPIN(this.value)">
+                    <p style="font-size: 11px; color:#888; margin-top: 15px;">Incharge: 1234 | VIP MD: 9999</p>
+                </div>
+            </div>
+
+            <!-- 2. INCHARGE ACTION FLOOR (Form) -->
+            <div id="view-incharge">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
+                        <button class="logout-btn" style="margin-left:auto;" onclick="logout()">LOCK</button>
+                    </div>
+                   
+                    <form id="radar-form">
+                        <div class="input-group">
+                            <label>INVOICE NUMBER</label>
+                            <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required>
+                        </div>
+                        <div class="input-group">
+                            <label>VEHICLE NUMBER (PART-B)</label>
+                            <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
+                        </div>
+                        <div class="input-group">
+                            <label>E-WAY BILL NUMBER</label>
+                            <div class="scan-wrapper">
+                                <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit No" required style="padding-right: 55px;">
+                                <span class="icon-btn" onclick="document.getElementById('hdCameraInputEWay').click()">📷</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>E-WAY BILL EXPIRY (CRITICAL)</label>
+                            <input type="datetime-local" id="EWB_Expiry_Time" required>
+                        </div>
+                        <div class="input-group">
+                            <label>CPCB TRACEABILITY CODE</label>
+                            <div class="scan-wrapper">
+                                <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Tag" required style="padding-right: 55px;">
+                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="document.getElementById('hdCameraInputCPCB').click()">📷</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>BAG WEIGHT (KG)</label>
+                            <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
+                        </div>
+                        <button type="submit" class="btn-authorize" id="submit-btn"><span id="btn-text">AUTHORIZE DISPATCH</span></button>
+                    </form>
+                    <div id="status-box"></div>
+                </div>
+            </div>
+
+            <!-- 3. VIP MD COMMAND CENTER (Dashboard) -->
+            <div id="view-md">
+                <div class="md-card">
+                    <div class="md-header">
+                        <span class="color-silver">EXECUTIVE DASHBOARD</span>
+                        <button class="logout-btn" onclick="logout()">LOCK</button>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-title">TOTAL DISPATCHES</div>
+                            <div class="stat-value val-total" id="md-total">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-title">HIGH-RISK (EXPIRING)</div>
+                            <div class="stat-value val-risk" id="md-risk">0</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="mdRiskChart"></canvas>
+                    </div>
                 </div>
                
-                <form id="radar-form">
-                    <div class="input-group">
-                        <label>INVOICE NUMBER</label>
-                        <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>VEHICLE NUMBER (PART-B)</label>
-                        <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
-                    </div>
-
-                    <!-- E-Way Bill Input with Native HD Camera -->
-                    <div class="input-group">
-                        <label>E-WAY BILL NUMBER</label>
-                        <div class="scan-wrapper">
-                            <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit No" required>
-                            <span class="icon-btn" onclick="triggerEWayCamera()" title="HD Camera Capture">📷</span>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>E-WAY BILL EXPIRY (CRITICAL)</label>
-                        <input type="datetime-local" id="EWB_Expiry_Time" required>
-                    </div>
-
-                    <!-- CPCB Input with Native HD Camera (Replaced Scanner) -->
-                    <div class="input-group">
-                        <label>CPCB TRACEABILITY CODE</label>
-                        <div class="scan-wrapper">
-                            <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Tag" required>
-                            <span class="icon-btn scanner-btn" onclick="triggerCPCBCamera()" title="HD Camera Capture">📷</span>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>BAG WEIGHT (KG)</label>
-                        <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
-                    </div>
-
-                    <button type="submit" class="btn-authorize" id="submit-btn">
-                        <span id="btn-text">AUTHORIZE DISPATCH</span>
-                    </button>
-                </form>
-
-                <div id="status-box"></div>
+                <div class="md-card" style="padding: 15px; text-align:center;">
+                    <p style="font-size:12px; color:#aaa;">Real-time Secure Sync via Firebase API</p>
+                </div>
             </div>
+
         </div>
 
         <footer>
@@ -320,13 +267,11 @@
                 <span class="color-digital">DIGITAL</span>
                 <span class="color-agency">AGENCY</span>
             </div>
-            <div class="footer-tagline">
-                © 2026 | Enterprise Compliance Command Center
-            </div>
+            <div class="footer-tagline">© 2026 | Enterprise Compliance Command Center</div>
         </footer>
     </div>
 
-    <!-- Hidden Native OS Camera Inputs (Crash-Proof) -->
+    <!-- Hidden Native OS Cameras -->
     <input type="file" id="hdCameraInputEWay" accept="image/*" capture="environment" style="display:none">
     <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
@@ -343,60 +288,65 @@
             messagingSenderId: "627072782594",
             appId: "1:627072782594:web:bb6b14e4010051d55d321b"
         };
-
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        // ==========================================
+        const dispatchRef = database.ref('Alam_Radar_Dispatches');
 
-        // ---------------------------------------------------------
-        // 1. E-Way Bill Native HD Camera Logic
-        // ---------------------------------------------------------
-        function triggerEWayCamera() {
-            if(navigator.vibrate) navigator.vibrate(50);
-            document.getElementById('hdCameraInputEWay').click();
+        // ==========================================
+        // SINGLE PAGE APPLICATION (SPA) SECURITY LOGIC
+        // ==========================================
+        function checkPIN(pin) {
+            if (pin === "1234") {
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-incharge').style.display = 'block';
+                document.getElementById('top-subtitle').innerText = "Action Floor - Active";
+                if(navigator.vibrate) navigator.vibrate(50);
+            } else if (pin === "9999") {
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-md').style.display = 'block';
+                document.getElementById('top-subtitle').innerHTML = "<span class='color-silver'>VIP Command Center</span>";
+                if(navigator.vibrate) navigator.vibrate([100,50,100]);
+                initMDDashboard(); // Load Charts and Data
+            }
         }
 
+        function logout() {
+            document.getElementById('auth-pin').value = '';
+            document.getElementById('view-login').style.display = 'flex';
+            document.getElementById('view-incharge').style.display = 'none';
+            document.getElementById('view-md').style.display = 'none';
+            document.getElementById('top-subtitle').innerText = "Security Gateway";
+        }
+
+        // ==========================================
+        // NATIVE CAMERA DUMMY INJECTIONS (Crash-Proof)
+        // ==========================================
         document.getElementById('hdCameraInputEWay').addEventListener('change', function(e) {
             if (e.target.files && e.target.files.length > 0) {
-                // Dummy Data Injection (Future OCR Hook)
                 document.getElementById('EWay_Bill_No').value = "241" + Math.floor(100000000 + Math.random() * 900000000);
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                e.target.value = ''; // Reset input
+                e.target.value = '';
             }
         });
-
-        // ---------------------------------------------------------
-        // 2. CPCB Tag Native HD Camera Logic (Replaces Scanner)
-        // ---------------------------------------------------------
-        function triggerCPCBCamera() {
-            if(navigator.vibrate) navigator.vibrate(50);
-            document.getElementById('hdCameraInputCPCB').click();
-        }
-
         document.getElementById('hdCameraInputCPCB').addEventListener('change', function(e) {
             if (e.target.files && e.target.files.length > 0) {
-                // Dummy Data Injection (Future OCR Hook)
                 document.getElementById('CPCB_Barcode_ID').value = "CPCB-" + Math.floor(1000000 + Math.random() * 9000000);
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                e.target.value = ''; // Reset input
+                e.target.value = '';
             }
         });
 
         // ==========================================
-        // 🚀 FIREBASE FAST SUBMIT ENGINE (0% Overload)
+        // INCHARGE FAST SUBMIT ENGINE (Push Data)
         // ==========================================
         document.getElementById('radar-form').addEventListener('submit', function(e) {
             e.preventDefault();
-           
             const btn = document.getElementById('submit-btn');
             const btnText = document.getElementById('btn-text');
             const statusBox = document.getElementById('status-box');
            
-            btnText.innerText = 'AUTHORIZING...';
-            btn.style.pointerEvents = 'none';
-            statusBox.style.display = 'none';
-
+            btnText.innerText = 'AUTHORIZING...'; btn.style.pointerEvents = 'none';
+           
             const payload = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value,
@@ -407,37 +357,91 @@
                 Timestamp: new Date().toISOString()
             };
 
-            // DIRECT PUSH TO FIREBASE (Millisecond Speed)
-            database.ref('Alam_Radar_Dispatches').push(payload)
-            .then(() => {
+            dispatchRef.push(payload).then(() => {
                 btnText.innerText = "RADAR SECURED ✓";
-                btn.style.border = "1px solid #00ff88";
-               
-                statusBox.className = "status-success";
-                statusBox.innerText = "🟢 Consignment Synced to Master Engine!";
-                statusBox.style.display = "block";
-               
+                statusBox.className = "status-success"; statusBox.innerText = "🟢 Synced to Master Engine!"; statusBox.style.display = "block";
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-               
                 document.getElementById('radar-form').reset();
                 setTimeout(() => {
-                    btnText.innerText = "AUTHORIZE DISPATCH";
-                    btn.style.pointerEvents = 'auto';
-                    btn.style.border = "1px solid var(--neon-green)";
-                    statusBox.style.display = "none";
-                }, 3500);
-            })
-            .catch((error) => {
-                btnText.innerText = "AUTHORIZE DISPATCH";
-                btn.style.pointerEvents = 'auto';
-               
-                statusBox.className = "status-error";
-                statusBox.innerText = "⚠️ Error! Data Save Failed.";
-                statusBox.style.display = "block";
+                    btnText.innerText = "AUTHORIZE DISPATCH"; btn.style.pointerEvents = 'auto'; statusBox.style.display = "none";
+                }, 3000);
             });
         });
+
+        // ==========================================
+        // VIP MD AI DASHBOARD LOGIC (Live Fetch)
+        // ==========================================
+        let mdChart = null;
+
+        function initMDDashboard() {
+            // Listen for Realtime Changes in Firebase
+            dispatchRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                let total = 0;
+                let riskCount = 0;
+                let safeCount = 0;
+               
+                const now = new Date();
+
+                if(data) {
+                    const keys = Object.keys(data);
+                    total = keys.length;
+                   
+                    keys.forEach(key => {
+                        const item = data[key];
+                        const expiryDate = new Date(item.EWB_Expiry_Time);
+                       
+                        // Edge AI Logic: Calculate Time Difference
+                        const timeDiff = expiryDate - now;
+                        const hoursLeft = timeDiff / (1000 * 60 * 60);
+                       
+                        if(hoursLeft < 12) { // 12 hours se kam bacha hai toh Risk!
+                            riskCount++;
+                        } else {
+                            safeCount++;
+                        }
+                    });
+                }
+
+                // Update UI Numbers
+                document.getElementById('md-total').innerText = total;
+                document.getElementById('md-risk').innerText = riskCount;
+
+                // Update Chart.js Graphic
+                renderMDChart(safeCount, riskCount);
+            });
+        }
+
+        function renderMDChart(safe, risk) {
+            const ctx = document.getElementById('mdRiskChart').getContext('2d');
+           
+            if(mdChart) { mdChart.destroy(); } // Clear old chart
+           
+            Chart.defaults.color = '#a0a0a0';
+            Chart.defaults.font.family = 'Rajdhani';
+
+            mdChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Safe Transit 🟢', 'High-Risk Penalty 🔴'],
+                    datasets: [{
+                        data: [safe, risk],
+                        backgroundColor: ['rgba(0, 255, 136, 0.8)', 'rgba(255, 51, 102, 0.8)'],
+                        borderColor: ['#00ff88', '#ff3366'],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 14, weight: 'bold' } } }
+                    },
+                    cutout: '75%' // Thin futuristic ring
+                }
+            });
+        }
     </script>
 </body>
 </html>
-
- 
