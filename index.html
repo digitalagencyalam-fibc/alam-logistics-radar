@@ -8,16 +8,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030712">
-    <link rel="manifest" href="manifest.json">
    
     <title>Alam Digital Agency - Transit Radar</title>
    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
-    <!-- 1. VIP Scanner Engine -->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-    <!-- 2. FIREBASE REALTIME DATABASE SDKs (The 1 Millisecond Engine) -->
+    <!-- FIREBASE REALTIME DATABASE SDKs (The 1 Millisecond Engine) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -174,6 +170,10 @@
             font-size: 18px;
             cursor: pointer;
             transition: all 0.2s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .icon-btn.scanner-btn {
@@ -246,38 +246,6 @@
             letter-spacing: 1px;
             font-weight: 600;
         }
-
-        /* VIP PHONE-PE STYLE SCANNER */
-        #scanner-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.98);
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        #reader {
-            width: 90%;
-            max-width: 500px;
-            border: 2px solid var(--neon-green);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
-        }
-        .close-scanner-btn {
-            margin-top: 30px;
-            padding: 12px 30px;
-            background: transparent;
-            border: 1px solid var(--danger-red);
-            color: var(--danger-red);
-            font-family: 'Orbitron', sans-serif;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            letter-spacing: 2px;
-        }
     </style>
 </head>
 <body>
@@ -309,11 +277,12 @@
                         <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
                     </div>
 
+                    <!-- E-Way Bill Input with Native HD Camera -->
                     <div class="input-group">
                         <label>E-WAY BILL NUMBER</label>
                         <div class="scan-wrapper">
                             <input type="number" id="EWay_Bill_No" class="input-with-btns" placeholder="12 Digit No" required>
-                            <span class="icon-btn" onclick="triggerHDCamera()" title="HD Camera Capture">📷</span>
+                            <span class="icon-btn" onclick="triggerEWayCamera()" title="HD Camera Capture">📷</span>
                         </div>
                     </div>
 
@@ -322,11 +291,12 @@
                         <input type="datetime-local" id="EWB_Expiry_Time" required>
                     </div>
 
+                    <!-- CPCB Input with Native HD Camera (Replaced Scanner) -->
                     <div class="input-group">
                         <label>CPCB TRACEABILITY CODE</label>
                         <div class="scan-wrapper">
                             <input type="text" id="CPCB_Barcode_ID" class="input-with-btns" placeholder="Scan EPR Tag" required>
-                            <span class="icon-btn scanner-btn" onclick="openLiveScanner()" title="Live Scanner">🔳</span>
+                            <span class="icon-btn scanner-btn" onclick="triggerCPCBCamera()" title="HD Camera Capture">📷</span>
                         </div>
                     </div>
 
@@ -356,131 +326,62 @@
         </footer>
     </div>
 
-    <!-- Hidden HD Camera Input -->
-    <input type="file" id="hdCameraInput" accept="image/*" capture="environment" style="display:none">
-
-    <!-- Live Scanner Modal -->
-    <div id="scanner-modal">
-        <h3 style="color:var(--neon-green); font-family:'Orbitron'; margin-bottom: 20px; letter-spacing:2px;">LIVE TAG SCANNER</h3>
-        <div id="reader"></div>
-        <button class="close-scanner-btn" onclick="closeLiveScanner()">CANCEL SCAN</button>
-    </div>
+    <!-- Hidden Native OS Camera Inputs (Crash-Proof) -->
+    <input type="file" id="hdCameraInputEWay" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
     <script>
         // ==========================================
-        // 🚨 FIREBASE CONFIGURATION (YAHAN APNA DATA DALNA HAI) 🚨
+        // 🚨 FIREBASE CONFIGURATION (VIP Keys) 🚨
         // ==========================================
-       const firebaseConfig = {
-    apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
-    authDomain: "alam-enterprise-engine.firebaseapp.com",
-    databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
-    projectId: "alam-enterprise-engine",
-    storageBucket: "alam-enterprise-engine.firebasestorage.app",
-    messagingSenderId: "627072782594",
-    appId: "1:627072782594:web:bb6b14e4010051d55d321b"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
+            authDomain: "alam-enterprise-engine.firebaseapp.com",
+            databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
+            projectId: "alam-enterprise-engine",
+            storageBucket: "alam-enterprise-engine.firebasestorage.app",
+            messagingSenderId: "627072782594",
+            appId: "1:627072782594:web:bb6b14e4010051d55d321b"
+        };
 
-        // Initialize Firebase (Bina kisi Server/URL ke direct connection)
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         // ==========================================
 
-
-        // HD Camera (E-Way Bill)
-        function triggerHDCamera() {
+        // ---------------------------------------------------------
+        // 1. E-Way Bill Native HD Camera Logic
+        // ---------------------------------------------------------
+        function triggerEWayCamera() {
             if(navigator.vibrate) navigator.vibrate(50);
-            document.getElementById('hdCameraInput').click();
+            document.getElementById('hdCameraInputEWay').click();
         }
 
-        document.getElementById('hdCameraInput').addEventListener('change', function(e) {
+        document.getElementById('hdCameraInputEWay').addEventListener('change', function(e) {
             if (e.target.files && e.target.files.length > 0) {
-                // Future OCR processing hook
+                // Dummy Data Injection (Future OCR Hook)
                 document.getElementById('EWay_Bill_No').value = "241" + Math.floor(100000000 + Math.random() * 900000000);
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                e.target.value = '';
+                e.target.value = ''; // Reset input
             }
         });
 
-        // ==========================================
-// VIP MNC LIVE SCANNER ENGINE (100% CRASH-PROOF)
-// ==========================================
-let html5QrCode = null;
-
-function openLiveScanner() {
-    try {
-        // Modal UI Open karein
-        const modal = document.getElementById('scanner-modal');
-        if (modal) modal.style.display = 'flex';
-        if (navigator.vibrate) navigator.vibrate(50);
-
-        // Naya Scanner instance banayein
-        html5QrCode = new Html5Qrcode("reader");
-       
-        // Back camera start command
-        html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 15, qrbox: { width: 250, height: 250 } },
-            function(decodedText, decodedResult) {
-                // SUCCESS FUNCTION (Yahan callback diya hai)
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                const cpcbInput = document.getElementById('CPCB_Barcode_ID');
-                if (cpcbInput) cpcbInput.value = decodedText;
-                closeLiveScanner();
-            },
-            function(errorMessage) {
-                // BACKGROUND ERROR (Silent rakhein)
-            }
-        ).catch(function(err) {
-            console.error("Camera Start Error:", err);
-            alert("⚠️ Camera shuru nahi ho paya. Permissions check karein.");
-        });
-
-    } catch (error) {
-        console.error("Scanner Engine Error:", error);
-        alert("⚠️ Scanner load hone mein problem hai. HD Camera safe hai.");
-    }
-}
-
-function closeLiveScanner() {
-    try {
-        const modal = document.getElementById('scanner-modal');
-        if (html5QrCode) {
-            html5QrCode.stop().then(function() {
-                html5QrCode.clear();
-                if (modal) modal.style.display = 'none';
-                html5QrCode = null; // Memory Clear (VIP W3C Standard)
-            }).catch(function(err) {
-                if (modal) modal.style.display = 'none';
-            });
-        } else {
-            if (modal) modal.style.display = 'none';
+        // ---------------------------------------------------------
+        // 2. CPCB Tag Native HD Camera Logic (Replaces Scanner)
+        // ---------------------------------------------------------
+        function triggerCPCBCamera() {
+            if(navigator.vibrate) navigator.vibrate(50);
+            document.getElementById('hdCameraInputCPCB').click();
         }
-    } catch (error) {
-        console.error("Close Error:", error);
-        const modal = document.getElementById('scanner-modal');
-        if (modal) modal.style.display = 'none';
-    }
-}
 
- 
-function closeLiveScanner() {
-    if (html5QrCode) {
-        html5QrCode.stop().then(() => {
-            html5QrCode.clear();
-            document.getElementById('scanner-modal').style.display = 'none';
-        }).catch((err) => {
-            document.getElementById('scanner-modal').style.display = 'none';
+        document.getElementById('hdCameraInputCPCB').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files.length > 0) {
+                // Dummy Data Injection (Future OCR Hook)
+                document.getElementById('CPCB_Barcode_ID').value = "CPCB-" + Math.floor(1000000 + Math.random() * 9000000);
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                e.target.value = ''; // Reset input
+            }
         });
-    } else {
-        document.getElementById('scanner-modal').style.display = 'none';
-    }
-}
-
-function onScanSuccess(decodedText, decodedResult) {
-    if(navigator.vibrate) navigator.vibrate([100, 50, 100]); // Success vibration
-    document.getElementById('CPCB_Barcode_ID').value = decodedText; // Input box mein data dalna
-    closeLiveScanner(); // Scan hote hi automatically camera band!
-        function onScanFailure(error) {}
 
         // ==========================================
         // 🚀 FIREBASE FAST SUBMIT ENGINE (0% Overload)
