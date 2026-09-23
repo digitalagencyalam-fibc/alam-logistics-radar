@@ -7,32 +7,22 @@
    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
-    <!-- VIP NETWORK TURBO BOOST (Pre-connect) -->
+    <!-- VIP NETWORK TURBO BOOST -->
     <link rel="preconnect" href="https://api.postalpincode.in" crossorigin>
     <link rel="preconnect" href="https://alam-enterprise-engine-default-rtdb.firebaseio.com" crossorigin>
    
-    <!-- FIREBASE SDKs -->
+    <!-- FIREBASE SDKs & CHART JS & AI SCANNER (html5-qrcode) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
         :root { --bg-color: #030712; --glass-bg: rgba(15, 20, 35, 0.65); --glass-border: rgba(255, 255, 255, 0.15); --neon-green: #00ff88; --neon-blue: #00d4ff; --pure-white: #ffffff; --danger-red: #ff3366; --text-main: #f3f4f6; --prism-silver: linear-gradient(135deg, #ffffff 0%, #b0c4de 50%, #87ceeb 100%); --md-glass-bg: linear-gradient(145deg, #0a0f1a, #000000); --md-border: rgba(0, 212, 255, 0.3); }
        
-        /* VIP ZERO-LAG & HARDWARE ACCELERATION */
-        * {
-            margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation; /* Removes 300ms mobile tap lag */
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
-        /* GPU ACCELERATION FOR BUTTERY SMOOTH UI */
-        .app-wrapper, .glass-card, .md-card, .pin-box {
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            will-change: transform, opacity;
-        }
+        .app-wrapper, .glass-card, .md-card, .pin-box { -webkit-transform: translateZ(0); transform: translateZ(0); will-change: transform, opacity; }
 
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.1) 0%, rgba(0, 0, 0, 1) 70%); }
         .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 12px rgba(0, 212, 255, 0.8); }
@@ -61,6 +51,7 @@
         .btn-authorize { width: 100%; padding: 18px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2)); border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 17px; font-weight: 700; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; }
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
         .status-success { background: rgba(0, 255, 136, 0.1); border-color: var(--neon-green); color: var(--neon-green); }
+       
         .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 212, 255, 0.1) inset; margin-bottom: 20px; position: relative; }
         .md-header { font-family: 'Orbitron', sans-serif; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 15px; }
         .md-header-title { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
@@ -73,22 +64,36 @@
         .stat-value { font-family: 'Orbitron'; font-size: 32px; font-weight: 900; }
         .val-safe { color: var(--neon-green); text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
         .val-risk { color: var(--danger-red); text-shadow: 0 0 15px rgba(255, 51, 102, 0.5); }
-        .chart-container { width: 100%; height: 260px; background: rgba(0,0,0,0.4); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         #vehicle-list-container::-webkit-scrollbar { width: 4px; }
         #vehicle-list-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.5); border-radius: 10px; }
         #vehicle-list-container::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.3); border-radius: 10px; }
+       
         .lock-btn { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 8px 15px; border-radius: 8px; font-family: 'Orbitron'; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; }
         .lock-btn:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
         footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.95); }
         .footer-brand { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; }
         .footer-tagline { font-size: 11px; color: #8b949e; letter-spacing: 1px; font-weight: 600; }
 
-        /* THE KILL SWITCH OVERLAY CSS */
-        #kill-switch-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center; padding: 20px;
-            backdrop-filter: blur(10px);
+        /* VIP COMMAND MENU (Zero Clutter Export) */
+        .btn-export-trigger { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 15px; border-radius: 8px; font-family: 'Orbitron'; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 1px; margin-left: 10px; }
+        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 25px; top: 65px; background: rgba(10, 15, 25, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--neon-blue); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 50; }
+        .export-dropdown button { background: transparent; border: none; color: #fff; padding: 15px 20px; font-family: 'Orbitron'; font-size: 12px; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .export-dropdown button:hover { background: rgba(0, 212, 255, 0.2); color: var(--neon-blue); }
+
+        /* LIVE AI SCANNER OVERLAY */
+        #ai-scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px); }
+        #reader { width: 100%; max-width: 400px; border: 2px solid var(--neon-green); border-radius: 15px; overflow: hidden; box-shadow: 0 0 30px rgba(0, 255, 136, 0.3); background: #000; }
+        .close-scanner-btn { margin-top: 20px; background: rgba(255, 51, 102, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px 30px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 700; cursor: pointer; letter-spacing: 1px; }
+
+        #kill-switch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; backdrop-filter: blur(10px); }
+       
+        /* HIDDEN PRINT CSS FOR PERFECT LEGAL PDF EXPORT */
+        @media print {
+            body * { visibility: hidden; }
+            #view-md, #view-md * { visibility: visible; }
+            #view-md { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
+            .btn-export-trigger, .export-dropdown, .lock-btn { display: none !important; }
+            .md-card { border: 1px solid #000; box-shadow: none; margin-bottom: 10px; page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -99,6 +104,13 @@
         <h1 style="color: #ff3366; font-family: 'Orbitron'; font-size: 40px; text-shadow: 0 0 20px #ff3366;">⚠️ ACCESS REVOKED</h1>
         <p style="color: #fff; font-size: 18px; margin-top: 15px; font-weight: 600; letter-spacing: 1px;">DEMO LICENSE EXPIRED</p>
         <p style="color: #00d4ff; font-size: 14px; margin-top: 30px; letter-spacing: 2px;">CONTACT ALAM DIGITAL AGENCY FOR SUBSCRIPTION</p>
+    </div>
+
+    <!-- AI BARCODE SCANNER UI -->
+    <div id="ai-scanner-overlay">
+        <h3 style="color: var(--neon-green); font-family: 'Orbitron'; margin-bottom: 15px; letter-spacing: 2px;">SCAN CPCB BARCODE</h3>
+        <div id="reader"></div>
+        <button class="close-scanner-btn" onclick="closeAiScanner()">CANCEL SCAN</button>
     </div>
 
     <div class="app-wrapper">
@@ -113,6 +125,7 @@
 
         <div class="container">
            
+            <!-- VIP LOGIN -->
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
@@ -138,7 +151,6 @@
                             <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
                         </div>
                        
-                        <!-- PINCODE FIELD WITH INDIA POST MAGIC -->
                         <div class="input-group">
                             <label>DESTINATION (PINCODE)</label>
                             <div class="scan-wrapper">
@@ -148,7 +160,7 @@
                             <div id="pincode-feedback" style="font-size: 12px; margin-top: 6px; font-weight: 700; letter-spacing: 0.5px;"></div>
                         </div>
 
-                        <!-- 🚨 RESTORED: E-WAY BILL WITH HD CAMERA 🚨 -->
+                        <!-- HD CAMERA: E-WAY BILL -->
                         <div class="input-group">
                             <label>E-WAY BILL NUMBER</label>
                             <div class="scan-wrapper">
@@ -156,21 +168,19 @@
                                 <span class="icon-btn" onclick="document.getElementById('hdCameraInputEWay').click()">📷</span>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <label>E-WAY BILL EXPIRY (CRITICAL)</label>
                             <input type="datetime-local" id="EWB_Expiry_Time" required>
                         </div>
                        
-                        <!-- 🚨 RESTORED: CPCB OPTIONAL WITH HD CAMERA 🚨 -->
+                        <!-- 🤖 AI SCANNER INTEGRATED: CPCB (OPTIONAL) -->
                         <div class="input-group">
                             <label>CPCB TRACEABILITY CODE (OPTIONAL)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="CPCB_Barcode_ID" placeholder="Leave blank if NA" style="padding-right: 45px;">
-                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="document.getElementById('hdCameraInputCPCB').click()">📷</span>
+                                <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode or Leave blank" style="padding-right: 45px;">
+                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="startAiScanner()">📷</span>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <label>BAG WEIGHT (KG)</label>
                             <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
@@ -191,7 +201,17 @@
                                 <div class="pulse-dot"></div> LIVE MAP
                             </div>
                         </div>
-                        <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
+                        <div style="display:flex; align-items:center;">
+                            <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
+                            <!-- VIP COMMAND BUTTON FOR EXPORT (ZERO CLUTTER) -->
+                            <button class="btn-export-trigger" onclick="toggleExportMenu()">⚙️ EXPORT</button>
+                        </div>
+                    </div>
+
+                    <!-- THE GLASSMORPHISM EXPORT MENU (Hidden by default) -->
+                    <div class="export-dropdown" id="export-menu">
+                        <button onclick="downloadCPCBExcel()">📥 DOWNLOAD CPCB EXCEL</button>
+                        <button onclick="window.print(); toggleExportMenu();" style="border-bottom:none;">📄 DOWNLOAD LEGAL PDF</button>
                     </div>
 
                     <div class="stat-grid">
@@ -228,9 +248,8 @@
         </footer>
     </div>
 
-    <!-- 🚨 RESTORED: HIDDEN HD CAMERA TRIGGERS 🚨 -->
+    <!-- NORMAL HD CAMERA FOR EWAY BILL (STILL INTACT) -->
     <input type="file" id="hdCameraInputEWay" accept="image/*" capture="environment" style="display:none">
-    <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
     <script>
         // FIREBASE INITIALIZATION
@@ -243,14 +262,12 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const dispatchRef = database.ref('Alam_Radar_Dispatches');
-       
-        // 🚨 SUPER-ADMIN FLAG (Aapki Safety Ke Liye) 🚨
+        let globalDispatchData = [];
         let isSuperAdmin = false;
 
-        // 🚨 THE MASTER KILL SWITCH LOGIC (Client vs Admin) 🚨
+        // 🚨 1. MASTER KILL SWITCH (Intact)
         database.ref('Admin/App_Access').on('value', (snapshot) => {
             const status = snapshot.val();
-            // Agar BLOCKED hai, aur aap Super Admin nahi hain, tabhi lock hoga!
             if (status === "BLOCKED" && isSuperAdmin === false) {
                 document.getElementById('kill-switch-overlay').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
@@ -260,21 +277,21 @@
             }
         });
 
-        // AUTHENTICATION WITH SECRET BOSS PIN
+        // 🚨 2. SECURE VIP LOGIN (Intact)
         function checkPIN(pin) {
             if (pin === "1234") {
-                isSuperAdmin = false; // Normal Incharge
+                isSuperAdmin = false;
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('view-incharge').style.display = 'block';
                 document.getElementById('top-subtitle').innerText = "Action Floor - Active";
             } else if (pin === "9999") {
-                isSuperAdmin = false; // Client MD
+                isSuperAdmin = false;
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('view-md').style.display = 'block';
                 document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>VIP Command Center</span>";
                 initMDDashboard();
             } else if (pin === "7777") {
-                isSuperAdmin = true; // BOSS - ALAM DIGITAL AGENCY (Immune to Kill Switch)
+                isSuperAdmin = true;
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('view-md').style.display = 'block';
                 document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>AGENCY ADMIN - GOD MODE</span>";
@@ -288,52 +305,69 @@
             document.getElementById('view-incharge').style.display = 'none';
             document.getElementById('view-md').style.display = 'none';
             document.getElementById('top-subtitle').innerText = "Security Gateway";
-            isSuperAdmin = false; // Reset security on logout
+            isSuperAdmin = false;
         }
 
-        // INDIA POST PINCODE MAGIC
+        // 🚨 3. GOVT PINCODE API (Intact)
         async function verifyPincodeLive(pincode) {
             const icon = document.getElementById('pincode-status-icon');
             const feedback = document.getElementById('pincode-feedback');
-           
-            if (pincode.length < 6) {
-                icon.innerHTML = ""; feedback.innerText = ""; return;
-            }
+            if (pincode.length < 6) { icon.innerHTML = ""; feedback.innerText = ""; return; }
             if (pincode.length === 6) {
-                icon.innerHTML = "⏳";
-                feedback.style.color = "#00d4ff";
-                feedback.innerText = "Connecting Govt Server...";
-               
+                icon.innerHTML = "⏳"; feedback.style.color = "#00d4ff"; feedback.innerText = "Connecting Govt Server...";
                 try {
                     const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
                     const data = await response.json();
-                   
                     if (data[0].Status === "Success") {
                         let city = data[0].PostOffice[0].District;
                         let state = data[0].PostOffice[0].State;
-                        icon.innerHTML = "✅";
-                        feedback.style.color = "#00ff88";
-                        feedback.innerText = `Verified: ${city}, ${state}`;
+                        icon.innerHTML = "✅"; feedback.style.color = "#00ff88"; feedback.innerText = `Verified: ${city}, ${state}`;
                     } else {
-                        icon.innerHTML = "❌";
-                        feedback.style.color = "#ff3366";
-                        feedback.innerText = "Invalid Govt Pincode!";
+                        icon.innerHTML = "❌"; feedback.style.color = "#ff3366"; feedback.innerText = "Invalid Govt Pincode!";
                     }
                 } catch (error) {
-                    icon.innerHTML = "⚠️";
-                    feedback.style.color = "#ffcc00";
-                    feedback.innerText = "Network Issue, Unable to verify.";
+                    icon.innerHTML = "⚠️"; feedback.style.color = "#ffcc00"; feedback.innerText = "Network Issue.";
                 }
             }
         }
 
-        // INCHARGE FORM SUBMIT
+        // 🤖 NEW AI FEATURE: LIVE BARCODE SCANNER FOR CPCB
+        let html5QrcodeScanner;
+        function startAiScanner() {
+            document.getElementById('ai-scanner-overlay').style.display = 'flex';
+            html5QrcodeScanner = new Html5Qrcode("reader");
+            html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 250, height: 250 } },
+                (decodedText, decodedResult) => {
+                    // SUCCESS! Barcode found.
+                    document.getElementById('CPCB_Barcode_ID').value = decodedText;
+                    if(navigator.vibrate) navigator.vibrate([100,50,100]); // Beep/Vibration feedback
+                    closeAiScanner(); // Auto close form fill
+                },
+                (errorMessage) => { /* AI is scanning, ignore background noise */ }
+            ).catch(err => {
+                alert("Camera Access Denied or Not Supported.");
+                closeAiScanner();
+            });
+        }
+        function closeAiScanner() {
+            document.getElementById('ai-scanner-overlay').style.display = 'none';
+            if(html5QrcodeScanner) {
+                html5QrcodeScanner.stop().catch(err => console.log("Scanner stop error"));
+            }
+        }
+
+        // 💎 NEW VIP FEATURE: TOGGLE EXPORT MENU
+        function toggleExportMenu() {
+            const menu = document.getElementById('export-menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // SUBMIT TO CLOUD
         document.getElementById('radar-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
             const btnText = document.getElementById('btn-text');
-            btnText.innerText = 'SYNCING TO CLOUD...';
-            btn.style.opacity = '0.7';
+            btnText.innerText = 'SYNCING TO CLOUD...'; btn.style.opacity = '0.7';
 
             const data = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
@@ -351,38 +385,34 @@
                 document.getElementById('radar-form').reset();
                 document.getElementById('pincode-feedback').innerText = "";
                 document.getElementById('pincode-status-icon').innerHTML = "";
-               
                 const sb = document.getElementById('status-box');
-                sb.innerHTML = "✅ SECURE SYNC COMPLETE";
-                sb.className = "status-success";
-                sb.style.display = "block";
-                btnText.innerText = 'AUTHORIZE DISPATCH';
-                btn.style.opacity = '1';
+                sb.innerHTML = "✅ SECURE SYNC COMPLETE"; sb.className = "status-success"; sb.style.display = "block";
+                btnText.innerText = 'AUTHORIZE DISPATCH'; btn.style.opacity = '1';
                 setTimeout(() => { sb.style.display = "none"; }, 4000);
             });
         });
 
-        // MD DASHBOARD DATA & SECURE ERROR LOGIC
+        // MD DASHBOARD DATA INJECTION (Intact)
         function initMDDashboard() {
             dispatchRef.on('value', (snapshot) => {
                 const container = document.getElementById('vehicle-list-container');
                 container.innerHTML = '';
+                globalDispatchData = [];
                
                 let total = 0; let riskCount = 0;
                 const now = new Date();
 
-                // NO OLA MENTIONED - SECURE VIP ERROR HANDLING
                 try {
                     if (!navigator.onLine) throw new Error("Network Offline");
 
                     snapshot.forEach((child) => {
                         const d = child.val();
                         total++;
+                        globalDispatchData.push(d);
                        
                         const expDate = new Date(d.EWB_Expiry_Time);
                         const hoursLeft = (expDate - now) / (1000 * 60 * 60);
-                        let statusColor = "#00ff88";
-                        let statusText = "SAFE";
+                        let statusColor = "#00ff88"; let statusText = "SAFE";
                        
                         if (hoursLeft < 12 && hoursLeft > 0) {
                             statusColor = "#ffcc00"; statusText = "WARNING";
@@ -392,7 +422,6 @@
 
                         const card = document.createElement('div');
                         card.style = `border-left: 4px solid ${statusColor}; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);`;
-                       
                         card.innerHTML = `
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                                 <strong style="font-family:'Orbitron'; font-size:16px; color:#fff;">${d.Vehicle_Number}</strong>
@@ -404,12 +433,9 @@
                         `;
                         container.prepend(card);
                     });
-
                     document.getElementById('md-total').innerText = total;
                     document.getElementById('md-risk').innerText = riskCount;
-
                 } catch (error) {
-                    // VIP CORPORATE ERROR MESSAGE
                     container.innerHTML = `
                         <div style="border: 1px solid #ff3366; background: rgba(255, 51, 102, 0.1); padding: 20px; text-align: center; border-radius: 10px; margin-top:20px;">
                             <div style="font-size: 28px; margin-bottom: 10px;">📡❌</div>
@@ -419,6 +445,27 @@
                     `;
                 }
             });
+        }
+
+        // CPCB EXCEL (CSV) EXPORT GENERATOR
+        function downloadCPCBExcel() {
+            toggleExportMenu(); // close menu after click
+            if(globalDispatchData.length === 0) return alert("No Data Found");
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Timestamp,Invoice_Number,Vehicle_Number,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG\n";
+           
+            globalDispatchData.forEach(function(rowArray) {
+                let row = `${rowArray.Timestamp},${rowArray.Invoice_Number},${rowArray.Vehicle_Number},${rowArray.Destination_Pincode},${rowArray.EWay_Bill_No},${rowArray.EWB_Expiry_Time},${rowArray.CPCB_Barcode_ID},${rowArray.Bag_Weight_KG}`;
+                csvContent += row + "\r\n";
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Alam_CPCB_Compliance_Report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
