@@ -7,11 +7,11 @@
    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
-    <!-- VIP NETWORK TURBO BOOST -->
+    <!-- VIP NETWORK BOOST -->
     <link rel="preconnect" href="https://api.postalpincode.in" crossorigin>
     <link rel="preconnect" href="https://alam-enterprise-engine-default-rtdb.firebaseio.com" crossorigin>
    
-    <!-- FIREBASE SDKs (Pure Native) -->
+    <!-- FIREBASE SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -20,7 +20,6 @@
        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
-        /* HARDWARE ACCELERATION */
         .app-wrapper, .glass-card, .md-card, .pin-box { -webkit-transform: translateZ(0); transform: translateZ(0); will-change: transform, opacity; }
 
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 1) 70%); }
@@ -41,8 +40,12 @@
        
         .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px; width: 90%; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.9); }
         .pin-box h2 { font-family: 'Orbitron'; font-size: 18px; color: var(--pure-white); margin-bottom: 20px; letter-spacing: 2px;}
-        .pin-input { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 15px; border-radius: 10px; font-family: 'Orbitron'; }
+        .pin-input { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 15px; border-radius: 10px; font-family: 'Orbitron'; transition: 0.3s; }
         .pin-input:focus { outline: none; box-shadow: 0 0 15px rgba(0, 212, 255, 0.6); border-color: var(--neon-green); }
+       
+        /* SHAKE ANIMATION FOR WRONG PIN */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+        .shake-error { animation: shake 0.4s; border-color: var(--danger-red) !important; box-shadow: 0 0 15px var(--danger-red) !important; color: var(--danger-red) !important; }
        
         .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .card-header { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--neon-blue); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 12px; }
@@ -152,6 +155,7 @@
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
+                    <!-- PIN INPUT -->
                     <input type="password" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="checkPIN(this.value)">
                     <p style="font-size: 12px; color:#666; margin-top: 15px; letter-spacing: 1px;">Incharge: 1234 | MD VIP: 9999</p>
                 </div>
@@ -295,36 +299,70 @@
     </div>
 
     <script>
-        // 🔒 FIREBASE INIT
-        const firebaseConfig = {
-            apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
-            authDomain: "alam-enterprise-engine.firebaseapp.com",
-            databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
-            projectId: "alam-enterprise-engine"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const dispatchRef = database.ref('Alam_Radar_Dispatches');
-        let globalDispatchData = [];
+        // 🛡️ BULLETPROOF FIREBASE INIT (Won't crash if offline) 🛡️
+        let database, dispatchRef;
         let isSuperAdmin = false;
 
-        database.ref('Admin/App_Access').on('value', (snapshot) => {
-            if (snapshot.val() === "BLOCKED" && isSuperAdmin === false) {
-                document.getElementById('kill-switch-overlay').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('kill-switch-overlay').style.display = 'none';
-                document.body.style.overflow = 'auto';
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
+                authDomain: "alam-enterprise-engine.firebaseapp.com",
+                databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
+                projectId: "alam-enterprise-engine"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
-        });
+            database = firebase.database();
+            dispatchRef = database.ref('Alam_Radar_Dispatches');
+            let globalDispatchData = [];
 
+            database.ref('Admin/App_Access').on('value', (snapshot) => {
+                if (snapshot.val() === "BLOCKED" && isSuperAdmin === false) {
+                    document.getElementById('kill-switch-overlay').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.getElementById('kill-switch-overlay').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        } catch (error) {
+            console.warn("Firebase Shield Active: Network Offline, proceeding locally.");
+        }
+
+        // 🚨 VIP LOGIN LOGIC WITH 'SHAKE' ERROR FEEDBACK 🚨
         function checkPIN(pin) {
+            const pinInput = document.getElementById('auth-pin');
+           
             if (pin === "1234") {
-                isSuperAdmin = false; document.getElementById('view-login').style.display = 'none'; document.getElementById('view-incharge').style.display = 'block'; document.getElementById('top-subtitle').innerText = "Action Floor - Active";
+                isSuperAdmin = false;
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-incharge').style.display = 'block';
+                document.getElementById('top-subtitle').innerText = "Action Floor - Active";
+                pinInput.value = '';
             } else if (pin === "9999") {
-                isSuperAdmin = false; document.getElementById('view-login').style.display = 'none'; document.getElementById('view-md').style.display = 'block'; document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>VIP Command Center</span>"; initMDDashboard();
+                isSuperAdmin = false;
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-md').style.display = 'block';
+                document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>VIP Command Center</span>";
+                pinInput.value = '';
+                initMDDashboard();
             } else if (pin === "7777") {
-                isSuperAdmin = true; document.getElementById('view-login').style.display = 'none'; document.getElementById('view-md').style.display = 'block'; document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>AGENCY ADMIN - GOD MODE</span>"; initMDDashboard();
+                isSuperAdmin = true;
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-md').style.display = 'block';
+                document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>AGENCY ADMIN - GOD MODE</span>";
+                pinInput.value = '';
+                initMDDashboard();
+            } else if (pin.length === 4) {
+                // THE NEW MNC ERROR FEEDBACK (RED SHAKE)
+                pinInput.classList.add('shake-error');
+                if(navigator.vibrate) navigator.vibrate([200, 100, 200]); // Angry Vibration
+               
+                setTimeout(() => {
+                    pinInput.value = '';
+                    pinInput.classList.remove('shake-error');
+                }, 500);
             }
         }
 
@@ -426,7 +464,6 @@
         }
 
         // 🚀 THE REAL VISION LLM SUPER ENGINE (WITH AUTO-RETRY PROTOCOL & API KEY) 🚀
-        // Boss, aapki API Key yahan securely inject kar di gayi hai:
         const GEMINI_API_KEY = "AQ.Ab8RN6IRs03d06G7Jvyf7bzYx7OIfs33bXkgZWiuzIodXMg6Fw";
 
         async function callGeminiAPIWithRetry(base64Data, prompt, retries = 3) {
@@ -446,7 +483,7 @@
                     if (!response.ok) throw new Error("Network Overload");
                     return await response.json();
                 } catch (error) {
-                    if (i === retries - 1) throw error; // Fails after 3 tries
+                    if (i === retries - 1) throw error;
                     await new Promise(res => setTimeout(res, 500)); // 0.5s Bulletproof wait
                 }
             }
@@ -485,4 +522,169 @@
                    
                     // Parse Real Response Safely
                     let aiText = data.candidates[0].content.parts[0].text;
-                    aiText = aiText.replace(/```json/g, '').replace(/
+                    aiText = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const aiResult = JSON.parse(aiText);
+
+                    playSuccessBeep();
+
+                    // Render Real Verdict
+                    if(aiResult.status === "PASS") {
+                        resultBox.style.borderColor = '#00ff88';
+                        resultBox.style.boxShadow = '0 0 20px rgba(0,255,136,0.3)';
+                        resultBox.innerHTML = `
+                            <div style="font-family: 'Orbitron'; font-size: 16px; color: #00ff88; margin-bottom: 10px; font-weight:900;">✅ QMS PASSED: VERIFIED</div>
+                            <div style="font-size: 11px; color: #e6edf3; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                                <span style="color:#00ff88;">Citing Rule:</span> ${aiResult.rule_cited}
+                            </div>
+                            <div style="font-size: 11px; color: #a0a0a0; line-height: 1.5;">
+                                <strong style="color:#fff;">LLM Auditor Verdict:</strong> ${aiResult.reason}
+                            </div>
+                        `;
+                    } else {
+                        resultBox.style.borderColor = '#ff3366';
+                        resultBox.style.boxShadow = '0 0 20px rgba(255,51,102,0.3)';
+                        resultBox.innerHTML = `
+                            <div style="font-family: 'Orbitron'; font-size: 16px; color: #ff3366; margin-bottom: 10px; font-weight:900;">❌ QMS FAILED: CRITICAL FLAW</div>
+                            <div style="font-size: 11px; color: #e6edf3; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                                <span style="color:#ff3366;">Violating Rule:</span> ${aiResult.rule_cited}
+                            </div>
+                            <div style="font-size: 11px; color: #a0a0a0; line-height: 1.5;">
+                                <strong style="color:#fff;">LLM Auditor Verdict:</strong> ${aiResult.reason}
+                            </div>
+                        `;
+                    }
+                } catch (err) {
+                    resultBox.style.borderColor = '#ffcc00';
+                    resultBox.innerHTML = `<div style="color:#ffcc00; font-family:'Orbitron'; padding:10px;">⚠️ API KEY ERROR OR NETWORK FAIL. Check Key format.</div>`;
+                }
+            };
+        }
+
+        // 💎 VIP TOGGLE EXPORT MENU & OUTSIDE CLICK
+        function toggleExportMenu(event) {
+            if(event) event.stopPropagation();
+            const menu = document.getElementById('export-menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+        window.addEventListener('click', function(event) {
+            const menu = document.getElementById('export-menu');
+            const triggerBtn = document.getElementById('export-trigger-btn');
+            if (menu && triggerBtn && menu.style.display === 'flex' && !menu.contains(event.target) && !triggerBtn.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // SUBMIT TO CLOUD
+        document.getElementById('radar-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!dispatchRef) return alert("Network Offline. Sync delayed.");
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            btnText.innerText = 'SYNCING...'; btn.style.opacity = '0.7';
+
+            const data = {
+                Invoice_Number: document.getElementById('Invoice_Number').value,
+                Vehicle_Number: document.getElementById('Vehicle_Number').value.toUpperCase(),
+                Destination_Pincode: document.getElementById('Destination_Info').value,
+                EWay_Bill_No: document.getElementById('EWay_Bill_No').value,
+                EWB_Expiry_Time: document.getElementById('EWB_Expiry_Time').value,
+                CPCB_Barcode_ID: document.getElementById('CPCB_Barcode_ID').value || "NA",
+                Bag_Weight_KG: document.getElementById('Bag_Weight_KG').value,
+                Timestamp: new Date().toISOString(),
+                Status: "In-Transit"
+            };
+
+            dispatchRef.push(data).then(() => {
+                document.getElementById('radar-form').reset();
+                document.getElementById('pincode-feedback').innerText = "";
+                document.getElementById('pincode-status-icon').innerHTML = "";
+                const sb = document.getElementById('status-box');
+                sb.innerHTML = "✅ SECURE SYNC COMPLETE"; sb.className = "status-success"; sb.style.display = "block";
+                btnText.innerText = 'AUTHORIZE DISPATCH'; btn.style.opacity = '1';
+                setTimeout(() => { sb.style.display = "none"; }, 4000);
+            });
+        });
+
+        // MD DASHBOARD DATA INJECTION
+        function initMDDashboard() {
+            if(!dispatchRef) return;
+            dispatchRef.on('value', (snapshot) => {
+                const tContainer = document.getElementById('vehicle-list-container');
+                const cContainer = document.getElementById('cpcb-list-container');
+                tContainer.innerHTML = ''; cContainer.innerHTML = '';
+                globalDispatchData = [];
+               
+                let total = 0; let riskCount = 0;
+                let cpcbWeight = 0; let cpcbCount = 0;
+                const now = new Date();
+
+                try {
+                    if (!navigator.onLine) throw new Error("Network Offline");
+
+                    snapshot.forEach((child) => {
+                        const d = child.val();
+                        total++; globalDispatchData.push(d);
+                       
+                        const expDate = new Date(d.EWB_Expiry_Time);
+                        const hoursLeft = (expDate - now) / (1000 * 60 * 60);
+                        let statusColor = "#00ff88"; let statusText = "SAFE";
+                       
+                        if (hoursLeft < 12 && hoursLeft > 0) { statusColor = "#ffcc00"; statusText = "WARNING"; }
+                        else if (hoursLeft <= 0) { statusColor = "#ff3366"; statusText = "CRITICAL"; riskCount++; }
+
+                        const tCard = document.createElement('div');
+                        tCard.style = `border-left: 4px solid ${statusColor}; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; border-top: 1px solid rgba(255,255,255,0.05);`;
+                        tCard.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                <strong style="font-family:'Orbitron'; font-size:16px; color:#fff;">${d.Vehicle_Number}</strong>
+                                <span style="background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:5px; font-size:11px; font-weight:bold; color:${statusColor}">${statusText}</span>
+                            </div>
+                            <div style="font-size:12px; color:#a0a0a0; margin-bottom:4px;">INV: <span style="color:#00d4ff;">${d.Invoice_Number}</span></div>
+                            <div style="font-size:12px; color:#a0a0a0; margin-bottom:4px;">E-WAY: <span style="color:#fff;">${d.EWay_Bill_No}</span></div>
+                        `;
+                        tContainer.prepend(tCard);
+
+                        if(d.CPCB_Barcode_ID !== "NA" && d.CPCB_Barcode_ID !== "") {
+                            cpcbCount++; cpcbWeight += parseFloat(d.Bag_Weight_KG) || 0;
+                            const cCard = document.createElement('div');
+                            cCard.style = `border-left: 4px solid #00ff88; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; border-top: 1px solid rgba(255,255,255,0.05);`;
+                            cCard.innerHTML = `
+                                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                    <strong style="font-family:'Orbitron'; font-size:12px; color:#00ff88; word-break:break-all;">🏷️ ${d.CPCB_Barcode_ID}</strong>
+                                </div>
+                                <div style="font-size:12px; color:#a0a0a0; margin-bottom:4px;">WEIGHT: <span style="color:#fff; font-weight:bold;">${d.Bag_Weight_KG} KG</span></div>
+                                <div style="font-size:12px; color:#a0a0a0;">INV: <span style="color:#00d4ff;">${d.Invoice_Number}</span></div>
+                            `;
+                            cContainer.prepend(cCard);
+                        }
+                    });
+                   
+                    document.getElementById('md-total').innerText = total;
+                    document.getElementById('md-risk').innerText = riskCount;
+                    document.getElementById('md-total-weight').innerText = cpcbWeight.toFixed(2);
+                    document.getElementById('md-cpcb-count').innerText = cpcbCount;
+                   
+                } catch (error) {
+                    tContainer.innerHTML = `<div style="border: 1px solid #ff3366; background: rgba(255, 51, 102, 0.1); padding: 20px; text-align: center; border-radius: 10px; margin-top:20px;"><h3 style="color: #ff3366; font-family: 'Orbitron';">TELEMETRY OFFLINE</h3></div>`;
+                }
+            });
+        }
+
+        function downloadCPCBExcel() {
+            document.getElementById('export-menu').style.display = 'none';
+            if(globalDispatchData.length === 0) return alert("No Data Found");
+            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Invoice_Number,Vehicle_Number,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG\n";
+            globalDispatchData.forEach(rowArray => {
+                csvContent += `${rowArray.Timestamp},${rowArray.Invoice_Number},${rowArray.Vehicle_Number},${rowArray.Destination_Pincode},${rowArray.EWay_Bill_No},${rowArray.EWB_Expiry_Time},${rowArray.CPCB_Barcode_ID},${rowArray.Bag_Weight_KG}\r\n`;
+            });
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Alam_CPCB_Compliance_Report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
