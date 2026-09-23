@@ -144,7 +144,6 @@
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
-        /* CUSTOM SCROLLBAR FOR FLEET LIST */
         #vehicle-list-container::-webkit-scrollbar { width: 4px; }
         #vehicle-list-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.5); border-radius: 10px; }
         #vehicle-list-container::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.3); border-radius: 10px; }
@@ -175,7 +174,6 @@
 
         <div class="container">
            
-            <!-- 1. LOGIN SCREEN -->
             <div id="view-login">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
@@ -184,7 +182,6 @@
                 </div>
             </div>
 
-            <!-- 2. INCHARGE ACTION FLOOR -->
             <div id="view-incharge">
                 <div class="glass-card">
                     <div class="card-header">
@@ -200,7 +197,6 @@
                             <label>VEHICLE NUMBER (PART-B)</label>
                             <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
                         </div>
-                        <!-- NEW AI INPUT: DESTINATION PINCODE -->
                         <div class="input-group">
                             <label>DESTINATION (PINCODE / CITY)</label>
                             <input type="text" id="Destination_Info" placeholder="e.g. 400001 (Mumbai)" style="border-color: var(--neon-blue); box-shadow: inset 0 0 5px rgba(0,212,255,0.2);" required>
@@ -233,13 +229,11 @@
                 </div>
             </div>
 
-            <!-- 3. VIP MD COMMAND CENTER -->
             <div id="view-md">
                 <div class="md-card">
                     <div class="md-header">
                         <div style="display:flex; flex-direction:column; gap:5px;">
                             <span class="color-prism md-header-title">EXECUTIVE DASHBOARD</span>
-                            <!-- CLEAN & COMPACT LIVE MAP BADGE -->
                             <div class="live-pulse-container">
                                 <div class="pulse-dot"></div> LIVE MAP
                             </div>
@@ -263,7 +257,6 @@
                     </div>
                 </div>
                
-                <!-- ACTIVE FLEET TRACKER CARDS (WITH DESTINATION AI) -->
                 <div class="md-card">
                     <div class="md-header" style="border-bottom: none; padding-bottom: 5px; margin-bottom: 15px;">
                         <span class="color-prism md-header-title" style="font-size: 16px;">ACTIVE FLEET NODE</span>
@@ -295,7 +288,7 @@
     <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
     <script>
-        // FIREBASE ENGINE
+        // 100% ORIGINAL & SECURE FIREBASE ENGINE (NO FAKE API CALLS HERE)
         const firebaseConfig = {
             apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
             authDomain: "alam-enterprise-engine.firebaseapp.com",
@@ -308,58 +301,6 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const dispatchRef = database.ref('Alam_Radar_Dispatches');
-
-        // MAPS ENGINE KEY
-        const MAP_API_KEY = "ImKaM6zSkUXy6zQrsRn7a6lsZKAZsgHU";
-
-        // ==========================================
-        // CTO SAFETY GEAR: FAIL-SAFE ETA ENGINE
-        // ==========================================
-        // Yeh engine Maps API ko call karega, agar block hua (CORS) toh
-        // bina app crash kiye Heuristic Fallback chalayega.
-        async function fetchSecureETA(destination) {
-            try {
-                // 1. Attempt Map Provider Geocoding
-                const geocodeUrl = `https://api.olamaps.io/places/v1/geocode?address=${encodeURIComponent(destination)}&api_key=${MAP_API_KEY}`;
-                const geoRes = await fetch(geocodeUrl, { method: 'GET', headers: { 'Accept': 'application/json' }});
-               
-                if(!geoRes.ok) throw new Error("Maps API Security Block (CORS)");
-               
-                const geoData = await geoRes.json();
-               
-                if(geoData.geocodingResults && geoData.geocodingResults.length > 0) {
-                    const destLat = geoData.geocodingResults[0].geometry.location.lat;
-                    const destLng = geoData.geocodingResults[0].geometry.location.lng;
-                   
-                    // 2. Attempt Map Provider Routing
-                    // Origin is generic central node for this demo
-                    const routeUrl = `https://api.olamaps.io/routing/v1/directions?origin=20.5937,78.9629&destination=${destLat},${destLng}&api_key=${MAP_API_KEY}`;
-                    const routeRes = await fetch(routeUrl, { method: 'POST', headers: { 'Accept': 'application/json' }});
-                   
-                    if(!routeRes.ok) throw new Error("Routing API Block");
-                    const routeData = await routeRes.json();
-                   
-                    if(routeData.routes && routeData.routes.length > 0) {
-                        const durationSeconds = routeData.routes[0].legs[0].duration;
-                        return Math.ceil(durationSeconds / 3600); // Return exact hours
-                    }
-                }
-                throw new Error("Route Data Unavailable");
-
-            } catch (error) {
-                // SAFETY GEAR ACTIVATED: No UI crash!
-                // Backend console logic handles the error, MD only sees safe calculated data.
-                console.warn("Safety Engine Activated: Fallback Algorithm engaged due to strict cross-origin policies.", error);
-               
-                // Smart Fallback calculation generates plausible ETA based on string dynamics
-                // Ensures the MD dashboard continues running flawlessly.
-                let fallbackHours = 24;
-                if(destination && destination.length > 0) {
-                     fallbackHours = (destination.length * 2 % 36) + 12; // Generates safe number between 12-48hrs
-                }
-                return fallbackHours;
-            }
-        }
 
         function checkPIN(pin) {
             if (pin === "1234") {
@@ -399,25 +340,20 @@
             }
         });
 
-        document.getElementById('radar-form').addEventListener('submit', async function(e) {
+        document.getElementById('radar-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
             const btnText = document.getElementById('btn-text');
             const statusBox = document.getElementById('status-box');
            
-            btnText.innerText = 'AI CALCULATING ETA... ⚡';
+            btnText.innerText = 'SECURING DATA...';
             btn.style.pointerEvents = 'none';
            
-            const destinationVal = document.getElementById('Destination_Info').value;
-           
-            // Calling the Fail-Safe Engine
-            const etaHours = await fetchSecureETA(destinationVal);
-
             const payload = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value,
-                Destination_Info: destinationVal,
-                Calculated_ETA_Hours: etaHours,
+                Destination_Info: document.getElementById('Destination_Info').value,
+                Calculated_ETA_Hours: "PENDING", // WILL BE UPDATED BY OUR UPCOMING SECURE CLOUDFLARE BACKEND
                 EWay_Bill_No: document.getElementById('EWay_Bill_No').value,
                 EWB_Expiry_Time: document.getElementById('EWB_Expiry_Time').value,
                 CPCB_Barcode_ID: document.getElementById('CPCB_Barcode_ID').value,
@@ -427,7 +363,7 @@
 
             dispatchRef.push(payload).then(() => {
                 btnText.innerText = "RADAR SECURED ✓";
-                statusBox.className = "status-success"; statusBox.innerText = "🟢 Smart Routing & DB Synced!"; statusBox.style.display = "block";
+                statusBox.className = "status-success"; statusBox.innerText = "🟢 DB Synced! Awaiting Backend ETA..."; statusBox.style.display = "block";
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 document.getElementById('radar-form').reset();
                 setTimeout(() => {
@@ -456,21 +392,11 @@
                         const timeDiff = expiryDate - now;
                         const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
                        
-                        let etaDisplay = "PENDING";
-                        let isRisk = false;
-
-                        // Magic AI Logic Comparison
-                        if (item.Calculated_ETA_Hours !== undefined && item.Calculated_ETA_Hours !== null) {
-                            etaDisplay = `${item.Calculated_ETA_Hours} HRS`;
-                           
-                            // CORE BUSINESS LOGIC: If ETA is greater than time left to expire, IT IS A DANGER!
-                            isRisk = (item.Calculated_ETA_Hours > hoursLeft) || (hoursLeft < 12);
-                        } else {
-                            isRisk = hoursLeft < 12; // Standard fallback
-                        }
-
+                        let isRisk = hoursLeft < 12;
+                       
                         if(isRisk) { riskCount++; } else { safeCount++; }
 
+                        // CLEAN VIP CARD WAITING FOR REAL BACKEND DATA
                         const cardHTML = `
                             <div style="background: rgba(0,0,0,0.6); border: 1px solid ${isRisk ? 'var(--danger-red)' : 'rgba(0, 255, 136, 0.3)'}; border-radius: 12px; padding: 15px; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);">
                                 <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:center;">
@@ -481,7 +407,7 @@
                                 </div>
                                 <div style="font-size: 12px; color: #a0a0a0; display:flex; justify-content:space-between; margin-bottom: 8px; font-weight:600;">
                                     <span style="color:#ffffff;">📍 DEST: ${item.Destination_Info || 'PENDING'}</span>
-                                    <span style="color:${isRisk ? 'var(--danger-red)' : 'var(--neon-blue)'}; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; border:1px solid ${isRisk ? 'var(--danger-red)' : 'rgba(0,212,255,0.3)'};">AI ETA: ${etaDisplay} ⚡</span>
+                                    <span style="color:var(--neon-blue); background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; border:1px solid rgba(0,212,255,0.3);">AI ETA: AWAITING BACKEND ⚡</span>
                                 </div>
                                 <div style="font-family:'Orbitron'; font-size:12px; display:flex; justify-content:space-between; color:${isRisk ? 'var(--danger-red)' : 'var(--neon-green)'};">
                                     <span>⏳ Exp: ${hoursLeft > 0 ? hoursLeft + ' hrs left' : 'EXPIRED'}</span>
