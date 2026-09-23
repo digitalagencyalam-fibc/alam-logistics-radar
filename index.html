@@ -84,39 +84,26 @@
         /* 💎 VIP PRISM LUXURY COMMAND MENU (Ultra Compact & Shiny) 💎 */
         .btn-export-trigger {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.1));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-family: 'Orbitron';
-            font-size: 10px;
-            font-weight: 900;
-            cursor: pointer;
-            letter-spacing: 1px;
-            margin-left: 10px;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4), inset 0 0 5px rgba(0, 255, 136, 0.2);
-            text-shadow: 0 0 5px rgba(255,255,255,0.8);
-            transition: 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 6px 12px; border-radius: 6px;
+            font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px;
+            margin-left: 10px; box-shadow: 0 0 10px rgba(0, 212, 255, 0.4), inset 0 0 5px rgba(0, 255, 136, 0.2);
+            text-shadow: 0 0 5px rgba(255,255,255,0.8); transition: 0.3s ease;
         }
         .btn-export-trigger:hover {
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.8), inset 0 0 10px rgba(0, 255, 136, 0.5);
-            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.8), inset 0 0 10px rgba(0, 255, 136, 0.5); transform: scale(1.05);
         }
        
         .export-dropdown {
             display: none; flex-direction: column; position: absolute; right: 25px; top: 60px;
             background: linear-gradient(145deg, rgba(5, 10, 15, 0.98), rgba(0, 212, 255, 0.05));
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 15px rgba(0,212,255,0.2);
+            backdrop-filter: blur(25px); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px;
+            overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 15px rgba(0,212,255,0.2);
             z-index: 50; min-width: 140px;
         }
         .export-dropdown button {
-            background: transparent; border: none; color: #fff; padding: 10px 15px;
-            font-family: 'Orbitron'; font-size: 10px; font-weight: 700; letter-spacing: 1px;
-            text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: 0.2s; display: flex; align-items: center; gap: 8px;
+            background: transparent; border: none; color: #fff; padding: 10px 15px; font-family: 'Orbitron';
+            font-size: 10px; font-weight: 700; letter-spacing: 1px; text-align: left; cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; display: flex; align-items: center; gap: 8px;
         }
         .export-dropdown button:last-child { border-bottom: none; }
         .export-dropdown button:hover { background: rgba(0, 212, 255, 0.2); color: var(--neon-green); padding-left: 20px; }
@@ -223,7 +210,7 @@
                             <label>CPCB TRACEABILITY CODE (OPTIONAL)</label>
                             <div class="scan-wrapper">
                                 <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode or Leave blank" style="padding-right: 45px;">
-                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88; box-shadow: 0 0 5px #00ff88 inset;" onclick="startNativeAiScanner()">📷</span>
+                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88; box-shadow: 0 0 5px #00ff88 inset;" onclick="startNativeAiScanner(event)">📷</span>
                             </div>
                         </div>
                         <div class="input-group">
@@ -249,14 +236,14 @@
                         <div style="display:flex; align-items:center;">
                             <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                             <!-- VIP PRISM EXPORT BUTTON -->
-                            <button class="btn-export-trigger" onclick="toggleExportMenu()">⚙️ EXPORT</button>
+                            <button class="btn-export-trigger" id="export-trigger-btn" onclick="toggleExportMenu(event)">⚙️ EXPORT</button>
                         </div>
                     </div>
 
                     <!-- VIP PRISM DROPDOWN MENU -->
                     <div class="export-dropdown" id="export-menu">
                         <button onclick="downloadCPCBExcel()">📥 EXPORT CSV</button>
-                        <button onclick="window.print(); toggleExportMenu();">📄 PRINT PDF</button>
+                        <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
                     </div>
 
                     <div class="stat-grid">
@@ -349,7 +336,7 @@
             document.getElementById('view-md').style.display = 'none';
             document.getElementById('top-subtitle').innerText = "Security Gateway";
             isSuperAdmin = false;
-            document.getElementById('export-menu').style.display = 'none'; // Close menu on logout
+            document.getElementById('export-menu').style.display = 'none';
         }
 
         // 🚨 GOVT PINCODE API 🚨
@@ -375,16 +362,39 @@
             }
         }
 
+        // 🔊 NATIVE BEEP SOUND GENERATOR (Web Audio API - Zero Loading Delay) 🔊
+        function playSuccessBeep() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+               
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+               
+                oscillator.type = 'sine'; // Crisp Beep
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Frequency
+               
+                gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); // Short Beep duration
+               
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {
+                // Ignore if browser blocks audio
+            }
+        }
+
         // 🦅 EAGLE-EYE NATIVE HARDWARE AI SCANNER (High-Res & Ultra-Fast) 🦅
         let aiVideoStream = null;
         let aiDetectionInterval = null;
 
-        async function startNativeAiScanner() {
+        async function startNativeAiScanner(event) {
+            if(event) event.preventDefault();
             document.getElementById('ai-scanner-overlay').style.display = 'flex';
             const video = document.getElementById('ai-video-feed');
            
             try {
-                // EAGLE EYE: Requesting High Resolution (1080p/4K) for distance scanning
                 aiVideoStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: "environment",
@@ -400,13 +410,13 @@
                
                 const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13', 'code_39'] });
                
-                // SPEED: Reduced interval from 300ms to 100ms for instant catch
                 aiDetectionInterval = setInterval(async () => {
                     try {
                         const barcodes = await barcodeDetector.detect(video);
                         if (barcodes.length > 0) {
                             document.getElementById('CPCB_Barcode_ID').value = barcodes[0].rawValue;
-                            if(navigator.vibrate) navigator.vibrate([100,50,100]); // VIP Beep
+                            playSuccessBeep(); // 🔊 BEEP SOUND TRIGGER
+                            if(navigator.vibrate) navigator.vibrate([100,50,100]); // VIP Vibration
                             closeAiScanner();
                         }
                     } catch (e) {
@@ -428,11 +438,24 @@
             }
         }
 
-        // 💎 VIP TOGGLE EXPORT MENU 💎
-        function toggleExportMenu() {
+        // 💎 VIP TOGGLE EXPORT MENU & OUTSIDE CLICK CLOSE LOGIC 💎
+        function toggleExportMenu(event) {
+            if(event) event.stopPropagation();
             const menu = document.getElementById('export-menu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
+
+        // Close dropdown when clicking on empty space (MNC Level UX)
+        window.addEventListener('click', function(event) {
+            const menu = document.getElementById('export-menu');
+            const triggerBtn = document.getElementById('export-trigger-btn');
+           
+            if (menu.style.display === 'flex') {
+                if (!menu.contains(event.target) && !triggerBtn.contains(event.target)) {
+                    menu.style.display = 'none';
+                }
+            }
+        });
 
         // SUBMIT TO CLOUD
         document.getElementById('radar-form').addEventListener('submit', function(e) {
@@ -521,7 +544,8 @@
 
         // ZERO-LAG CPCB EXCEL (CSV) EXPORT
         function downloadCPCBExcel() {
-            toggleExportMenu();
+            const menu = document.getElementById('export-menu');
+            menu.style.display = 'none'; // Close menu on download
             if(globalDispatchData.length === 0) return alert("No Data Found");
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Timestamp,Invoice_Number,Vehicle_Number,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG\n";
