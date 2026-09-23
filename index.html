@@ -148,21 +148,26 @@
                             <div id="pincode-feedback" style="font-size: 12px; margin-top: 6px; font-weight: 700; letter-spacing: 0.5px;"></div>
                         </div>
 
+                        <!-- 🚨 RESTORED: E-WAY BILL WITH HD CAMERA 🚨 -->
                         <div class="input-group">
                             <label>E-WAY BILL NUMBER</label>
-                            <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required>
+                            <div class="scan-wrapper">
+                                <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required style="padding-right: 45px;">
+                                <span class="icon-btn" onclick="document.getElementById('hdCameraInputEWay').click()">📷</span>
+                            </div>
                         </div>
+
                         <div class="input-group">
                             <label>E-WAY BILL EXPIRY (CRITICAL)</label>
                             <input type="datetime-local" id="EWB_Expiry_Time" required>
                         </div>
                        
-                        <!-- CPCB IS NOW OPTIONAL -->
+                        <!-- 🚨 RESTORED: CPCB OPTIONAL WITH HD CAMERA 🚨 -->
                         <div class="input-group">
                             <label>CPCB TRACEABILITY CODE (OPTIONAL)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="CPCB_Barcode_ID" placeholder="Leave blank if NA" style="padding-right: 55px;">
-                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;">📷</span>
+                                <input type="text" id="CPCB_Barcode_ID" placeholder="Leave blank if NA" style="padding-right: 45px;">
+                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="document.getElementById('hdCameraInputCPCB').click()">📷</span>
                             </div>
                         </div>
 
@@ -222,6 +227,10 @@
             <div class="footer-tagline">© 2026 | MNC Compliance Protocol</div>
         </footer>
     </div>
+
+    <!-- 🚨 RESTORED: HIDDEN HD CAMERA TRIGGERS 🚨 -->
+    <input type="file" id="hdCameraInputEWay" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="hdCameraInputCPCB" accept="image/*" capture="environment" style="display:none">
 
     <script>
         // FIREBASE INITIALIZATION
