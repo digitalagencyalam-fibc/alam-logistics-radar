@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alam Digital Agency - Executive Core</title>
+    <title>Alam Digital Agency - VIP Core</title>
    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
    
@@ -11,11 +11,10 @@
     <link rel="preconnect" href="https://api.postalpincode.in" crossorigin>
     <link rel="preconnect" href="https://alam-enterprise-engine-default-rtdb.firebaseio.com" crossorigin>
    
-    <!-- FIREBASE SDKs & CHART JS & AI SCANNER (html5-qrcode) -->
+    <!-- FIREBASE SDKs & CHART JS ONLY (No 3rd Party Scanner Junk) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
         :root { --bg-color: #030712; --glass-bg: rgba(15, 20, 35, 0.65); --glass-border: rgba(255, 255, 255, 0.15); --neon-green: #00ff88; --neon-blue: #00d4ff; --pure-white: #ffffff; --danger-red: #ff3366; --text-main: #f3f4f6; --prism-silver: linear-gradient(135deg, #ffffff 0%, #b0c4de 50%, #87ceeb 100%); --md-glass-bg: linear-gradient(145deg, #0a0f1a, #000000); --md-border: rgba(0, 212, 255, 0.3); }
@@ -74,20 +73,22 @@
         .footer-brand { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; }
         .footer-tagline { font-size: 11px; color: #8b949e; letter-spacing: 1px; font-weight: 600; }
 
-        /* VIP COMMAND MENU (Zero Clutter Export) */
+        /* VIP COMMAND MENU */
         .btn-export-trigger { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 15px; border-radius: 8px; font-family: 'Orbitron'; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 1px; margin-left: 10px; }
         .export-dropdown { display: none; flex-direction: column; position: absolute; right: 25px; top: 65px; background: rgba(10, 15, 25, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--neon-blue); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 50; }
         .export-dropdown button { background: transparent; border: none; color: #fff; padding: 15px 20px; font-family: 'Orbitron'; font-size: 12px; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .export-dropdown button:hover { background: rgba(0, 212, 255, 0.2); color: var(--neon-blue); }
 
-        /* LIVE AI SCANNER OVERLAY */
-        #ai-scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px); }
-        #reader { width: 100%; max-width: 400px; border: 2px solid var(--neon-green); border-radius: 15px; overflow: hidden; box-shadow: 0 0 30px rgba(0, 255, 136, 0.3); background: #000; }
-        .close-scanner-btn { margin-top: 20px; background: rgba(255, 51, 102, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px 30px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 700; cursor: pointer; letter-spacing: 1px; }
+        /* PURE NATIVE HARDWARE AI SCANNER OVERLAY */
+        #ai-scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px); }
+        .scanner-container { position: relative; width: 100%; max-width: 400px; border: 2px solid var(--neon-green); border-radius: 20px; overflow: hidden; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3); background: #000; }
+        #ai-video-feed { width: 100%; height: auto; display: block; object-fit: cover; }
+        .laser-line { position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background: var(--neon-green); box-shadow: 0 0 15px 5px rgba(0, 255, 136, 0.6); animation: scan-laser 2s infinite linear; }
+        @keyframes scan-laser { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
+        .close-scanner-btn { margin-top: 25px; background: rgba(255, 51, 102, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 12px 35px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 700; cursor: pointer; letter-spacing: 2px; }
 
         #kill-switch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; backdrop-filter: blur(10px); }
        
-        /* HIDDEN PRINT CSS FOR PERFECT LEGAL PDF EXPORT */
         @media print {
             body * { visibility: hidden; }
             #view-md, #view-md * { visibility: visible; }
@@ -106,10 +107,13 @@
         <p style="color: #00d4ff; font-size: 14px; margin-top: 30px; letter-spacing: 2px;">CONTACT ALAM DIGITAL AGENCY FOR SUBSCRIPTION</p>
     </div>
 
-    <!-- AI BARCODE SCANNER UI -->
+    <!-- PURE NATIVE AI BARCODE SCANNER UI -->
     <div id="ai-scanner-overlay">
-        <h3 style="color: var(--neon-green); font-family: 'Orbitron'; margin-bottom: 15px; letter-spacing: 2px;">SCAN CPCB BARCODE</h3>
-        <div id="reader"></div>
+        <h3 style="color: var(--neon-green); font-family: 'Orbitron'; margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-green);">HARDWARE AI SCANNER</h3>
+        <div class="scanner-container">
+            <video id="ai-video-feed" autoplay playsinline></video>
+            <div class="laser-line"></div>
+        </div>
         <button class="close-scanner-btn" onclick="closeAiScanner()">CANCEL SCAN</button>
     </div>
 
@@ -125,7 +129,6 @@
 
         <div class="container">
            
-            <!-- VIP LOGIN -->
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
@@ -173,12 +176,12 @@
                             <input type="datetime-local" id="EWB_Expiry_Time" required>
                         </div>
                        
-                        <!-- 🤖 AI SCANNER INTEGRATED: CPCB (OPTIONAL) -->
+                        <!-- NATIVE HARDWARE AI SCANNER: CPCB (OPTIONAL) -->
                         <div class="input-group">
                             <label>CPCB TRACEABILITY CODE (OPTIONAL)</label>
                             <div class="scan-wrapper">
                                 <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode or Leave blank" style="padding-right: 45px;">
-                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="startAiScanner()">📷</span>
+                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="startNativeAiScanner()">📷</span>
                             </div>
                         </div>
                         <div class="input-group">
@@ -203,12 +206,10 @@
                         </div>
                         <div style="display:flex; align-items:center;">
                             <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
-                            <!-- VIP COMMAND BUTTON FOR EXPORT (ZERO CLUTTER) -->
                             <button class="btn-export-trigger" onclick="toggleExportMenu()">⚙️ EXPORT</button>
                         </div>
                     </div>
 
-                    <!-- THE GLASSMORPHISM EXPORT MENU (Hidden by default) -->
                     <div class="export-dropdown" id="export-menu">
                         <button onclick="downloadCPCBExcel()">📥 DOWNLOAD CPCB EXCEL</button>
                         <button onclick="window.print(); toggleExportMenu();" style="border-bottom:none;">📄 DOWNLOAD LEGAL PDF</button>
@@ -231,7 +232,6 @@
                         <span class="color-prism md-header-title" style="font-size: 16px;">ACTIVE FLEET NODE</span>
                     </div>
                     <div id="vehicle-list-container" style="display:flex; flex-direction:column; gap:15px; max-height:400px; overflow-y:auto; padding-right:5px;">
-                        <!-- Data will inject here -->
                     </div>
                 </div>
             </div>
@@ -248,11 +248,10 @@
         </footer>
     </div>
 
-    <!-- NORMAL HD CAMERA FOR EWAY BILL (STILL INTACT) -->
+    <!-- NORMAL HD CAMERA -->
     <input type="file" id="hdCameraInputEWay" accept="image/*" capture="environment" style="display:none">
 
     <script>
-        // FIREBASE INITIALIZATION
         const firebaseConfig = {
             apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
             authDomain: "alam-enterprise-engine.firebaseapp.com",
@@ -265,7 +264,7 @@
         let globalDispatchData = [];
         let isSuperAdmin = false;
 
-        // 🚨 1. MASTER KILL SWITCH (Intact)
+        // 🚨 MASTER KILL SWITCH 🚨
         database.ref('Admin/App_Access').on('value', (snapshot) => {
             const status = snapshot.val();
             if (status === "BLOCKED" && isSuperAdmin === false) {
@@ -277,7 +276,7 @@
             }
         });
 
-        // 🚨 2. SECURE VIP LOGIN (Intact)
+        // 🚨 VIP LOGIN 🚨
         function checkPIN(pin) {
             if (pin === "1234") {
                 isSuperAdmin = false;
@@ -308,7 +307,7 @@
             isSuperAdmin = false;
         }
 
-        // 🚨 3. GOVT PINCODE API (Intact)
+        // 🚨 GOVT PINCODE API 🚨
         async function verifyPincodeLive(pincode) {
             const icon = document.getElementById('pincode-status-icon');
             const feedback = document.getElementById('pincode-feedback');
@@ -331,32 +330,56 @@
             }
         }
 
-        // 🤖 NEW AI FEATURE: LIVE BARCODE SCANNER FOR CPCB
-        let html5QrcodeScanner;
-        function startAiScanner() {
+        // 🤖 PURE NATIVE HARDWARE AI SCANNER (ZERO EXTERNAL SCRIPTS) 🤖
+        let aiVideoStream = null;
+        let aiDetectionInterval = null;
+
+        async function startNativeAiScanner() {
             document.getElementById('ai-scanner-overlay').style.display = 'flex';
-            html5QrcodeScanner = new Html5Qrcode("reader");
-            html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 250, height: 250 } },
-                (decodedText, decodedResult) => {
-                    // SUCCESS! Barcode found.
-                    document.getElementById('CPCB_Barcode_ID').value = decodedText;
-                    if(navigator.vibrate) navigator.vibrate([100,50,100]); // Beep/Vibration feedback
-                    closeAiScanner(); // Auto close form fill
-                },
-                (errorMessage) => { /* AI is scanning, ignore background noise */ }
-            ).catch(err => {
-                alert("Camera Access Denied or Not Supported.");
+            const video = document.getElementById('ai-video-feed');
+           
+            try {
+                // 1. Mobile ka Native Camera On Karo
+                aiVideoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = aiVideoStream;
+               
+                // 2. Hardware AI Check (BarcodeDetector API)
+                if (!('BarcodeDetector' in window)) {
+                    throw new Error("Device Hardware AI not supported. Please type manually.");
+                }
+               
+                const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13', 'code_39'] });
+               
+                // 3. Millisecond Scanning Loop
+                aiDetectionInterval = setInterval(async () => {
+                    try {
+                        const barcodes = await barcodeDetector.detect(video);
+                        if (barcodes.length > 0) {
+                            // Success! AI Captured the Barcode
+                            document.getElementById('CPCB_Barcode_ID').value = barcodes[0].rawValue;
+                            if(navigator.vibrate) navigator.vibrate([100,50,100]); // VIP Beep
+                            closeAiScanner();
+                        }
+                    } catch (e) {
+                        // Ignore scan errors, keep looking quietly
+                    }
+                }, 300); // 300ms ki lag-free speed
+
+            } catch (err) {
+                alert("Hardware Camera Issue: " + err.message);
                 closeAiScanner();
-            });
-        }
-        function closeAiScanner() {
-            document.getElementById('ai-scanner-overlay').style.display = 'none';
-            if(html5QrcodeScanner) {
-                html5QrcodeScanner.stop().catch(err => console.log("Scanner stop error"));
             }
         }
 
-        // 💎 NEW VIP FEATURE: TOGGLE EXPORT MENU
+        function closeAiScanner() {
+            document.getElementById('ai-scanner-overlay').style.display = 'none';
+            if (aiDetectionInterval) clearInterval(aiDetectionInterval);
+            if (aiVideoStream) {
+                aiVideoStream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        // 💎 VIP TOGGLE EXPORT MENU 💎
         function toggleExportMenu() {
             const menu = document.getElementById('export-menu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
@@ -392,7 +415,7 @@
             });
         });
 
-        // MD DASHBOARD DATA INJECTION (Intact)
+        // MD DASHBOARD DATA INJECTION
         function initMDDashboard() {
             dispatchRef.on('value', (snapshot) => {
                 const container = document.getElementById('vehicle-list-container');
@@ -447,9 +470,9 @@
             });
         }
 
-        // CPCB EXCEL (CSV) EXPORT GENERATOR
+        // ZERO-LAG CPCB EXCEL (CSV) EXPORT
         function downloadCPCBExcel() {
-            toggleExportMenu(); // close menu after click
+            toggleExportMenu();
             if(globalDispatchData.length === 0) return alert("No Data Found");
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Timestamp,Invoice_Number,Vehicle_Number,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG\n";
