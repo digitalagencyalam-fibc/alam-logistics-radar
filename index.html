@@ -408,7 +408,23 @@
         }
 
         // 🚀 THE REAL VISION LLM SUPER ENGINE (OPENROUTER GATEWAY) 🚀
-        const OPENROUTER_API_KEY = "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";
+        // 🚀 VIP STEALTH MEMORY HACK (BYPASS GITHUB SCANNER) 🚀
+        let OPENROUTER_API_KEY = localStorage.getItem("KABOOTAR_VIP_KEY");
+        
+        if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY === "null") {
+            OPENROUTER_API_KEY = prompt("🛡️ VIP GOD MODE: Please paste your new OpenRouter API Key to initialize AI Kabootar:");
+            if (OPENROUTER_API_KEY) {
+                localStorage.setItem("KABOOTAR_VIP_KEY", OPENROUTER_API_KEY);
+            } else {
+                alert("⚠️ System Locked: API Key is required to fly Kabootar!");
+            }
+        }
+
+        // Agar future mein key change karni ho (MD ke liye hidden function)
+        function resetKabootarKey() {
+            localStorage.removeItem("KABOOTAR_VIP_KEY");
+            alert("VIP Key Removed! Refresh the app to enter a new key.");
+        }
 
         async function callGeminiAPIWithRetry(base64Data, prompt, retries = 3) {
             for (let i = 0; i < retries; i++) {
