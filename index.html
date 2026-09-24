@@ -215,13 +215,13 @@
                 <div class="md-card">
                     <div class="md-header" style="border-bottom: none; padding-bottom: 0; margin-bottom: 5px; display: block;">
                        
-                        <!-- 🍏 PREMIUM LIVE MAP BADGE RESTORED 🍏 -->
+                        <!-- 🍏 UPDATED DARK GREEN PREMIUM LIVE MAP BADGE 🍏 -->
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 12px; margin-bottom: 12px;">
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <span class="color-prism md-header-title">EXECUTIVE DASHBOARD</span>
-                                <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.4); padding: 4px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);">
+                                <div style="background: linear-gradient(135deg, #004d26, #002613); border: 1px solid #00ff88; padding: 4px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);">
                                     <span class="live-heartbeat" style="width: 8px; height: 8px;"></span>
-                                    <span style="color: #00ff88; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px;">LIVE MAP</span>
+                                    <span style="color: #ffffff; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 8px #00ff88;">LIVE MAP</span>
                                 </div>
                             </div>
                             <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
@@ -408,7 +408,7 @@
         }
 
         // 🚀 THE REAL VISION LLM SUPER ENGINE (OPENROUTER GATEWAY) 🚀
-        const OPENROUTER_API_KEY = "YAHAN_APNA_OPENROUTER_KEY_PASTE_KAREIN"; // sk-or-v1-... wala code yahan daalein
+        const OPENROUTER_API_KEY = "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";
 
         async function callGeminiAPIWithRetry(base64Data, prompt, retries = 3) {
             for (let i = 0; i < retries; i++) {
@@ -422,7 +422,7 @@
                             'X-Title': 'Alam Digital Agency VIP'
                         },
                         body: JSON.stringify({
-                            model: "google/gemini-1.5-flash", // Isey change karke 3.5-flash bhi kar sakte hain baad mein
+                            model: "google/gemini-1.5-flash",
                             messages: [
                                 {
                                     role: "user",
@@ -441,7 +441,6 @@
                     }
                     const data = await response.json();
                    
-                    // JSON format map kiya taaki purana code ekdum safely chalta rahe
                     return {
                         candidates: [{
                             content: { parts: [{ text: data.choices[0].message.content }] }
@@ -520,7 +519,7 @@
                     snapshot.forEach((child) => {
                         const d = child.val(); total++; globalDispatchData.push(d);
                         const expDate = new Date(d.EWB_Expiry_Time); const hoursLeft = (expDate - now) / (1000 * 60 * 60); let statusColor = "#00ff88"; let statusText = "SAFE";
-                        // 🍏 ADDED HEARTBEAT TO SAFE VEHICLES 🍏
+                       
                         let safeHeartbeat = '';
                        
                         if (hoursLeft < 12 && hoursLeft > 0) { statusColor = "#ffcc00"; statusText = "WARNING"; }
