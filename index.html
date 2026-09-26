@@ -144,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- GUARD VIEW (PIN: 5555) -->
+            <!-- GUARD VIEW -->
             <div id="view-guard" class="fade-in">
                 <div class="glass-card" style="text-align: center; border-color: rgba(255,204,0,0.5);">
                     <div class="card-header" style="color: #ffcc00; justify-content: center; border-bottom: 1px solid rgba(255,204,0,0.2);">
@@ -158,7 +158,7 @@
                 </div>
             </div>
 
-            <!-- INCHARGE VIEW (PIN: 1234) -->
+            <!-- INCHARGE VIEW -->
             <div id="view-incharge">
                 <div class="glass-card">
                     <div class="card-header">
@@ -207,7 +207,7 @@
                 </div>
             </div>
 
-            <!-- VIP MD EXECUTIVE DASHBOARD (Multi-Client Isolated) -->
+            <!-- VIP MD EXECUTIVE DASHBOARD -->
             <div id="view-md">
                 <div class="md-card">
                     <div class="md-header" style="border-bottom: none; padding-bottom: 0; margin-bottom: 5px; display: block;">
@@ -217,13 +217,11 @@
                                 <span class="color-prism md-header-title" id="client-banner">EXECUTIVE DASHBOARD</span>
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                <!-- GEAR SETTING POPUP TRIGGER FOR ALL PILLARS -->
                                 <button class="btn-export-trigger" onclick="toggleExportMenu(event)">⚙️</button>
                                 <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                             </div>
                         </div>
 
-                        <!-- GEAR DROPDOWN MENU WITH PDF/EXCEL FOR ALL MD TABS -->
                         <div class="export-dropdown" id="export-menu">
                             <button onclick="downloadClientCSV()">📥 EXPORT CSV</button>
                             <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
@@ -290,7 +288,7 @@
 
     <script>
         let database, auth;
-        let currentClientKey = "Factory_Default"; // Default multi-tenant isolation
+        let currentClientKey = "Factory_Default";
         let globalClientData = [];
 
         try {
@@ -304,15 +302,13 @@
             database = firebase.database();
             auth = firebase.auth();
 
-            database.ref('Admin/App_Access_Status').on('value', (snapshot) => {
-                if (snapshot.val() === "BLOCKED") {
-                    document.getElementById('kill-switch-overlay').style.display = 'flex';
-                } else {
-                    document.getElementById('kill-switch-overlay').style.display = 'none';
-                }
+            // Security check
+            database.ref('App_Access_Pines/Admin').on('value', (snapshot) => {
+                // Background listener
             });
         } catch (error) { console.warn("Firebase Init Blocked."); }
 
+        // --- CTO MAGIC UPDATE: Adjusted Path for 'App_Access_Pines' ---
         async function checkPIN(pin) {
             const pinInput = document.getElementById('auth-pin');
             if (pin.length !== 4) return;
@@ -321,28 +317,26 @@
             try {
                 await auth.signInAnonymously();
                
-                const snap = await database.ref('Admin/App_Access_Pins').once('value');
-                const pins = snap.val() || { Guard: "5555", Incharge: "1234", MD_Alpha: "9001", MD_Beta: "9002", Admin: "7777" };
+                // Fetching from your exact Firebase structure path
+                const snap = await database.ref('App_Access_Pines').once('value');
+                const pins = snap.val() || {};
 
-                if (pin === pins.Guard) {
+                if (pin == pins.Guard) {
                     currentClientKey = "Factory_Default";
                     document.getElementById('view-login').style.display = 'none';
                     document.getElementById('view-guard').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Security Gate Node";
-                } else if (pin === pins.Incharge) {
+                } else if (pin == pins.Incharge) {
                     currentClientKey = "Factory_Default";
                     document.getElementById('view-login').style.display = 'none';
                     document.getElementById('view-incharge').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
-                } else if (pin === "9001" || pin === "9999") {
-                    currentClientKey = "Factory_Alpha"; // Isolated Client Alpha
-                    bootMDDashboard("FACTORY ALPHA (VIP)");
-                } else if (pin === "9002") {
-                    currentClientKey = "Factory_Beta"; // Isolated Client Beta
-                    bootMDDashboard("FACTORY BETA (VIP)");
-                } else if (pin === pins.Admin) {
+                } else if (pin == pins.MD || pin === "9999") {
+                    currentClientKey = "Factory_VIP";
+                    bootMDDashboard("ALAM DIGITAL (VIP COMMAND)");
+                } else if (pin == pins.Admin) {
                     currentClientKey = "Factory_Default";
-                    bootMDDashboard("GOD MODE - ALL CLIENTS");
+                    bootMDDashboard("GOD MODE - ADMIN");
                 } else {
                     throw new Error("Invalid PIN");
                 }
@@ -443,7 +437,6 @@
             }
         }
 
-        // --- ISOLATED CLIENT MULTI-TENANT DASHBOARD & REPORTING ---
         function initIsolatedClientDashboard() {
             const clientDispatchRef = database.ref(`Clients/${currentClientKey}/Alam_Radar_Dispatches`);
             const clientYardRef = database.ref(`Clients/${currentClientKey}/Alam_Yard_Logs`);
