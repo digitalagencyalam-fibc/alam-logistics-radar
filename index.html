@@ -18,9 +18,10 @@
         /* LUXURY AMOLED & PRISM COLORS RESTORED */
         :root {
             --bg-color: #010308;
-            --glass-bg: rgba(10, 15, 25, 0.75);
-            --glass-border: rgba(0, 212, 255, 0.25);
+            --glass-bg: rgba(10, 15, 25, 0.85);
+            --glass-border: rgba(0, 212, 255, 0.3);
             --neon-green: #00ff88;
+            --dark-green: #00cc6a;
             --neon-blue: #00d4ff;
             --neon-gold: #ffcc00;
             --pure-white: #ffffff;
@@ -28,37 +29,35 @@
             --text-main: #f3f4f6;
             --prism-silver: linear-gradient(135deg, #ffffff 0%, #b0c4de 40%, #87ceeb 80%, #ffffff 100%);
             --md-glass-bg: linear-gradient(160deg, rgba(5,10,20,0.95), rgba(0,0,0,1));
-            --md-border: rgba(0, 212, 255, 0.4);
+            --md-border: rgba(0, 212, 255, 0.5);
         }
        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
         .app-wrapper, .glass-card, .md-card, .pin-box { -webkit-transform: translateZ(0); transform: translateZ(0); will-change: transform, opacity; }
 
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12) 0%, rgba(0, 0, 0, 1) 75%); }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 1) 75%); }
        
         .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 15px rgba(0, 212, 255, 0.9); }
         .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
         .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 15px rgba(0, 255, 136, 0.9); }
        
-        /* THE PRISM GLASS EFFECT */
         .color-prism {
             background: var(--prism-silver);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(176, 196, 222, 0.5);
+            text-shadow: 0 0 25px rgba(176, 196, 222, 0.6);
         }
        
-        /* RESTORED GREEN HEARTBEAT */
-        @keyframes heartbeat { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.8); } 70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
-        .live-heartbeat { width: 12px; height: 12px; background-color: var(--neon-green); border-radius: 50%; display: inline-block; animation: heartbeat 1.2s infinite; box-shadow: 0 0 12px var(--neon-green); vertical-align: middle; margin-right: 6px;}
+        /* THE PERFECT DARK GREEN HEARTBEAT */
+        @keyframes heartbeat { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.9); } 70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
+        .live-heartbeat { width: 10px; height: 10px; background-color: var(--neon-green); border-radius: 50%; display: inline-block; animation: heartbeat 1s infinite; box-shadow: 0 0 15px var(--neon-green); vertical-align: middle; margin-right: 5px;}
        
-        /* LIVE MAP VIP BADGE */
         .live-map-badge {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            padding: 5px 10px;
-            border-radius: 20px;
+            background: rgba(0, 204, 106, 0.15);
+            border: 1px solid var(--dark-green);
+            padding: 4px 8px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             font-family: 'Orbitron';
@@ -66,7 +65,7 @@
             font-weight: 900;
             color: #fff;
             letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2) inset;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3) inset;
         }
 
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 51, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); } }
@@ -90,25 +89,38 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
         .shake-error { animation: shake 0.4s; border-color: var(--danger-red) !important; box-shadow: 0 0 20px var(--danger-red) !important; color: var(--danger-red) !important; }
        
-        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
-        .card-header { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--neon-blue); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 212, 255, 0.25); padding-bottom: 12px; }
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+       
+        /* CARD HEADER & SECURE BUTTON PERFECT PLACEMENT */
+        .card-header { font-family: 'Orbitron', sans-serif; font-size: 15px; color: var(--neon-blue); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0, 212, 255, 0.25); padding-bottom: 12px; }
        
         .input-group { margin-bottom: 18px; }
         .input-group label { display: block; font-size: 13px; color: #e6edf3; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
         .scan-wrapper { position: relative; display: flex; align-items: center; }
         .input-group input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 15px 15px; border-radius: 10px; font-size: 16px; transition: 0.3s;}
         .input-group input:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,212,255,0.2) inset;}
-        .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 12px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+       
+        /* HD CAMERA IN E-WAY & CPCB */
+        .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 12px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;}
+        .icon-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+        .icon-btn-cpcb { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 255, 136, 0.1); }
+        .icon-btn-cpcb:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+
         .btn-authorize { width: 100%; padding: 18px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2)); border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 17px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
        
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
-        /* VIP COMMAND CENTER LUXURY CARD */
-        .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 25px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 212, 255, 0.15) inset; margin-bottom: 20px; position: relative; }
-        .md-header-title { font-size: 20px; font-weight: 900; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; font-family: 'Orbitron'; }
+        /* VIP COMMAND CENTER PERFECT FIT */
+        .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 20px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 212, 255, 0.15) inset; margin-bottom: 20px; position: relative; }
        
-        .vip-tabs { display: flex; justify-content: space-between; background: rgba(0,0,0,0.85); border: 1px solid rgba(0, 212, 255, 0.4); border-radius: 30px; padding: 5px; box-shadow: inset 0 0 15px rgba(0,0,0,0.9); }
-        .tab-btn { flex: 1; background: transparent; color: #6e7a85; border: none; padding: 12px 0; border-radius: 25px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; cursor: pointer; transition: all 0.4s ease; letter-spacing: 1px; }
+        .md-header-container { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(0, 212, 255, 0.3); padding-bottom: 15px; margin-bottom: 15px; gap: 5px;}
+        .md-title-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 50%; }
+        .md-header-title { font-size: 16px; font-weight: 900; letter-spacing: 1px; font-family: 'Orbitron'; line-height: 1.2;}
+       
+        .md-actions-wrapper { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;}
+       
+        .vip-tabs { display: flex; justify-content: space-between; background: rgba(0,0,0,0.85); border: 1px solid rgba(0, 212, 255, 0.4); border-radius: 30px; padding: 4px; box-shadow: inset 0 0 15px rgba(0,0,0,0.9); }
+        .tab-btn { flex: 1; background: transparent; color: #6e7a85; border: none; padding: 10px 0; border-radius: 25px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; transition: all 0.4s ease; letter-spacing: 1px; }
         .tab-btn.active-transit { background: rgba(255, 51, 102, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 51, 102, 0.5); border: 1px solid rgba(255,51,102,0.6); text-shadow: 0 0 8px rgba(255,51,102,0.9); }
         .tab-btn.active-cpcb { background: rgba(0, 255, 136, 0.15); color: #fff; box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); border: 1px solid rgba(0,255,136,0.6); text-shadow: 0 0 8px rgba(0,255,136,0.9); }
         .tab-btn.active-yard { background: rgba(255, 204, 0, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 204, 0, 0.5); border: 1px solid rgba(255,204,0,0.6); text-shadow: 0 0 8px rgba(255,204,0,0.9); }
@@ -116,18 +128,19 @@
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; margin-top: 20px; }
-        .stat-box { background: linear-gradient(135deg, rgba(10, 15, 25, 0.95), rgba(0, 0, 0, 1)); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 18px 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
-        .stat-title { font-size: 11px; color: #b0c4de; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-family: 'Orbitron';}
-        .stat-value { font-family: 'Orbitron'; font-size: 32px; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3);}
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; margin-top: 20px; }
+        .stat-box { background: linear-gradient(135deg, rgba(10, 15, 25, 0.95), rgba(0, 0, 0, 1)); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 15px 10px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+        .stat-title { font-size: 10px; color: #b0c4de; font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; font-family: 'Orbitron';}
+        .stat-value { font-family: 'Orbitron'; font-size: 28px; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3);}
        
-        .lock-btn { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 8px 15px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 10px rgba(255,51,102,0.2);}
+        /* PERFECT SIZED BUTTONS */
+        .lock-btn { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 6px 10px; border-radius: 6px; font-family: 'Orbitron'; font-size: 9px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 10px rgba(255,51,102,0.2);}
         .lock-btn:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
        
-        .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 212, 255, 0.5); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+        .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 212, 255, 0.5); color: #fff; padding: 5px 8px; border-radius: 6px; font-family: 'Orbitron'; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
        
-        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 25px; top: 75px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.5); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.95); z-index: 50; min-width: 140px; }
-        .export-dropdown button { background: transparent; border: none; color: #e6edf3; padding: 15px 15px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 20px; top: 60px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.5); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.95); z-index: 50; min-width: 130px; }
+        .export-dropdown button { background: transparent; border: none; color: #e6edf3; padding: 12px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .export-dropdown button:hover { background: rgba(0, 212, 255, 0.2); color: var(--neon-blue); }
 
         footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.95); }
@@ -140,13 +153,6 @@
        
         #kill-switch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
 
-        @media print {
-            body * { visibility: hidden; }
-            #view-md, #view-md * { visibility: visible; }
-            #view-md { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
-            .btn-export-trigger, .export-dropdown, .lock-btn, .vip-tabs { display: none !important; }
-            .md-card { border: 1px solid #000; box-shadow: none; }
-        }
     </style>
 </head>
 <body>
@@ -156,6 +162,7 @@
         <p style="color: #fff; font-size: 18px; margin-top: 15px; font-weight: 600;">CLEAR PENDING DUES TO RESUME</p>
     </div>
 
+    <!-- NATIVE HD CAMERA OVERLAY -->
     <div id="ai-scanner-overlay">
         <h3 id="scanner-title" style="color: var(--neon-green); font-family: 'Orbitron'; margin-bottom: 15px; letter-spacing: 2px;">SYSTEM SCANNER</h3>
         <div class="scanner-container">
@@ -188,23 +195,23 @@
             <!-- GUARD VIEW -->
             <div id="view-guard" class="fade-in">
                 <div class="glass-card" style="text-align: center; border-color: rgba(255,204,0,0.5);">
-                    <div class="card-header" style="color: #ffcc00; justify-content: center; border-bottom: 1px solid rgba(255,204,0,0.2);">
-                        <span>🚧</span> YARD SECURITY GATE
-                        <button class="lock-btn" style="position: absolute; right: 20px;" onclick="logout()">LOCK 🔒</button>
+                    <div class="card-header" style="color: #ffcc00; display:flex; justify-content:space-between; align-items:center;">
+                        <div><span>🚧</span> YARD SECURITY GATE</div>
+                        <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                     </div>
                     <div style="font-size: 13px; color: #a0a0a0; margin-bottom: 25px; margin-top: 15px;">SCAN VEHICLE E-WAY QR / BARCODE</div>
-                    <button onclick="startGuardScanner('IN')" style="width: 100%; padding: 20px; background: rgba(0, 255, 136, 0.1); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 16px; font-weight: 900; border-radius: 12px; margin-bottom: 20px; cursor: pointer;">⬇️ GATE IN (ARRIVAL)</button>
-                    <button onclick="startGuardScanner('OUT')" style="width: 100%; padding: 20px; background: rgba(255, 51, 102, 0.1); border: 2px solid var(--danger-red); color: var(--danger-red); font-family: 'Orbitron'; font-size: 16px; font-weight: 900; border-radius: 12px; cursor: pointer;">⬆️ GATE OUT (DEPART)</button>
+                    <button onclick="startGuardScanner('IN')" style="width: 100%; padding: 20px; background: rgba(0, 255, 136, 0.1); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 16px; font-weight: 900; border-radius: 12px; margin-bottom: 20px; cursor: pointer; box-shadow: 0 0 15px rgba(0,255,136,0.15);">⬇️ GATE IN (ARRIVAL)</button>
+                    <button onclick="startGuardScanner('OUT')" style="width: 100%; padding: 20px; background: rgba(255, 51, 102, 0.1); border: 2px solid var(--danger-red); color: var(--danger-red); font-family: 'Orbitron'; font-size: 16px; font-weight: 900; border-radius: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(255,51,102,0.15);">⬆️ GATE OUT (DEPART)</button>
                     <div id="guard-feedback" style="margin-top: 15px; font-family: 'Orbitron'; font-size: 14px; font-weight: bold;"></div>
                 </div>
             </div>
 
-            <!-- INCHARGE VIEW -->
+            <!-- INCHARGE VIEW (RESTORED HD CAMERA) -->
             <div id="view-incharge">
                 <div class="glass-card">
                     <div class="card-header">
-                        <span>🔴</span> TRANSIT CLEARANCE PROTOCOL
-                        <button class="lock-btn" style="margin-left:auto;" onclick="logout()">LOCK 🔒</button>
+                        <div><span>🔴</span> TRANSIT CLEARANCE</div>
+                        <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                     </div>
                     <form id="radar-form">
                         <div class="input-group">
@@ -225,7 +232,11 @@
                         </div>
                         <div class="input-group">
                             <label>E-WAY BILL NUMBER</label>
-                            <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required>
+                            <div class="scan-wrapper">
+                                <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required style="padding-right: 45px;">
+                                <!-- RESTORED HD CAMERA FOR E-WAY BILL -->
+                                <span class="icon-btn" onclick="startNativeAiScanner('EWAY')">📷</span>
+                            </div>
                         </div>
                         <div class="input-group">
                             <label>E-WAY BILL EXPIRY (CRITICAL)</label>
@@ -235,7 +246,7 @@
                             <label>CPCB TRACEABILITY CODE (SCAN)</label>
                             <div class="scan-wrapper">
                                 <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode" style="padding-right: 45px;">
-                                <span class="icon-btn" style="border-color:#00ff88; color:#00ff88;" onclick="startNativeAiScanner('CPCB')">📷</span>
+                                <span class="icon-btn icon-btn-cpcb" onclick="startNativeAiScanner('CPCB')">📷</span>
                             </div>
                         </div>
                         <div class="input-group">
@@ -248,41 +259,37 @@
                 </div>
             </div>
 
-            <!-- VIP MD EXECUTIVE DASHBOARD RESTORED TO FULL LUXURY -->
+            <!-- VIP COMMAND CENTER -->
             <div id="view-md">
                 <div class="md-card">
-                    <div class="md-header" style="border-bottom: none; padding-bottom: 0; margin-bottom: 5px; display: block;">
+                    <div class="md-header-container">
+                        <div class="md-title-wrapper">
+                            <span class="color-prism md-header-title">VIP COMMAND<br>CENTER</span>
+                        </div>
                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 212, 255, 0.3); padding-bottom: 15px; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span class="color-prism md-header-title" id="client-banner">VIP COMMAND CENTER</span>
+                        <div class="md-actions-wrapper">
+                            <!-- RESTORED & FIXED LIVE DATA HEARTBEAT (Only shows on Transit Tab) -->
+                            <div class="live-map-badge" id="live-data-badge">
+                                <div class="live-heartbeat"></div> LIVE DATA
                             </div>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <!-- RESTORED LIVE MAP HEARTBEAT -->
-                                <div class="live-map-badge">
-                                    <div class="live-heartbeat"></div> LIVE MAP
-                                </div>
-                                <button class="btn-export-trigger" onclick="toggleExportMenu(event)">⚙️</button>
-                                <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
-                            </div>
-                        </div>
-
-                        <div class="export-dropdown" id="export-menu">
-                            <button onclick="downloadClientCSV()">📥 EXPORT CSV</button>
-                            <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
-                        </div>
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                            <div class="vip-tabs" style="margin: 0; width: 100%;">
-                                <button class="tab-btn active-transit" id="btn-transit" onclick="switchTab('transit')">🔴 TRANSIT</button>
-                                <button class="tab-btn" id="btn-cpcb" onclick="switchTab('cpcb')">🟢 CPCB</button>
-                                <button class="tab-btn" id="btn-yard" onclick="switchTab('yard')">🚧 YARD</button>
-                            </div>
+                            <button class="btn-export-trigger" onclick="toggleExportMenu(event)">⚙️</button>
+                            <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                         </div>
                     </div>
 
+                    <div class="export-dropdown" id="export-menu">
+                        <button onclick="downloadClientCSV()">📥 EXPORT CSV</button>
+                        <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
+                    </div>
+
+                    <div class="vip-tabs">
+                        <button class="tab-btn active-transit" id="btn-transit" onclick="switchTab('transit')">🔴 TRANSIT</button>
+                        <button class="tab-btn" id="btn-cpcb" onclick="switchTab('cpcb')">🟢 CPCB</button>
+                        <button class="tab-btn" id="btn-yard" onclick="switchTab('yard')">🚧 YARD</button>
+                    </div>
+
                     <!-- TRANSIT TAB -->
-                    <div id="tab-transit" class="fade-in" style="margin-top: 20px;">
+                    <div id="tab-transit" class="fade-in">
                         <div class="stat-grid">
                             <div class="stat-box">
                                 <div class="stat-title">TOTAL DISPATCHES</div>
@@ -297,7 +304,7 @@
                     </div>
 
                     <!-- CPCB TAB -->
-                    <div id="tab-cpcb" style="display:none;" class="fade-in" style="margin-top: 20px;">
+                    <div id="tab-cpcb" style="display:none;" class="fade-in">
                         <div class="stat-grid">
                             <div class="stat-box" style="border-color: rgba(0, 255, 136, 0.4);">
                                 <div class="stat-title" style="color: #00ff88;">TOTAL EPR WEIGHT</div>
@@ -308,7 +315,7 @@
                     </div>
 
                     <!-- YARD MASTER TAB -->
-                    <div id="tab-yard" style="display:none;" class="fade-in" style="margin-top: 20px;">
+                    <div id="tab-yard" style="display:none;" class="fade-in">
                         <div class="stat-grid">
                             <div class="stat-box" style="border-color: rgba(255, 204, 0, 0.4);">
                                 <div class="stat-title" style="color: #ffcc00;">IN-YARD VEHICLES</div>
@@ -363,7 +370,6 @@
            
             try {
                 await auth.signInAnonymously();
-               
                 const snap = await database.ref('Admin/App_Access_Pines').once('value');
                 const pins = snap.val() || {};
 
@@ -379,10 +385,10 @@
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
                 } else if (pin == pins.MD || pin === "9999") {
                     currentClientKey = "Factory_VIP";
-                    bootMDDashboard("VIP COMMAND CENTER");
+                    bootMDDashboard();
                 } else if (pin == pins.Admin) {
                     currentClientKey = "Factory_Default";
-                    bootMDDashboard("VIP COMMAND CENTER");
+                    bootMDDashboard();
                 } else {
                     throw new Error("Invalid PIN");
                 }
@@ -394,11 +400,10 @@
             pinInput.value = ''; pinInput.disabled = false; pinInput.focus();
         }
 
-        function bootMDDashboard(bannerText) {
+        function bootMDDashboard() {
             document.getElementById('view-login').style.display = 'none';
             document.getElementById('view-md').style.display = 'block';
             document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>Executive Intelligence</span>";
-            document.getElementById('client-banner').innerText = bannerText;
             initIsolatedClientDashboard();
         }
 
@@ -419,9 +424,20 @@
             document.getElementById('btn-transit').className = 'tab-btn';
             document.getElementById('btn-cpcb').className = 'tab-btn';
             document.getElementById('btn-yard').className = 'tab-btn';
+           
             document.getElementById('tab-' + tabId).style.display = 'block';
             document.getElementById('btn-' + tabId).className = 'tab-btn active-' + tabId;
             document.getElementById('export-menu').style.display = 'none';
+
+            // CTO Logic: Live Data Heartbeat ONLY on Transit (E-Way) Tab
+            const liveBadge = document.getElementById('live-data-badge');
+            if (liveBadge) {
+                if (tabId === 'transit') {
+                    liveBadge.style.display = 'flex';
+                } else {
+                    liveBadge.style.display = 'none';
+                }
+            }
         }
 
         function toggleExportMenu(event) {
@@ -439,7 +455,12 @@
         async function startNativeAiScanner(mode) {
             currentScanMode = mode;
             document.getElementById('ai-scanner-overlay').style.display = 'flex';
-            document.getElementById('scanner-title').innerText = mode === 'CPCB' ? "CPCB SCANNER" : `YARD GATE ${mode}`;
+            let title = "SYSTEM SCANNER";
+            if(mode === 'CPCB') title = "CPCB TRACEABILITY SCAN";
+            if(mode === 'EWAY') title = "E-WAY BILL SCAN";
+            if(mode === 'IN' || mode === 'OUT') title = `YARD GATE ${mode} SCAN`;
+            document.getElementById('scanner-title').innerText = title;
+           
             const video = document.getElementById('ai-video-feed');
             try {
                 aiVideoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1280 } } });
@@ -470,6 +491,8 @@
         function processScanData(data) {
             if(currentScanMode === 'CPCB') {
                 document.getElementById('CPCB_Barcode_ID').value = data;
+            } else if (currentScanMode === 'EWAY') {
+                document.getElementById('EWay_Bill_No').value = data;
             } else if (currentScanMode === 'IN' || currentScanMode === 'OUT') {
                 database.ref(`Clients/${currentClientKey}/Alam_Yard_Logs`).push({
                     Vehicle_QR: data,
