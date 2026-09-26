@@ -302,13 +302,17 @@
             database = firebase.database();
             auth = firebase.auth();
 
-            // Security check
-            database.ref('App_Access_Pines/Admin').on('value', (snapshot) => {
-                // Background listener
+            // 100% RESTORED THE CORRECT LISTENER PATH (Admin/App_Access_Status)
+            database.ref('Admin/App_Access_Status').on('value', (snapshot) => {
+                if (snapshot.val() === "BLOCKED") {
+                    document.getElementById('kill-switch-overlay').style.display = 'flex';
+                } else {
+                    document.getElementById('kill-switch-overlay').style.display = 'none';
+                }
             });
         } catch (error) { console.warn("Firebase Init Blocked."); }
 
-        // --- CTO MAGIC UPDATE: Adjusted Path for 'App_Access_Pines' ---
+        // --- 100% RESTORED THE CORRECT ADMIN PATH (Admin/App_Access_Pines) ---
         async function checkPIN(pin) {
             const pinInput = document.getElementById('auth-pin');
             if (pin.length !== 4) return;
@@ -317,8 +321,8 @@
             try {
                 await auth.signInAnonymously();
                
-                // Fetching from your exact Firebase structure path
-                const snap = await database.ref('App_Access_Pines').once('value');
+                // CTO Correction: Firebase path exactly matches screenshot 13
+                const snap = await database.ref('Admin/App_Access_Pines').once('value');
                 const pins = snap.val() || {};
 
                 if (pin == pins.Guard) {
