@@ -15,78 +15,119 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        :root { --bg-color: #030712; --glass-bg: rgba(15, 20, 35, 0.65); --glass-border: rgba(255, 255, 255, 0.15); --neon-green: #00ff88; --neon-blue: #00d4ff; --neon-gold: #ffcc00; --pure-white: #ffffff; --danger-red: #ff3366; --text-main: #f3f4f6; --prism-silver: linear-gradient(135deg, #ffffff 0%, #b0c4de 50%, #87ceeb 100%); --md-glass-bg: linear-gradient(145deg, #0a0f1a, #000000); --md-border: rgba(0, 212, 255, 0.3); }
+        /* LUXURY AMOLED & PRISM COLORS RESTORED */
+        :root {
+            --bg-color: #010308;
+            --glass-bg: rgba(10, 15, 25, 0.75);
+            --glass-border: rgba(0, 212, 255, 0.25);
+            --neon-green: #00ff88;
+            --neon-blue: #00d4ff;
+            --neon-gold: #ffcc00;
+            --pure-white: #ffffff;
+            --danger-red: #ff3366;
+            --text-main: #f3f4f6;
+            --prism-silver: linear-gradient(135deg, #ffffff 0%, #b0c4de 40%, #87ceeb 80%, #ffffff 100%);
+            --md-glass-bg: linear-gradient(160deg, rgba(5,10,20,0.95), rgba(0,0,0,1));
+            --md-border: rgba(0, 212, 255, 0.4);
+        }
        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
         .app-wrapper, .glass-card, .md-card, .pin-box { -webkit-transform: translateZ(0); transform: translateZ(0); will-change: transform, opacity; }
 
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 1) 70%); }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.12) 0%, rgba(0, 0, 0, 1) 75%); }
        
-        .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 12px rgba(0, 212, 255, 0.8); }
-        .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 12px rgba(255, 255, 255, 0.8); }
-        .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 12px rgba(0, 255, 136, 0.8); }
-        .color-prism { background: var(--prism-silver); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(176, 196, 222, 0.4); }
+        .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 15px rgba(0, 212, 255, 0.9); }
+        .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
+        .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 15px rgba(0, 255, 136, 0.9); }
        
-        @keyframes heartbeat { 0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); } 100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
-        .live-heartbeat { width: 10px; height: 10px; background-color: var(--neon-green); border-radius: 50%; display: inline-block; animation: heartbeat 1.5s infinite; box-shadow: 0 0 10px var(--neon-green); vertical-align: middle; }
+        /* THE PRISM GLASS EFFECT */
+        .color-prism {
+            background: var(--prism-silver);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(176, 196, 222, 0.5);
+        }
        
+        /* RESTORED GREEN HEARTBEAT */
+        @keyframes heartbeat { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.8); } 70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
+        .live-heartbeat { width: 12px; height: 12px; background-color: var(--neon-green); border-radius: 50%; display: inline-block; animation: heartbeat 1.2s infinite; box-shadow: 0 0 12px var(--neon-green); vertical-align: middle; margin-right: 6px;}
+       
+        /* LIVE MAP VIP BADGE */
+        .live-map-badge {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            font-family: 'Orbitron';
+            font-size: 10px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2) inset;
+        }
+
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 51, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); } }
         .critical-pulse { animation: pulse-red 1.5s infinite; border: 1px solid var(--danger-red) !important; }
 
-        header { padding: 22px 20px; text-align: center; border-bottom: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .brand-title { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
-        .brand-subtitle { font-size: 13px; color: #a0a0a0; letter-spacing: 4px; margin-top: 6px; font-weight: 600; }
+        .brand-subtitle { font-size: 13px; color: #a0a0a0; letter-spacing: 4px; margin-top: 6px; font-weight: 600; text-transform: uppercase;}
+       
         .app-wrapper { max-width: 600px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; flex: 1; }
         .container { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
        
         #view-login, #view-incharge, #view-md, #view-guard { display: none; }
         #view-login { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 60vh; }
        
-        .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px; width: 90%; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.9); }
-        .pin-box h2 { font-family: 'Orbitron'; font-size: 18px; color: var(--pure-white); margin-bottom: 20px; letter-spacing: 2px;}
-        .pin-input { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue); color: #fff; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 15px; border-radius: 10px; font-family: 'Orbitron'; transition: 0.3s; }
-        .pin-input:focus { outline: none; box-shadow: 0 0 15px rgba(0, 212, 255, 0.6); border-color: var(--neon-green); }
+        .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px 20px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+        .pin-box h2 { font-family: 'Orbitron'; font-size: 19px; color: var(--pure-white); margin-bottom: 25px; letter-spacing: 3px; text-shadow: 0 0 10px rgba(255,255,255,0.5);}
+        .pin-input { width: 100%; background: rgba(0,0,0,0.9); border: 1px solid var(--neon-blue); color: #fff; padding: 18px; font-size: 28px; text-align: center; letter-spacing: 15px; border-radius: 12px; font-family: 'Orbitron'; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 212, 255, 0.1) inset;}
+        .pin-input:focus { outline: none; box-shadow: 0 0 20px rgba(0, 212, 255, 0.7); border-color: var(--neon-green); }
        
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
-        .shake-error { animation: shake 0.4s; border-color: var(--danger-red) !important; box-shadow: 0 0 15px var(--danger-red) !important; color: var(--danger-red) !important; }
+        .shake-error { animation: shake 0.4s; border-color: var(--danger-red) !important; box-shadow: 0 0 20px var(--danger-red) !important; color: var(--danger-red) !important; }
        
-        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        .card-header { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--neon-blue); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 12px; }
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .card-header { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--neon-blue); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 212, 255, 0.25); padding-bottom: 12px; }
+       
         .input-group { margin-bottom: 18px; }
         .input-group label { display: block; font-size: 13px; color: #e6edf3; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
         .scan-wrapper { position: relative; display: flex; align-items: center; }
-        .input-group input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border); color: #fff; padding: 14px 15px; border-radius: 10px; font-size: 16px; }
-        .input-group input:focus { outline: none; border-color: var(--neon-blue); }
+        .input-group input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 15px 15px; border-radius: 10px; font-size: 16px; transition: 0.3s;}
+        .input-group input:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,212,255,0.2) inset;}
         .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 12px; border-radius: 8px; font-size: 18px; cursor: pointer; }
-        .btn-authorize { width: 100%; padding: 18px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2)); border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 17px; font-weight: 700; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-authorize { width: 100%; padding: 18px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.2)); border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 17px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
        
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
-        .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 212, 255, 0.1) inset; margin-bottom: 20px; position: relative; }
-        .md-header-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        /* VIP COMMAND CENTER LUXURY CARD */
+        .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 25px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 212, 255, 0.15) inset; margin-bottom: 20px; position: relative; }
+        .md-header-title { font-size: 20px; font-weight: 900; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; font-family: 'Orbitron'; }
        
-        .vip-tabs { display: flex; justify-content: space-between; background: rgba(0,0,0,0.8); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 30px; padding: 4px; box-shadow: inset 0 0 10px rgba(0,0,0,0.9); }
-        .tab-btn { flex: 1; background: transparent; color: #6e7a85; border: none; padding: 10px 0; border-radius: 25px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; transition: all 0.4s ease; letter-spacing: 1px; }
-        .tab-btn.active-transit { background: rgba(255, 51, 102, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); border: 1px solid rgba(255,51,102,0.5); text-shadow: 0 0 5px rgba(255,51,102,0.8); }
-        .tab-btn.active-cpcb { background: rgba(0, 255, 136, 0.15); color: #fff; box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); border: 1px solid rgba(0,255,136,0.5); text-shadow: 0 0 5px rgba(0,255,136,0.8); }
-        .tab-btn.active-yard { background: rgba(255, 204, 0, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 204, 0, 0.4); border: 1px solid rgba(255,204,0,0.5); text-shadow: 0 0 5px rgba(255,204,0,0.8); }
+        .vip-tabs { display: flex; justify-content: space-between; background: rgba(0,0,0,0.85); border: 1px solid rgba(0, 212, 255, 0.4); border-radius: 30px; padding: 5px; box-shadow: inset 0 0 15px rgba(0,0,0,0.9); }
+        .tab-btn { flex: 1; background: transparent; color: #6e7a85; border: none; padding: 12px 0; border-radius: 25px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; cursor: pointer; transition: all 0.4s ease; letter-spacing: 1px; }
+        .tab-btn.active-transit { background: rgba(255, 51, 102, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 51, 102, 0.5); border: 1px solid rgba(255,51,102,0.6); text-shadow: 0 0 8px rgba(255,51,102,0.9); }
+        .tab-btn.active-cpcb { background: rgba(0, 255, 136, 0.15); color: #fff; box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); border: 1px solid rgba(0,255,136,0.6); text-shadow: 0 0 8px rgba(0,255,136,0.9); }
+        .tab-btn.active-yard { background: rgba(255, 204, 0, 0.15); color: #fff; box-shadow: 0 0 15px rgba(255, 204, 0, 0.5); border: 1px solid rgba(255,204,0,0.6); text-shadow: 0 0 8px rgba(255,204,0,0.9); }
 
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; margin-top: 15px; }
-        .stat-box { background: linear-gradient(135deg, rgba(10, 15, 25, 0.9), rgba(0, 0, 0, 1)); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .stat-title { font-size: 11px; color: #b0c4de; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase;}
-        .stat-value { font-family: 'Orbitron'; font-size: 28px; font-weight: 900; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; margin-top: 20px; }
+        .stat-box { background: linear-gradient(135deg, rgba(10, 15, 25, 0.95), rgba(0, 0, 0, 1)); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 18px 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+        .stat-title { font-size: 11px; color: #b0c4de; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-family: 'Orbitron';}
+        .stat-value { font-family: 'Orbitron'; font-size: 32px; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3);}
        
-        .lock-btn { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 8px 15px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; }
+        .lock-btn { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 8px 15px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 10px rgba(255,51,102,0.2);}
         .lock-btn:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
        
-        .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 212, 255, 0.5); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; box-shadow: 0 0 10px rgba(0, 212, 255, 0.3); }
+        .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 212, 255, 0.5); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
        
-        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 25px; top: 75px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.4); border-radius: 8px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.9); z-index: 50; min-width: 140px; }
-        .export-dropdown button { background: transparent; border: none; color: #e6edf3; padding: 12px 15px; font-family: 'Orbitron'; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 25px; top: 75px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.5); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.95); z-index: 50; min-width: 140px; }
+        .export-dropdown button { background: transparent; border: none; color: #e6edf3; padding: 15px 15px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .export-dropdown button:hover { background: rgba(0, 212, 255, 0.2); color: var(--neon-blue); }
 
         footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.95); }
@@ -140,7 +181,7 @@
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
                     <input type="password" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="checkPIN(this.value)">
-                    <p style="font-size: 12px; color:#666; margin-top: 15px; letter-spacing: 1px;">Multi-Tenant Secure Cloud V2.0</p>
+                    <p style="font-size: 12px; color:#666; margin-top: 20px; letter-spacing: 1px; font-weight:bold;">Multi-Tenant Secure Cloud V2.0</p>
                 </div>
             </div>
 
@@ -207,16 +248,20 @@
                 </div>
             </div>
 
-            <!-- VIP MD EXECUTIVE DASHBOARD -->
+            <!-- VIP MD EXECUTIVE DASHBOARD RESTORED TO FULL LUXURY -->
             <div id="view-md">
                 <div class="md-card">
                     <div class="md-header" style="border-bottom: none; padding-bottom: 0; margin-bottom: 5px; display: block;">
                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 12px; margin-bottom: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span class="color-prism md-header-title" id="client-banner">EXECUTIVE DASHBOARD</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 212, 255, 0.3); padding-bottom: 15px; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="color-prism md-header-title" id="client-banner">VIP COMMAND CENTER</span>
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <!-- RESTORED LIVE MAP HEARTBEAT -->
+                                <div class="live-map-badge">
+                                    <div class="live-heartbeat"></div> LIVE MAP
+                                </div>
                                 <button class="btn-export-trigger" onclick="toggleExportMenu(event)">⚙️</button>
                                 <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                             </div>
@@ -227,7 +272,7 @@
                             <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                             <div class="vip-tabs" style="margin: 0; width: 100%;">
                                 <button class="tab-btn active-transit" id="btn-transit" onclick="switchTab('transit')">🔴 TRANSIT</button>
                                 <button class="tab-btn" id="btn-cpcb" onclick="switchTab('cpcb')">🟢 CPCB</button>
@@ -237,44 +282,44 @@
                     </div>
 
                     <!-- TRANSIT TAB -->
-                    <div id="tab-transit" class="fade-in" style="margin-top: 15px;">
+                    <div id="tab-transit" class="fade-in" style="margin-top: 20px;">
                         <div class="stat-grid">
                             <div class="stat-box">
                                 <div class="stat-title">TOTAL DISPATCHES</div>
                                 <div class="stat-value color-pure-white" id="md-total" style="color: #fff;">0</div>
                             </div>
-                            <div class="stat-box" style="border-color: rgba(255, 51, 102, 0.3);">
+                            <div class="stat-box" style="border-color: rgba(255, 51, 102, 0.4);">
                                 <div class="stat-title" style="color: #ff3366;">HIGH-RISK E-WAY</div>
-                                <div class="stat-value val-risk" id="md-risk">0</div>
+                                <div class="stat-value val-risk" id="md-risk" style="color: #ff3366;">0</div>
                             </div>
                         </div>
-                        <div id="vehicle-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;"></div>
+                        <div id="vehicle-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:15px;"></div>
                     </div>
 
                     <!-- CPCB TAB -->
-                    <div id="tab-cpcb" style="display:none;" class="fade-in" style="margin-top: 15px;">
+                    <div id="tab-cpcb" style="display:none;" class="fade-in" style="margin-top: 20px;">
                         <div class="stat-grid">
-                            <div class="stat-box" style="border-color: rgba(0, 255, 136, 0.3);">
+                            <div class="stat-box" style="border-color: rgba(0, 255, 136, 0.4);">
                                 <div class="stat-title" style="color: #00ff88;">TOTAL EPR WEIGHT</div>
-                                <div class="stat-value"><span id="md-total-weight" style="color: #00ff88;">0</span> <span style="font-size:12px;">KG</span></div>
+                                <div class="stat-value"><span id="md-total-weight" style="color: #00ff88;">0</span> <span style="font-size:14px; color:#fff;">KG</span></div>
                             </div>
                         </div>
-                        <div id="cpcb-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;"></div>
+                        <div id="cpcb-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:15px;"></div>
                     </div>
 
                     <!-- YARD MASTER TAB -->
-                    <div id="tab-yard" style="display:none;" class="fade-in" style="margin-top: 15px;">
+                    <div id="tab-yard" style="display:none;" class="fade-in" style="margin-top: 20px;">
                         <div class="stat-grid">
-                            <div class="stat-box" style="border-color: rgba(255, 204, 0, 0.3);">
+                            <div class="stat-box" style="border-color: rgba(255, 204, 0, 0.4);">
                                 <div class="stat-title" style="color: #ffcc00;">IN-YARD VEHICLES</div>
                                 <div class="stat-value" id="md-yard-count" style="color:#fff;">0</div>
                             </div>
-                            <div class="stat-box" style="border-color: rgba(255, 51, 102, 0.3);">
+                            <div class="stat-box" style="border-color: rgba(255, 51, 102, 0.4);">
                                 <div class="stat-title" style="color: var(--danger-red);">DETENTION ALERTS</div>
-                                <div class="stat-value val-risk" id="md-yard-delay">0</div>
+                                <div class="stat-value val-risk" id="md-yard-delay" style="color: #ff3366;">0</div>
                             </div>
                         </div>
-                        <div id="yard-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;"></div>
+                        <div id="yard-list-container" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:15px;"></div>
                     </div>
 
                 </div>
@@ -302,7 +347,6 @@
             database = firebase.database();
             auth = firebase.auth();
 
-            // 100% RESTORED THE CORRECT LISTENER PATH (Admin/App_Access_Status)
             database.ref('Admin/App_Access_Status').on('value', (snapshot) => {
                 if (snapshot.val() === "BLOCKED") {
                     document.getElementById('kill-switch-overlay').style.display = 'flex';
@@ -312,7 +356,6 @@
             });
         } catch (error) { console.warn("Firebase Init Blocked."); }
 
-        // --- 100% RESTORED THE CORRECT ADMIN PATH (Admin/App_Access_Pines) ---
         async function checkPIN(pin) {
             const pinInput = document.getElementById('auth-pin');
             if (pin.length !== 4) return;
@@ -321,7 +364,6 @@
             try {
                 await auth.signInAnonymously();
                
-                // CTO Correction: Firebase path exactly matches screenshot 13
                 const snap = await database.ref('Admin/App_Access_Pines').once('value');
                 const pins = snap.val() || {};
 
@@ -337,10 +379,10 @@
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
                 } else if (pin == pins.MD || pin === "9999") {
                     currentClientKey = "Factory_VIP";
-                    bootMDDashboard("ALAM DIGITAL (VIP COMMAND)");
+                    bootMDDashboard("VIP COMMAND CENTER");
                 } else if (pin == pins.Admin) {
                     currentClientKey = "Factory_Default";
-                    bootMDDashboard("GOD MODE - ADMIN");
+                    bootMDDashboard("VIP COMMAND CENTER");
                 } else {
                     throw new Error("Invalid PIN");
                 }
@@ -355,7 +397,7 @@
         function bootMDDashboard(bannerText) {
             document.getElementById('view-login').style.display = 'none';
             document.getElementById('view-md').style.display = 'block';
-            document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>VIP Command Center</span>";
+            document.getElementById('top-subtitle').innerHTML = "<span class='color-prism'>Executive Intelligence</span>";
             document.getElementById('client-banner').innerText = bannerText;
             initIsolatedClientDashboard();
         }
@@ -458,14 +500,14 @@
                     if (hoursLeft < 12 && hoursLeft > 0) { statusColor = "#ffcc00"; statusText = "WARNING"; }
                     else if (hoursLeft <= 0) { statusColor = "#ff3366"; statusText = "CRITICAL"; riskCount++; isBlinking = "critical-pulse"; }
 
-                    const tCard = document.createElement('div'); tCard.className = isBlinking; tCard.style = `border-left: 4px solid ${statusColor}; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;`;
-                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff;">${d.Vehicle_Number}</strong><span style="background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:5px; font-size:11px; font-weight:bold; color:${statusColor};">${statusText}</span></div><div style="font-size:12px; color:#a0a0a0;">E-WAY: <span style="color:#fff;">${d.EWay_Bill_No}</span></div>`;
+                    const tCard = document.createElement('div'); tCard.className = isBlinking; tCard.style = `border-left: 4px solid ${statusColor}; background: rgba(0,0,0,0.7); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.05); box-shadow: 0 5px 15px rgba(0,0,0,0.5);`;
+                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff; letter-spacing:1px;">${d.Vehicle_Number}</strong><span style="background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:6px; font-size:11px; font-weight:900; color:${statusColor}; font-family:'Orbitron';">${statusText}</span></div><div style="font-size:13px; color:#a0a0a0; font-weight:600;">E-WAY: <span style="color:#fff;">${d.EWay_Bill_No}</span></div>`;
                     tContainer.prepend(tCard);
 
                     if(d.CPCB_Barcode_ID !== "NA" && d.CPCB_Barcode_ID !== "") {
                         cpcbWeight += parseFloat(d.Bag_Weight_KG) || 0;
-                        const cCard = document.createElement('div'); cCard.style = `border-left: 4px solid #00ff88; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;`;
-                        cCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><strong style="font-family:'Orbitron'; font-size:12px; color:#00ff88;">🏷️ ${d.CPCB_Barcode_ID}</strong></div><div style="font-size:12px; color:#a0a0a0;">WEIGHT: <span style="color:#fff; font-weight:bold;">${d.Bag_Weight_KG} KG</span></div>`;
+                        const cCard = document.createElement('div'); cCard.style = `border-left: 4px solid #00ff88; background: rgba(0,0,0,0.7); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.05); box-shadow: 0 5px 15px rgba(0,0,0,0.5);`;
+                        cCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><strong style="font-family:'Orbitron'; font-size:13px; color:#00ff88; letter-spacing:1px;">🏷️ ${d.CPCB_Barcode_ID}</strong></div><div style="font-size:13px; color:#a0a0a0; font-weight:600;">WEIGHT: <span style="color:#fff; font-weight:900; font-size:15px;">${d.Bag_Weight_KG} KG</span></div>`;
                         cContainer.prepend(cCard);
                     }
                 });
@@ -497,9 +539,9 @@
 
                         const card = document.createElement('div');
                         card.className = isDelayed ? "critical-pulse" : "";
-                        card.style = `border-left: 4px solid ${isDelayed ? '#ff3366' : '#ffcc00'}; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;`;
+                        card.style = `border-left: 4px solid ${isDelayed ? '#ff3366' : '#ffcc00'}; background: rgba(0,0,0,0.7); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.05); box-shadow: 0 5px 15px rgba(0,0,0,0.5);`;
                         const entryTime = new Date(v.IN).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                        card.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><strong style="font-family:'Orbitron'; font-size:12px; color:#fff;">VEHICLE ID: ${qr.substring(0,12)}..</strong><span style="background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:5px; font-size:11px; font-weight:bold; color:${isDelayed ? '#ff3366' : '#ffcc00'};">${isDelayed ? '⚠️ DETENTION' : 'IN-YARD'}</span></div><div style="font-size:12px; color:#a0a0a0;">Entry: <span style="color:#00d4ff;">${entryTime}</span> | Inside: <span style="color:#fff; font-weight:bold;">${hoursInside.toFixed(1)} Hrs</span></div>`;
+                        card.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><strong style="font-family:'Orbitron'; font-size:13px; color:#fff; letter-spacing:1px;">VEHICLE ID: ${qr.substring(0,12)}..</strong><span style="background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:6px; font-size:11px; font-weight:900; color:${isDelayed ? '#ff3366' : '#ffcc00'}; font-family:'Orbitron';">${isDelayed ? '⚠️ DETENTION' : 'IN-YARD'}</span></div><div style="font-size:13px; color:#a0a0a0; font-weight:600;">Entry: <span style="color:#00d4ff;">${entryTime}</span> | Inside: <span style="color:#fff; font-weight:900;">${hoursInside.toFixed(1)} Hrs</span></div>`;
                         yContainer.prepend(card);
                     }
                 });
