@@ -90,7 +90,7 @@
         .input-group label { display: block; font-size: 14px; color: #ffffff; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
         .scan-wrapper { position: relative; display: flex; align-items: center; }
         .input-group input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 16px 15px; border-radius: 10px; font-size: 16px; transition: 0.3s; font-weight: 600;}
-        .input-group input:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0,212,255,0.3) inset, 0 0 10px rgba(0,212,255,0.2);}
+        .input-group input:focus { outline: none; border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,136,0.3) inset, 0 0 10px rgba(0,255,136,0.2);}
        
         .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px 14px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 0 10px rgba(0,212,255,0.2); }
         .icon-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
@@ -98,6 +98,8 @@
         .icon-btn-cpcb:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
         .btn-authorize { width: 100%; padding: 20px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 255, 136, 0.25)); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 18px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0,255,136,0.2); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .btn-authorize:focus { outline: none; box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), inset 0 0 15px rgba(0,255,136,0.4); border-color: #fff; }
+
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
         /* ETA FEEDBACK */
@@ -198,7 +200,6 @@
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
-                    <!-- 🌟 FIX: Auto-Focus and No Google Save Popup 🌟 -->
                     <input type="tel" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" autocomplete="off" oninput="checkPIN(this.value)">
                     <p style="font-size: 13px; color:var(--text-sub); margin-top: 20px; letter-spacing: 1.5px; font-weight:800; text-transform:uppercase;">Multi-Tenant Secure Cloud V2.0</p>
                 </div>
@@ -376,7 +377,6 @@
         let currentClientKey = "Factory_Default";
         let globalClientData = [];
 
-        // 🌟 FIX: AUTO FOCUS ON LOAD 🌟
         window.onload = function() {
             setTimeout(function() {
                 const pinInput = document.getElementById('auth-pin');
@@ -426,6 +426,10 @@
                     document.getElementById('view-login').style.display = 'none';
                     document.getElementById('view-incharge').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
+                   
+                    // 🌟 AUTO-FOCUS INCHARGE FORM FIRST BOX 🌟
+                    setTimeout(() => { document.getElementById('Invoice_Number').focus(); }, 300);
+                   
                 } else if (pin == pins.MD || pin === "9999") {
                     currentClientKey = "Factory_VIP";
                     bootMDDashboard("VIP COMMAND<br>CENTER");
@@ -567,7 +571,6 @@
                         safeCount++;
                     }
 
-                    // 🌟 FIX: ETA LINE NOW PRINTS ON MD DASHBOARD 🌟
                     let etaDisplayHTML = "";
                     if(d.Predictive_ETA && d.Predictive_ETA !== "Pending" && d.Predictive_ETA !== "Error") {
                         etaDisplayHTML = `<div style="font-size:12px; color:var(--neon-gold); font-weight:800; margin-top:8px; font-family:'Orbitron'; padding: 6px; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--neon-gold); border-radius: 6px; display: inline-block;">Predictive ETA: ${d.Predictive_ETA} Hrs</div>`;
@@ -738,6 +741,21 @@
         });
 
         function startGuardScanner(type) { startNativeAiScanner(type); }
+
+        // 🌟 NEW: FRICTIONLESS DATA ENTRY (ENTER KEY NAVIGATION) 🌟
+        const inchargeInputs = Array.from(document.querySelectorAll('#radar-form input:not([type="hidden"])'));
+        inchargeInputs.forEach((input, index) => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (index < inchargeInputs.length - 1) {
+                        inchargeInputs[index + 1].focus();
+                    } else {
+                        document.getElementById('submit-btn').focus();
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
