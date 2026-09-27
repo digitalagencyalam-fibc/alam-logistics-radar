@@ -123,7 +123,12 @@
         .stat-value { font-family: 'Orbitron'; font-size: 30px; font-weight: 900; text-shadow: 0 0 15px rgba(255,255,255,0.5); color: #fff;}
        
         .lock-btn { background: rgba(255, 26, 77, 0.15); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 6px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 12px rgba(255,26,77,0.3);}
+       
+        /* 100% RECOVERED: EXPORT GEAR BUTTON AND DROPDOWN CSS */
         .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.1)); border: 1px solid rgba(0, 212, 255, 0.6); color: #fff; padding: 6px 10px; border-radius: 6px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .export-dropdown { display: none; flex-direction: column; position: absolute; right: 20px; top: 60px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.6); border-radius: 8px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,1); z-index: 50; min-width: 140px; }
+        .export-dropdown button { background: transparent; border: none; color: #fff; padding: 14px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .export-dropdown button:hover { background: rgba(0, 212, 255, 0.25); color: var(--neon-blue); }
        
         footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.95); box-shadow: 0 -5px 20px rgba(0,0,0,0.5);}
        
@@ -292,8 +297,18 @@
                             <div class="live-map-badge" id="live-data-badge">
                                 <div class="live-heartbeat"></div> LIVE DATA
                             </div>
+                           
+                            <!-- 100% RECOVERED GEAR ICON (EXPORT MENU) -->
+                            <button class="btn-export-trigger" id="gear-btn" onclick="toggleExportMenu(event)">⚙️</button>
+                           
                             <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                         </div>
+                    </div>
+
+                    <!-- 100% RECOVERED DROPDOWN -->
+                    <div class="export-dropdown" id="export-menu">
+                        <button onclick="downloadClientCSV()">📥 EXPORT CSV</button>
+                        <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
                     </div>
 
                     <!-- ORIGINAL YARD TAB -->
@@ -371,6 +386,7 @@
     <script>
         let database, auth;
         let currentClientKey = "Factory_VIP";
+        let globalClientData = []; // REQUIRED FOR CSV EXPORT
 
         window.onload = function() {
             setTimeout(function() {
@@ -466,6 +482,22 @@
             document.getElementById('tab-' + tabId).style.display = 'block';
             document.getElementById('btn-' + tabId).className = 'tab-btn active-' + tabId;
         }
+
+        // --- NEW SMART AUTO-CLOSE LOGIC FOR EXPORT MENU ---
+        function toggleExportMenu(event) {
+            if(event) event.stopPropagation(); // Prevents immediate closing
+            const menu = document.getElementById('export-menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+       
+        // Auto-close when clicking anywhere else on the screen
+        window.addEventListener('click', function(event) {
+            const menu = document.getElementById('export-menu');
+            const gearBtn = document.getElementById('gear-btn');
+            if(menu && menu.style.display === 'flex' && event.target !== gearBtn) {
+                menu.style.display = 'none';
+            }
+        });
 
         // --- SECURE OPTICAL SCANNER ---
         let aiVideoStream = null; let aiDetectionInterval = null; let currentScanMode = '';
@@ -622,13 +654,13 @@
             clientDispatchRef.on('value', (snapshot) => {
                 const tContainer = document.getElementById('vehicle-list-container');
                 const lrContainer = document.getElementById('lr-list-container');
-                tContainer.innerHTML = ''; lrContainer.innerHTML = '';
+                tContainer.innerHTML = ''; lrContainer.innerHTML = ''; globalClientData = [];
                
                 let total = 0; let safeCount = 0; let warnCount = 0; let critCount = 0; let lrCount = 0;
                 const now = Date.now();
                
                 snapshot.forEach((child) => {
-                    const d = child.val(); total++;
+                    const d = child.val(); total++; globalClientData.push(d); // ADDED FOR CSV EXPORT
                     const expDate = new Date(d.EWB_Expiry_Time).getTime(); const hoursLeft = (expDate - now) / (1000 * 60 * 60);
                    
                     let statusColor = "#00ff88"; let statusText = "SAFE"; let isBlinking = "";
@@ -702,6 +734,15 @@
                 document.getElementById('ring-yard-out').innerText = clearedCount;
                 document.getElementById('ring-yard-delay').innerText = delayCount;
             });
+        }
+
+        // --- 100% RECOVERED CSV EXPORT FUNCTION ---
+        function downloadClientCSV() {
+            document.getElementById('export-menu').style.display = 'none';
+            if(globalClientData.length === 0) return alert("No Data Found");
+            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Invoice_Number,Vehicle_Number,Origin_Pincode,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,LR_Number,Bag_Weight_KG,Predictive_ETA\n";
+            globalClientData.forEach(row => { csvContent += `${row.Timestamp},${row.Invoice_Number},${row.Vehicle_Number},${row.Origin_Pincode},${row.Destination_Pincode},${row.EWay_Bill_No},${row.EWB_Expiry_Time},${row.LR_Number || 'NA'},${row.Bag_Weight_KG},${row.Predictive_ETA || 'NA'}\r\n`; });
+            var encodedUri = encodeURI(csvContent); var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", `Alam_Logistics_Report.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         function playSuccessBeep() { try { const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); gainNode.gain.setValueAtTime(1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1); } catch(e) {} }
