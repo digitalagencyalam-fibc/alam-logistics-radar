@@ -15,7 +15,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        /* LUXURY AMOLED & HIGH-CONTRAST DAYLIGHT PRISM COLORS */
         :root {
             --bg-color: #000000;
             --glass-bg: rgba(10, 15, 25, 0.90);
@@ -36,7 +35,6 @@
        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
-        /* HARDWARE ACCELERATION */
         .app-wrapper, .glass-card, .md-card, .pin-box, .status-ring, .btn-authorize {
             -webkit-transform: translate3d(0,0,0);
             transform: translate3d(0,0,0);
@@ -50,7 +48,6 @@
         .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 18px rgba(0, 255, 136, 1); font-weight: 900; }
         .color-prism { background: var(--prism-silver); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 20px rgba(186, 230, 253, 0.8); }
        
-        /* CALM 4.5s HEARTBEAT */
         @keyframes heartbeat {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.8); }
             30% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); }
@@ -66,7 +63,6 @@
         .brand-title { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
         .brand-subtitle { font-size: 14px; color: var(--text-sub); letter-spacing: 4px; margin-top: 6px; font-weight: 700; text-transform: uppercase;}
        
-        /* 🌟 MOBILE FIRST DEFAULT BASE (600px Max) 🌟 */
         .app-wrapper { max-width: 600px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; flex: 1; transition: max-width 0.4s ease; }
         .container { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
        
@@ -91,12 +87,8 @@
         .input-group input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 16px 15px; border-radius: 10px; font-size: 16px; transition: 0.3s; font-weight: 600;}
         .input-group input:focus { outline: none; border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,136,0.3) inset, 0 0 10px rgba(0,255,136,0.2);}
        
-        /* NUMBER SPINNER FIX */
         input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
         .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px 14px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 0 10px rgba(0,212,255,0.2); }
@@ -159,7 +151,6 @@
         @keyframes scan-laser { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
         #kill-switch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
 
-        /* 🌟 ADAPTIVE GRID ARCHITECTURE (LAPTOP/DESKTOP FULL SCREEN) 🌟 */
         @media (min-width: 768px) {
             .app-wrapper { max-width: 1200px; }
             .md-card { padding: 30px; }
@@ -241,10 +232,21 @@
                             <label>VEHICLE NUMBER</label>
                             <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required autocomplete="off">
                         </div>
+                       
+                        <!-- 🌟 NEW: ORIGIN PINCODE BOX (Added per CEO order) 🌟 -->
                         <div class="input-group">
-                            <label>DESTINATION (PINCODE)</label>
+                            <label>ORIGIN (STARTING PINCODE)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyPincodeLive(this.value)" autocomplete="off">
+                                <input type="text" id="Origin_Info" placeholder="Enter 6-digit Start Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
+                                <span id="origin-status-icon" style="position: absolute; right: 12px; font-size: 18px; font-weight: bold;"></span>
+                            </div>
+                            <div id="origin-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>DESTINATION (END PINCODE)</label>
+                            <div class="scan-wrapper">
+                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit End Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
                                 <span id="pincode-status-icon" style="position: absolute; right: 12px; font-size: 18px; font-weight: bold;"></span>
                             </div>
                             <div id="pincode-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
@@ -379,7 +381,7 @@
 
     <script>
         let database, auth;
-        let currentClientKey = "Factory_Default";
+        let currentClientKey = "Factory_VIP";
         let globalClientData = [];
 
         window.onload = function() {
@@ -422,12 +424,12 @@
                 const pins = snap.val() || {};
 
                 if (pin == pins.Guard) {
-                    currentClientKey = "Factory_Default";
+                    currentClientKey = "Factory_VIP";
                     document.getElementById('view-login').style.display = 'none';
                     document.getElementById('view-guard').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Security Gate Node";
                 } else if (pin == pins.Incharge) {
-                    currentClientKey = "Factory_Default";
+                    currentClientKey = "Factory_VIP";
                     document.getElementById('view-login').style.display = 'none';
                     document.getElementById('view-incharge').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
@@ -435,11 +437,10 @@
                     setTimeout(() => { document.getElementById('Invoice_Number').focus(); }, 300);
                    
                 } else if (pin == pins.MD || pin === "9999") {
-                    // 🌟 CRITICAL FIX: MD ROOM SYNCED WITH INCHARGE ROOM 🌟
-                    currentClientKey = "Factory_Default";
+                    currentClientKey = "Factory_VIP";
                     bootMDDashboard("VIP COMMAND<br>CENTER");
                 } else if (pin == pins.Admin || pin === "7777") {
-                    currentClientKey = "Factory_Default";
+                    currentClientKey = "Factory_VIP";
                     bootMDDashboard("GOD MODE<br>- ADMIN -");
                 } else {
                     throw new Error("Invalid PIN");
@@ -585,7 +586,7 @@
                     }
 
                     const tCard = document.createElement('div'); tCard.className = isBlinking; tCard.style = `border-left: 5px solid ${statusColor}; background: rgba(10,15,25,0.9); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.8);`;
-                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">${d.Vehicle_Number}</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:${statusColor}; border: 1px solid ${statusColor}; font-family:'Orbitron'; box-shadow: 0 0 10px ${statusColor}40 inset;">${statusText}</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">E-WAY: <span style="color:#fff; font-weight:800;">${d.EWay_Bill_No}</span></div>${etaDisplayHTML}`;
+                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">${d.Vehicle_Number}</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:${statusColor}; border: 1px solid ${statusColor}; font-family:'Orbitron'; box-shadow: 0 0 10px ${statusColor}40 inset;">${statusText}</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">Route: <span style="color:#00ff88; font-weight:800;">${d.Origin_Pincode}</span> ➔ <span style="color:#00d4ff; font-weight:800;">${d.Destination_Pincode}</span></div>${etaDisplayHTML}`;
                     tContainer.prepend(tCard);
 
                     if(d.CPCB_Barcode_ID !== "NA" && d.CPCB_Barcode_ID !== "") {
@@ -650,9 +651,9 @@
         function downloadClientCSV() {
             document.getElementById('export-menu').style.display = 'none';
             if(globalClientData.length === 0) return alert("No Data Found for this Client");
-            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Invoice_Number,Vehicle_Number,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG,Predictive_ETA\n";
+            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Invoice_Number,Vehicle_Number,Origin_Pincode,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,CPCB_Barcode_ID,Bag_Weight_KG,Predictive_ETA\n";
             globalClientData.forEach(row => {
-                csvContent += `${row.Timestamp},${row.Invoice_Number},${row.Vehicle_Number},${row.Destination_Pincode},${row.EWay_Bill_No},${row.EWB_Expiry_Time},${row.CPCB_Barcode_ID},${row.Bag_Weight_KG},${row.Predictive_ETA || 'NA'}\r\n`;
+                csvContent += `${row.Timestamp},${row.Invoice_Number},${row.Vehicle_Number},${row.Origin_Pincode},${row.Destination_Pincode},${row.EWay_Bill_No},${row.EWB_Expiry_Time},${row.CPCB_Barcode_ID},${row.Bag_Weight_KG},${row.Predictive_ETA || 'NA'}\r\n`;
             });
             var encodedUri = encodeURI(csvContent); var link = document.createElement("a");
             link.setAttribute("href", encodedUri); link.setAttribute("download", `${currentClientKey}_Compliance_Report.csv`);
@@ -661,54 +662,85 @@
 
         function playSuccessBeep() { try { const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); gainNode.gain.setValueAtTime(1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1); } catch(e) {} }
 
-        async function verifyPincodeLive(pincode) {
-            const icon = document.getElementById('pincode-status-icon');
-            const feedback = document.getElementById('pincode-feedback');
+        // 🌟 NEW W3C DYNAMIC ORIGIN + DESTINATION LOGIC 🌟
+        let isOriginValid = false;
+        let isDestValid = false;
+        let originCode = "";
+        let destCode = "";
+
+        async function verifyBothPincodes() {
+            const oInput = document.getElementById('Origin_Info').value;
+            const dInput = document.getElementById('Destination_Info').value;
+           
+            if(oInput.length === 6 && oInput !== originCode) {
+                originCode = oInput;
+                isOriginValid = await validatePostal(oInput, 'origin');
+            } else if (oInput.length < 6) { isOriginValid = false; originCode = ""; clearPostalUI('origin'); }
+
+            if(dInput.length === 6 && dInput !== destCode) {
+                destCode = dInput;
+                isDestValid = await validatePostal(dInput, 'dest');
+            } else if (dInput.length < 6) { isDestValid = false; destCode = ""; clearPostalUI('dest'); }
+
+            if(isOriginValid && isDestValid) {
+                fetchLiveETA(originCode, destCode);
+            } else {
+                document.getElementById('eta-feedback').style.display = "none";
+                document.getElementById('Hidden_Predictive_ETA').value = "Pending";
+            }
+        }
+
+        async function validatePostal(pin, type) {
+            const icon = type === 'origin' ? document.getElementById('origin-status-icon') : document.getElementById('pincode-status-icon');
+            const feedback = type === 'origin' ? document.getElementById('origin-feedback') : document.getElementById('pincode-feedback');
+           
+            icon.innerHTML = "⏳"; feedback.style.color = "#00d4ff"; feedback.innerText = "Connecting Govt Server...";
+            try {
+                const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+                const data = await res.json();
+                if (data[0].Status === "Success") {
+                    icon.innerHTML = "✅"; feedback.style.color = "#00ff88";
+                    feedback.innerText = `Verified: ${data[0].PostOffice[0].District}, ${data[0].PostOffice[0].State}`;
+                    return true;
+                } else {
+                    icon.innerHTML = "❌"; feedback.style.color = "#ff1a4d"; feedback.innerText = "Invalid Pincode!";
+                    return false;
+                }
+            } catch(e) {
+                icon.innerHTML = "⚠️"; feedback.style.color = "#ffcc00"; feedback.innerText = "Network Issue.";
+                return false;
+            }
+        }
+
+        function clearPostalUI(type) {
+            const icon = type === 'origin' ? document.getElementById('origin-status-icon') : document.getElementById('pincode-status-icon');
+            const feedback = type === 'origin' ? document.getElementById('origin-feedback') : document.getElementById('pincode-feedback');
+            icon.innerHTML = ""; feedback.innerText = "";
+        }
+
+        async function fetchLiveETA(origin, dest) {
             const etaFeedbackBox = document.getElementById('eta-feedback');
             const etaDisplayText = document.getElementById('eta-display-text');
             const hiddenEta = document.getElementById('Hidden_Predictive_ETA');
-
-            if (pincode.length < 6) {
-                icon.innerHTML = ""; feedback.innerText = "";
-                etaFeedbackBox.style.display = "none"; hiddenEta.value = "Pending";
-                return;
-            }
-            if (pincode.length === 6) {
-                icon.innerHTML = "⏳"; feedback.style.color = "#00d4ff"; feedback.innerText = "Connecting Govt Server...";
-                try {
-                    const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`); const data = await res.json();
-                    if (data[0].Status === "Success") {
-                        icon.innerHTML = "✅"; feedback.style.color = "#00ff88"; feedback.innerText = `Verified: ${data[0].PostOffice[0].District}, ${data[0].PostOffice[0].State}`;
-                       
-                        etaFeedbackBox.style.display = "block";
-                        etaDisplayText.innerText = "Scanning Live Traffic Matrix...";
-                        try {
-                            const olaRes = await fetch(`https://alam-routing-engine.digitalagencyalam.workers.dev/?pincode=${pincode}`);
-                            if(olaRes.ok) {
-                                const olaData = await olaRes.json();
-                                if(olaData.etaHours) {
-                                    etaDisplayText.innerText = `${olaData.etaHours} Hrs`;
-                                    hiddenEta.value = olaData.etaHours;
-                                    if(olaData.etaHours > 48) { etaDisplayText.style.color = "var(--danger-red)"; }
-                                    else { etaDisplayText.style.color = "var(--neon-gold)"; }
-                                } else {
-                                    throw new Error("No ETA");
-                                }
-                            } else {
-                                throw new Error("Worker Error");
-                            }
-                        } catch(apiErr) {
-                            etaDisplayText.innerText = "24 Hrs (Standard Est.)";
-                            hiddenEta.value = "24";
-                        }
-                    } else {
-                        icon.innerHTML = "❌"; feedback.style.color = "#ff1a4d"; feedback.innerText = "Invalid Govt Pincode!";
-                        etaFeedbackBox.style.display = "none"; hiddenEta.value = "Error";
-                    }
-                } catch (e) {
-                    icon.innerHTML = "⚠️"; feedback.style.color = "#ffcc00"; feedback.innerText = "Network Issue.";
-                    etaFeedbackBox.style.display = "none"; hiddenEta.value = "Error";
-                }
+           
+            etaFeedbackBox.style.display = "block";
+            etaDisplayText.style.color = "var(--pure-white)";
+            etaDisplayText.innerText = "Scanning Live Traffic Matrix...";
+           
+            try {
+                const cfRes = await fetch(`https://alam-routing-engine.digitalagencyalam.workers.dev/?origin=${origin}&destination=${dest}`);
+                if(cfRes.ok) {
+                    const cfData = await cfRes.json();
+                    if(cfData.etaHours) {
+                        etaDisplayText.innerText = `${cfData.etaHours} Hrs`;
+                        hiddenEta.value = cfData.etaHours;
+                        if(cfData.etaHours > 48) { etaDisplayText.style.color = "var(--danger-red)"; }
+                        else { etaDisplayText.style.color = "var(--neon-gold)"; }
+                    } else { throw new Error("No ETA"); }
+                } else { throw new Error("Worker Error"); }
+            } catch(e) {
+                etaDisplayText.innerText = "24 Hrs (Standard Est.)";
+                hiddenEta.value = "24";
             }
         }
 
@@ -720,6 +752,7 @@
             const data = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value.toUpperCase(),
+                Origin_Pincode: document.getElementById('Origin_Info').value,
                 Destination_Pincode: document.getElementById('Destination_Info').value,
                 Predictive_ETA: document.getElementById('Hidden_Predictive_ETA').value,
                 EWay_Bill_No: document.getElementById('EWay_Bill_No').value,
@@ -732,8 +765,8 @@
            
             dispatchRef.push(data).then(() => {
                 document.getElementById('radar-form').reset();
-                document.getElementById('pincode-feedback').innerText = "";
-                document.getElementById('pincode-status-icon').innerHTML = "";
+                clearPostalUI('origin'); clearPostalUI('dest');
+                originCode = ""; destCode = ""; isOriginValid = false; isDestValid = false;
                 document.getElementById('eta-feedback').style.display = "none";
                 document.getElementById('Hidden_Predictive_ETA').value = "Pending";
                
