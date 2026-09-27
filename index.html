@@ -76,7 +76,6 @@
         .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px 20px; width: 90%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .pin-box h2 { font-family: 'Orbitron'; font-size: 20px; color: var(--pure-white); margin-bottom: 25px; letter-spacing: 3px; text-shadow: 0 2px 15px rgba(255,255,255,0.7);}
        
-        /* FIX: Google Password Pop-up permanently disabled */
         .pin-input { width: 100%; background: rgba(0,0,0,0.95); border: 2px solid var(--neon-blue); color: #fff; padding: 20px; font-size: 30px; text-align: center; letter-spacing: 15px; border-radius: 12px; font-family: 'Orbitron'; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2) inset; -webkit-text-security: disc;}
         .pin-input:focus { outline: none; box-shadow: 0 0 25px rgba(0, 212, 255, 0.8); border-color: var(--neon-green); }
        
@@ -246,7 +245,8 @@
                             <!-- ETA PREDICTIVE MATRIX -->
                             <div id="eta-feedback" class="eta-feedback-box">
                                 Predictive Analytics Matrix Active<br>
-                                <span style="font-size: 11px; color: var(--text-sub);">Ola Engine ETA:</span> <span id="eta-display-text" class="eta-highlight">Calculating...</span>
+                                <!-- 🌟 WHITE-LABEL: OLA REMOVED PERMANENTLY 🌟 -->
+                                <span style="font-size: 11px; color: var(--text-sub);">Routing Matrix ETA:</span> <span id="eta-display-text" class="eta-highlight">Calculating...</span>
                             </div>
                             <input type="hidden" id="Hidden_Predictive_ETA" value="Pending">
                         </div>
@@ -427,7 +427,6 @@
                     document.getElementById('view-incharge').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "Action Floor - Active";
                    
-                    // 🌟 AUTO-FOCUS INCHARGE FORM FIRST BOX 🌟
                     setTimeout(() => { document.getElementById('Invoice_Number').focus(); }, 300);
                    
                 } else if (pin == pins.MD || pin === "9999") {
@@ -742,7 +741,6 @@
 
         function startGuardScanner(type) { startNativeAiScanner(type); }
 
-        // 🌟 NEW: FRICTIONLESS DATA ENTRY (ENTER KEY NAVIGATION) 🌟
         const inchargeInputs = Array.from(document.querySelectorAll('#radar-form input:not([type="hidden"])'));
         inchargeInputs.forEach((input, index) => {
             input.addEventListener('keydown', function(e) {
