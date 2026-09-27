@@ -51,7 +51,7 @@
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 26, 77, 0.8); } 70% { box-shadow: 0 0 0 18px rgba(255, 26, 77, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 26, 77, 0); } }
         .critical-pulse { animation: pulse-red 1.5s infinite; border: 2px solid var(--danger-red) !important; }
 
-        header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; box-shadow: 0 5px 25px rgba(0,0,0,0.7); }
+        header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; box-shadow: 0 5px 25px rgba(0,0,0,0.7); }
         .brand-title { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
         .brand-subtitle { font-size: 14px; color: var(--text-sub); letter-spacing: 4px; margin-top: 6px; font-weight: 700; text-transform: uppercase; transition: all 0.3s ease;}
        
@@ -85,9 +85,16 @@
         .icon-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
         .icon-btn-lr { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 255, 136, 0.15); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
         .icon-btn-lr:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
+       
+        /* NEW PHOTO ICON CSS */
+        .icon-btn-photo { border-color: var(--neon-gold); color: var(--neon-gold); background: rgba(255, 204, 0, 0.15); box-shadow: 0 0 10px rgba(255,204,0,0.2); }
+        .icon-btn-photo:hover { background: var(--neon-gold); color: #000; box-shadow: 0 0 20px var(--neon-gold); }
 
         .btn-authorize { width: 100%; padding: 20px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 255, 136, 0.25)); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 18px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0,255,136,0.2); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         .btn-authorize:focus { outline: none; box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), inset 0 0 15px rgba(0,255,136,0.4); border-color: #fff; }
+       
+        /* GPS LOCK BUTTON STATE */
+        .btn-locked { background: rgba(255, 26, 77, 0.15) !important; border-color: var(--danger-red) !important; color: var(--danger-red) !important; box-shadow: none !important; cursor: not-allowed !important; opacity: 0.6; }
 
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
@@ -124,7 +131,7 @@
        
         .lock-btn { background: rgba(255, 26, 77, 0.15); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 6px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 12px rgba(255,26,77,0.3);}
        
-        /* 100% RECOVERED: EXPORT GEAR BUTTON AND DROPDOWN CSS */
+        /* EXPORT GEAR BUTTON AND DROPDOWN CSS */
         .btn-export-trigger { background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.1)); border: 1px solid rgba(0, 212, 255, 0.6); color: #fff; padding: 6px 10px; border-radius: 6px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         .export-dropdown { display: none; flex-direction: column; position: absolute; right: 20px; top: 60px; background: rgba(5, 10, 15, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(0, 212, 255, 0.6); border-radius: 8px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,1); z-index: 50; min-width: 140px; }
         .export-dropdown button { background: transparent; border: none; color: #fff; padding: 14px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-align: left; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
@@ -139,7 +146,7 @@
         .laser-line { position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background: var(--neon-green); box-shadow: 0 0 20px 5px rgba(0, 255, 136, 0.9); animation: scan-laser 2s infinite linear; }
         @keyframes scan-laser { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
 
-        /* ORIGINAL FULL-SCREEN LAPTOP WIDTH */
+        /* FULL-SCREEN LAPTOP WIDTH */
         @media (min-width: 768px) {
             .app-wrapper { max-width: 1200px; }
             .md-card { padding: 30px; }
@@ -152,11 +159,19 @@
             .tab-btn { font-size: 14px; padding: 15px 0; }
             #vehicle-list-container, #lr-list-container, #yard-list-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         }
+
+        /* NEW DRIVER PHOTO MODAL CSS - PRISM GLASS EFFECT */
+        #photo-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100001; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
+        .photo-modal-card { background: linear-gradient(145deg, rgba(10,15,25,0.95), rgba(0,0,0,1)); border: 2px solid var(--neon-blue); border-radius: 20px; padding: 25px; max-width: 90%; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0,212,255,0.2); position: relative; }
+        .photo-modal-card::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--prism-silver); z-index: -1; border-radius: 22px; opacity: 0.3; animation: pulse-red 3s infinite; }
+       
+        /* GEO-FENCE BANNER */
+        #gps-security-banner { background: rgba(255, 26, 77, 0.15); border: 2px solid var(--danger-red); border-radius: 10px; padding: 14px; margin-top: 20px; text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 14px; color: var(--danger-red); letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,26,77,0.3); transition: 0.4s; }
     </style>
 </head>
 <body>
 
-    <div id="kill-switch-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+    <div id="kill-switch-overlay">
         <h1 style="color: #ff1a4d; font-family: 'Orbitron'; font-size: 40px; text-shadow: 0 0 25px #ff1a4d;">⚠️ ACCESS REVOKED</h1>
         <p style="color: #fff; font-size: 18px; margin-top: 15px; font-weight: 700;">CLEAR PENDING DUES TO RESUME</p>
     </div>
@@ -171,6 +186,17 @@
         <button onclick="closeAiScanner()" style="margin-top: 25px; background: rgba(255, 26, 77, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 14px 40px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(255,26,77,0.3);">CANCEL SCAN</button>
     </div>
 
+    <!-- NEW DRIVER PHOTO MD VIEWER OVERLAY -->
+    <div id="photo-modal-overlay">
+        <div class="photo-modal-card">
+            <h3 style="color: var(--neon-blue); font-family: 'Orbitron'; font-size: 20px; font-weight: 900; margin-bottom: 20px; letter-spacing: 3px; text-shadow: 0 0 15px rgba(0,212,255,0.8);">DRIVER IDENTITY</h3>
+            <div style="border: 3px solid rgba(0,212,255,0.5); padding: 5px; border-radius: 12px; background: #000; display: inline-block;">
+                <img id="modal-driver-photo" src="" style="width: 100%; max-height: 50vh; object-fit: cover; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.9) inset;">
+            </div>
+            <button onclick="closePhotoModal()" style="width: 100%; margin-top: 25px; background: rgba(255, 26, 77, 0.15); border: 2px solid var(--danger-red); color: var(--danger-red); padding: 16px; border-radius: 10px; font-family: 'Orbitron'; font-weight: 900; font-size: 16px; letter-spacing: 2px; cursor: pointer; box-shadow: 0 0 20px rgba(255,26,77,0.4);">CLOSE SECURE VIEW</button>
+        </div>
+    </div>
+
     <div class="app-wrapper">
         <header>
             <div class="brand-title">
@@ -178,7 +204,6 @@
                 <span class="color-digital">DIGITAL</span>
                 <span class="color-agency">AGENCY</span>
             </div>
-            <!-- ORIGINAL DYNAMIC SUBTITLE -->
             <div class="brand-subtitle" id="top-subtitle">SECURITY GATEWAY</div>
         </header>
 
@@ -219,10 +244,19 @@
                             <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required autocomplete="off">
                         </div>
                        
-                        <!-- HONESTY UPDATE: CLEAN VEHICLE BOX (NO FAKE VAHAN SHIELD) -->
                         <div class="input-group">
                             <label>VEHICLE NUMBER</label>
                             <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required autocomplete="off" style="text-transform: uppercase;">
+                        </div>
+
+                        <!-- PLAN 1: DRIVER PHOTO CAPTURE -->
+                        <div class="input-group">
+                            <label>DRIVER PHOTO CAPTURE (SECURITY)</label>
+                            <div class="scan-wrapper">
+                                <input type="file" id="Driver_Photo_File" accept="image/*" capture="environment" style="display: none;" onchange="handleDriverPhoto(event)">
+                                <input type="text" id="Driver_Photo_Status" placeholder="Tap Camera to Capture Identity" readonly required style="border-color: var(--neon-gold); padding-right: 45px; cursor: pointer; font-size: 13px;" onclick="document.getElementById('Driver_Photo_File').click()">
+                                <span class="icon-btn icon-btn-photo" onclick="document.getElementById('Driver_Photo_File').click()">📸</span>
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -242,7 +276,6 @@
                             </div>
                             <div id="pincode-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
                            
-                            <!-- 100% REAL LIVE ETA FROM OLA -->
                             <div id="eta-feedback" class="eta-feedback-box">
                                 Predictive Analytics Matrix Active<br>
                                 <span style="font-size: 11px; color: var(--text-sub);">Routing Matrix ETA:</span> <span id="eta-display-text" class="eta-highlight">Calculating...</span>
@@ -250,7 +283,6 @@
                             <input type="hidden" id="Hidden_Predictive_ETA" value="Pending">
                         </div>
 
-                        <!-- HONESTY UPDATE: CLEAN E-WAY BILL (NO FAKE AUTO-FETCH, MANUAL EXPIRY BACK) -->
                         <div class="input-group">
                             <label>E-WAY BILL NUMBER</label>
                             <div class="scan-wrapper">
@@ -263,7 +295,6 @@
                             <input type="datetime-local" id="EWB_Expiry_Time" required>
                         </div>
 
-                        <!-- HONESTY UPDATE: PURE LR NUMBER -->
                         <div class="input-group">
                             <label>LR NUMBER</label>
                             <div class="scan-wrapper">
@@ -272,13 +303,16 @@
                             </div>
                         </div>
 
-                        <!-- YOUR MANUAL UPDATE -->
                         <div class="input-group">
                             <label>TOTAL DISPATCH WEIGHT (KG)</label>
                             <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required autocomplete="off">
                         </div>
                        
-                        <button type="submit" class="btn-authorize" id="submit-btn"><span id="btn-text">AUTHORIZE DISPATCH</span></button>
+                        <!-- PLAN 2: GPS GEO-FENCE SECURE BANNER & BUTTON -->
+                        <div id="gps-security-banner">
+                            🛰️ SATELLITE SYNCING... STANDBY
+                        </div>
+                        <button type="submit" class="btn-authorize btn-locked" id="submit-btn" disabled><span id="btn-text">AUTHORIZE DISPATCH (LOCKED)</span></button>
                     </form>
                     <div id="status-box"></div>
                 </div>
@@ -293,32 +327,26 @@
                         </div>
                        
                         <div class="md-actions-wrapper">
-                            <!-- ORIGINAL HEARTBEAT BADGE -->
                             <div class="live-map-badge" id="live-data-badge">
                                 <div class="live-heartbeat"></div> LIVE DATA
                             </div>
                            
-                            <!-- 100% RECOVERED GEAR ICON (EXPORT MENU) -->
                             <button class="btn-export-trigger" id="gear-btn" onclick="toggleExportMenu(event)">⚙️</button>
-                           
                             <button class="lock-btn" onclick="logout()">SECURE 🔒</button>
                         </div>
                     </div>
 
-                    <!-- 100% RECOVERED DROPDOWN -->
                     <div class="export-dropdown" id="export-menu">
                         <button onclick="downloadClientCSV()">📥 EXPORT CSV</button>
                         <button onclick="window.print(); toggleExportMenu(event);">📄 PRINT PDF</button>
                     </div>
 
-                    <!-- ORIGINAL YARD TAB -->
                     <div class="vip-tabs">
                         <button class="tab-btn active-transit" id="btn-transit" onclick="switchTab('transit')">🔴 TRANSIT</button>
                         <button class="tab-btn" id="btn-lr" onclick="switchTab('lr')">🟢 LR LOGS</button>
                         <button class="tab-btn" id="btn-yard" onclick="switchTab('yard')">🚧 YARD</button>
                     </div>
 
-                    <!-- TRANSIT TAB -->
                     <div id="tab-transit">
                         <div class="ring-container">
                             <div class="ring-box">
@@ -344,7 +372,6 @@
                         <div id="vehicle-list-container" style="max-height:400px; overflow-y:auto; gap:15px; padding-bottom: 20px;"></div>
                     </div>
 
-                    <!-- LR LOGS TAB -->
                     <div id="tab-lr" style="display:none;">
                         <div class="stat-grid">
                             <div class="stat-box" style="grid-column: 1 / -1; border-color: rgba(0, 255, 136, 0.5);">
@@ -355,7 +382,6 @@
                         <div id="lr-list-container" style="max-height:400px; overflow-y:auto; gap:15px; padding-bottom: 20px;"></div>
                     </div>
                    
-                    <!-- YARD MASTER TAB ORIGINAL -->
                     <div id="tab-yard" style="display:none;">
                         <div class="ring-container">
                             <div class="ring-box">
@@ -386,7 +412,11 @@
     <script>
         let database, auth;
         let currentClientKey = "Factory_VIP";
-        let globalClientData = []; // REQUIRED FOR CSV EXPORT
+        let globalClientData = [];
+        let activeDriverPhotoBase64 = "";
+        let geoWatchId = null;
+        let demoYardLat = null; // Used for Geo-Fence tracking
+        let demoYardLng = null;
 
         window.onload = function() {
             setTimeout(function() {
@@ -417,7 +447,6 @@
                 const snap = await database.ref('Admin/App_Access_Pines').once('value');
                 const pins = snap.val() || {};
 
-                // ORIGINAL DYNAMIC SUBTITLES & GOD MODE
                 if (pin == pins.Guard) {
                     currentClientKey = "Factory_VIP";
                     document.getElementById('view-login').style.display = 'none';
@@ -429,9 +458,11 @@
                     document.getElementById('view-incharge').style.display = 'block';
                     document.getElementById('top-subtitle').innerText = "ACTION FLOOR - ACTIVE";
                    
-                    // ORIGINAL AUTOFOCUS ON INVOICE NUMBER
                     setTimeout(() => { document.getElementById('Invoice_Number').focus(); }, 300);
                    
+                    // START PLAN 2: GPS GEO-FENCE LOCK
+                    startGeoFenceLock();
+
                 } else if (pin == pins.MD || pin === "9999") {
                     currentClientKey = "Factory_VIP";
                     bootMDDashboard("VIP COMMAND<br>CENTER");
@@ -450,6 +481,56 @@
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
+        // --- PLAN 2: GPS GEO-FENCE LOGIC ---
+        function startGeoFenceLock() {
+            if (navigator.geolocation) {
+                geoWatchId = navigator.geolocation.watchPosition((position) => {
+                    // DEMO LOGIC: First time it loads, it sets your current location as the "Yard"
+                    if(!demoYardLat) { demoYardLat = position.coords.latitude; demoYardLng = position.coords.longitude; }
+                   
+                    const dist = calculateDistance(demoYardLat, demoYardLng, position.coords.latitude, position.coords.longitude);
+                    const banner = document.getElementById('gps-security-banner');
+                    const btn = document.getElementById('submit-btn');
+                    const btnText = document.getElementById('btn-text');
+                   
+                    if(dist <= 500) { // If within 500 meters of Yard
+                        banner.style.background = "rgba(0, 255, 136, 0.15)";
+                        banner.style.borderColor = "var(--neon-green)";
+                        banner.style.color = "var(--neon-green)";
+                        banner.style.boxShadow = "0 0 15px rgba(0,255,136,0.3)";
+                        banner.innerHTML = `✅ IN-ZONE: YARD GPS SECURED (${dist}m)`;
+                        btn.disabled = false;
+                        btn.classList.remove('btn-locked');
+                        btnText.innerText = "AUTHORIZE DISPATCH";
+                    } else { // If outside 500 meters
+                        banner.style.background = "rgba(255, 26, 77, 0.15)";
+                        banner.style.borderColor = "var(--danger-red)";
+                        banner.style.color = "var(--danger-red)";
+                        banner.style.boxShadow = "0 0 15px rgba(255,26,77,0.3)";
+                        banner.innerHTML = `⚠️ OUT OF ZONE: DISPATCH LOCKED (${dist}m)`;
+                        btn.disabled = true;
+                        btn.classList.add('btn-locked');
+                        btnText.innerText = "LOCKED BY GPS";
+                    }
+                }, (error) => {
+                    const banner = document.getElementById('gps-security-banner');
+                    banner.innerHTML = "❌ GPS PERMISSION DENIED: DISPATCH LOCKED";
+                    document.getElementById('submit-btn').disabled = true;
+                    document.getElementById('submit-btn').classList.add('btn-locked');
+                }, { enableHighAccuracy: true });
+            }
+        }
+
+        // Haversine Formula (Calculates distance between two GPS coordinates in meters)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3;
+            const p1 = lat1 * Math.PI/180; const p2 = lat2 * Math.PI/180;
+            const dp = (lat2-lat1) * Math.PI/180; const dl = (lon2-lon1) * Math.PI/180;
+            const a = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dl/2) * Math.sin(dl/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return Math.round(R * c);
+        }
+
         function bootMDDashboard(titleText) {
             document.getElementById('view-login').style.display = 'none';
             document.getElementById('view-md').style.display = 'block';
@@ -460,6 +541,8 @@
 
         function logout() {
             auth.signOut();
+            if (geoWatchId) navigator.geolocation.clearWatch(geoWatchId);
+            demoYardLat = null; demoYardLng = null;
             document.getElementById('auth-pin').value = '';
             document.getElementById('view-login').style.display = 'flex';
             document.getElementById('view-guard').style.display = 'none';
@@ -483,14 +566,12 @@
             document.getElementById('btn-' + tabId).className = 'tab-btn active-' + tabId;
         }
 
-        // --- NEW SMART AUTO-CLOSE LOGIC FOR EXPORT MENU ---
         function toggleExportMenu(event) {
-            if(event) event.stopPropagation(); // Prevents immediate closing
+            if(event) event.stopPropagation();
             const menu = document.getElementById('export-menu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
        
-        // Auto-close when clicking anywhere else on the screen
         window.addEventListener('click', function(event) {
             const menu = document.getElementById('export-menu');
             const gearBtn = document.getElementById('gear-btn');
@@ -499,7 +580,46 @@
             }
         });
 
-        // --- SECURE OPTICAL SCANNER ---
+        // --- PLAN 1: DRIVER PHOTO COMPRESSION & UPLOAD ---
+        function handleDriverPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+           
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400; // Optimal for Database
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                   
+                    activeDriverPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6); // Compress
+                   
+                    const statusInput = document.getElementById('Driver_Photo_Status');
+                    statusInput.value = "✅ IDENTITY SECURED";
+                    statusInput.style.color = "var(--neon-green)";
+                    statusInput.style.borderColor = "var(--neon-green)";
+                    if(navigator.vibrate) navigator.vibrate(100);
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function viewDriverPhoto(base64Data) {
+            document.getElementById('modal-driver-photo').src = base64Data;
+            document.getElementById('photo-modal-overlay').style.display = 'flex';
+        }
+
+        function closePhotoModal() {
+            document.getElementById('photo-modal-overlay').style.display = 'none';
+            document.getElementById('modal-driver-photo').src = "";
+        }
+
         let aiVideoStream = null; let aiDetectionInterval = null; let currentScanMode = '';
         async function startNativeAiScanner(mode) {
             currentScanMode = mode;
@@ -549,7 +669,6 @@
             }
         }
 
-        // --- 100% REAL ROUTING ENGINE (OLA) ---
         let originCode = ""; let destCode = ""; let isOriginValid = false; let isDestValid = false;
         async function verifyBothPincodes() {
             const oInput = document.getElementById('Origin_Info').value;
@@ -611,15 +730,21 @@
             } catch(e) { etaDisplayText.innerText = "24 Hrs (Standard Est.)"; hiddenEta.value = "24"; }
         }
 
-        // --- SUBMIT DISPATCH FORM ---
         document.getElementById('radar-form').addEventListener('submit', function(e) {
             e.preventDefault();
+           
+            if(!activeDriverPhotoBase64) {
+                alert("⚠️ DRIVER PHOTO IS MANDATORY FOR CLEARANCE.");
+                return;
+            }
+
             const dispatchRef = database.ref(`Clients/${currentClientKey}/Alam_Radar_Dispatches`);
             const btnText = document.getElementById('btn-text'); btnText.innerText = 'SYNCING...';
            
             const data = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value.toUpperCase(),
+                Driver_Photo: activeDriverPhotoBase64, // PUSH TO DB
                 Origin_Pincode: document.getElementById('Origin_Info').value,
                 Destination_Pincode: document.getElementById('Destination_Info').value,
                 Predictive_ETA: document.getElementById('Hidden_Predictive_ETA').value,
@@ -635,6 +760,13 @@
                 document.getElementById('radar-form').reset();
                 clearPostalUI('origin'); clearPostalUI('dest');
                 originCode = ""; destCode = ""; isOriginValid = false; isDestValid = false;
+               
+                activeDriverPhotoBase64 = "";
+                const photoStatus = document.getElementById('Driver_Photo_Status');
+                photoStatus.value = "";
+                photoStatus.style.color = "";
+                photoStatus.style.borderColor = "var(--neon-gold)";
+
                 document.getElementById('eta-feedback').style.display = "none";
                 document.getElementById('Hidden_Predictive_ETA').value = "Pending";
                
@@ -646,7 +778,6 @@
             });
         });
 
-        // --- MD DASHBOARD DATA ---
         function initIsolatedClientDashboard() {
             const clientDispatchRef = database.ref(`Clients/${currentClientKey}/Alam_Radar_Dispatches`);
             const clientYardRef = database.ref(`Clients/${currentClientKey}/Alam_Yard_Logs`);
@@ -660,7 +791,7 @@
                 const now = Date.now();
                
                 snapshot.forEach((child) => {
-                    const d = child.val(); total++; globalClientData.push(d); // ADDED FOR CSV EXPORT
+                    const d = child.val(); total++; globalClientData.push(d);
                     const expDate = new Date(d.EWB_Expiry_Time).getTime(); const hoursLeft = (expDate - now) / (1000 * 60 * 60);
                    
                     let statusColor = "#00ff88"; let statusText = "SAFE"; let isBlinking = "";
@@ -673,8 +804,16 @@
                         etaDisplayHTML = `<div style="font-size:12px; color:var(--neon-gold); font-weight:800; margin-top:8px; font-family:'Orbitron'; padding: 6px; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--neon-gold); border-radius: 6px; display: inline-block;">Predictive ETA: ${d.Predictive_ETA} Hrs</div>`;
                     }
 
-                    const tCard = document.createElement('div'); tCard.className = isBlinking; tCard.style = `border-left: 5px solid ${statusColor}; background: rgba(10,15,25,0.9); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.8);`;
-                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">${d.Vehicle_Number}</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:${statusColor}; border: 1px solid ${statusColor}; font-family:'Orbitron'; box-shadow: 0 0 10px ${statusColor}40 inset;">${statusText}</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">Route: <span style="color:#00ff88; font-weight:800;">${d.Origin_Pincode}</span> ➔ <span style="color:#00d4ff; font-weight:800;">${d.Destination_Pincode}</span></div>${etaDisplayHTML}`;
+                    // PLAN 1: MD DASHBOARD BUTTON LOGIC
+                    let driverPhotoBtn = "";
+                    if(d.Driver_Photo) {
+                        driverPhotoBtn = `<button onclick="viewDriverPhoto('${d.Driver_Photo}')" style="background: rgba(0, 212, 255, 0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 5px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; cursor: pointer; box-shadow: 0 0 10px rgba(0,212,255,0.3); transition: 0.3s; margin-top: 10px; display: inline-flex; align-items: center; gap: 5px;">📸 VIEW DRIVER</button>`;
+                    } else {
+                        driverPhotoBtn = `<div style="font-size: 10px; color: var(--danger-red); font-family: 'Orbitron'; font-weight: 900; margin-top: 10px;">❌ NO DRIVER IDENTITY</div>`;
+                    }
+
+                    const tCard = document.createElement('div'); tCard.className = isBlinking; tCard.style = `border-left: 5px solid ${statusColor}; background: rgba(10,15,25,0.9); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: space-between;`;
+                    tCard.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:16px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">${d.Vehicle_Number}</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:${statusColor}; border: 1px solid ${statusColor}; font-family:'Orbitron'; box-shadow: 0 0 10px ${statusColor}40 inset;">${statusText}</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">Route: <span style="color:#00ff88; font-weight:800;">${d.Origin_Pincode}</span> ➔ <span style="color:#00d4ff; font-weight:800;">${d.Destination_Pincode}</span></div>${etaDisplayHTML}<div>${driverPhotoBtn}</div>`;
                     tContainer.prepend(tCard);
 
                     if(d.LR_Number) {
@@ -736,7 +875,6 @@
             });
         }
 
-        // --- 100% RECOVERED CSV EXPORT FUNCTION ---
         function downloadClientCSV() {
             document.getElementById('export-menu').style.display = 'none';
             if(globalClientData.length === 0) return alert("No Data Found");
@@ -747,8 +885,7 @@
 
         function playSuccessBeep() { try { const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); gainNode.gain.setValueAtTime(1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1); } catch(e) {} }
 
-        // ORIGINAL ENTER KEY AUTOFOCUS
-        const inchargeInputs = Array.from(document.querySelectorAll('#radar-form input:not([type="hidden"])'));
+        const inchargeInputs = Array.from(document.querySelectorAll('#radar-form input:not([type="hidden"]):not([type="file"])'));
         inchargeInputs.forEach((input, index) => {
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
