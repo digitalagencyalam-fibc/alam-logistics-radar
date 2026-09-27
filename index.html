@@ -76,7 +76,7 @@
         .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px 20px; width: 90%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .pin-box h2 { font-family: 'Orbitron'; font-size: 20px; color: var(--pure-white); margin-bottom: 25px; letter-spacing: 3px; text-shadow: 0 2px 15px rgba(255,255,255,0.7);}
        
-        /* 🌟 GOOGLE POPUP FIX: type="tel" and text-security 🌟 */
+        /* FIX: Google Password Pop-up permanently disabled */
         .pin-input { width: 100%; background: rgba(0,0,0,0.95); border: 2px solid var(--neon-blue); color: #fff; padding: 20px; font-size: 30px; text-align: center; letter-spacing: 15px; border-radius: 12px; font-family: 'Orbitron'; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2) inset; -webkit-text-security: disc;}
         .pin-input:focus { outline: none; box-shadow: 0 0 25px rgba(0, 212, 255, 0.8); border-color: var(--neon-green); }
        
@@ -198,7 +198,7 @@
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
-                    <!-- 🌟 AUTO-FOCUS AND GOOGLE POPUP FIX (type="tel", autocomplete="off") 🌟 -->
+                    <!-- 🌟 FIX: Auto-Focus and No Google Save Popup 🌟 -->
                     <input type="tel" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" autocomplete="off" oninput="checkPIN(this.value)">
                     <p style="font-size: 13px; color:var(--text-sub); margin-top: 20px; letter-spacing: 1.5px; font-weight:800; text-transform:uppercase;">Multi-Tenant Secure Cloud V2.0</p>
                 </div>
@@ -376,7 +376,7 @@
         let currentClientKey = "Factory_Default";
         let globalClientData = [];
 
-        // 🌟 AUTO FOCUS LOGIC 🌟
+        // 🌟 FIX: AUTO FOCUS ON LOAD 🌟
         window.onload = function() {
             setTimeout(function() {
                 const pinInput = document.getElementById('auth-pin');
@@ -441,7 +441,6 @@
                 setTimeout(() => { pinInput.classList.remove('shake-error'); }, 400);
             }
             pinInput.value = ''; pinInput.disabled = false;
-            // Re-focus logic if failed
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
@@ -461,7 +460,6 @@
             document.getElementById('view-incharge').style.display = 'none';
             document.getElementById('view-md').style.display = 'none';
             switchTab('transit');
-            // Auto focus on logout
             setTimeout(() => { document.getElementById('auth-pin').focus(); }, 300);
         }
 
@@ -569,7 +567,7 @@
                         safeCount++;
                     }
 
-                    // 🌟 PREDICTIVE ETA DISPLAY MATRIX 🌟
+                    // 🌟 FIX: ETA LINE NOW PRINTS ON MD DASHBOARD 🌟
                     let etaDisplayHTML = "";
                     if(d.Predictive_ETA && d.Predictive_ETA !== "Pending" && d.Predictive_ETA !== "Error") {
                         etaDisplayHTML = `<div style="font-size:12px; color:var(--neon-gold); font-weight:800; margin-top:8px; font-family:'Orbitron'; padding: 6px; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--neon-gold); border-radius: 6px; display: inline-block;">Predictive ETA: ${d.Predictive_ETA} Hrs</div>`;
@@ -732,7 +730,6 @@
                 sb.innerHTML = "✅ SECURE SYNC COMPLETE"; sb.className = "status-success"; sb.style.display = "block";
                 btnText.innerText = 'AUTHORIZE DISPATCH';
                
-                // Re-focus after submit for fast entry
                 setTimeout(() => {
                     sb.style.display = "none";
                     document.getElementById('Invoice_Number').focus();
