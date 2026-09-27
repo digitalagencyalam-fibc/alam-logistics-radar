@@ -36,7 +36,7 @@
        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
        
-        /* HARDWARE ACCELERATION FOR MILLISECOND SPEED */
+        /* HARDWARE ACCELERATION */
         .app-wrapper, .glass-card, .md-card, .pin-box, .status-ring, .btn-authorize {
             -webkit-transform: translate3d(0,0,0);
             transform: translate3d(0,0,0);
@@ -48,7 +48,6 @@
         .color-alam { color: var(--neon-blue) !important; text-shadow: 0 0 18px rgba(0, 212, 255, 1); font-weight: 900; }
         .color-digital { color: var(--pure-white) !important; text-shadow: 0 0 18px rgba(255, 255, 255, 1); font-weight: 900; }
         .color-agency { color: var(--neon-green) !important; text-shadow: 0 0 18px rgba(0, 255, 136, 1); font-weight: 900; }
-       
         .color-prism { background: var(--prism-silver); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 20px rgba(186, 230, 253, 0.8); }
        
         /* CALM 4.5s HEARTBEAT */
@@ -58,7 +57,6 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
         }
         .live-heartbeat { width: 12px; height: 12px; background-color: var(--neon-green); border-radius: 50%; display: inline-block; animation: heartbeat 4.5s infinite cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 12px var(--neon-green); vertical-align: middle; margin-right: 6px;}
-       
         .live-map-badge { background: rgba(0, 204, 106, 0.2); border: 1px solid var(--neon-green); padding: 5px 10px; border-radius: 12px; display: flex; align-items: center; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; color: #fff; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) inset; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 26, 77, 0.8); } 70% { box-shadow: 0 0 0 18px rgba(255, 26, 77, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 26, 77, 0); } }
@@ -77,7 +75,9 @@
        
         .pin-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px 20px; width: 90%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .pin-box h2 { font-family: 'Orbitron'; font-size: 20px; color: var(--pure-white); margin-bottom: 25px; letter-spacing: 3px; text-shadow: 0 2px 15px rgba(255,255,255,0.7);}
-        .pin-input { width: 100%; background: rgba(0,0,0,0.95); border: 2px solid var(--neon-blue); color: #fff; padding: 20px; font-size: 30px; text-align: center; letter-spacing: 15px; border-radius: 12px; font-family: 'Orbitron'; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2) inset;}
+       
+        /* 🌟 GOOGLE POPUP FIX: type="tel" and text-security 🌟 */
+        .pin-input { width: 100%; background: rgba(0,0,0,0.95); border: 2px solid var(--neon-blue); color: #fff; padding: 20px; font-size: 30px; text-align: center; letter-spacing: 15px; border-radius: 12px; font-family: 'Orbitron'; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2) inset; -webkit-text-security: disc;}
         .pin-input:focus { outline: none; box-shadow: 0 0 25px rgba(0, 212, 255, 0.8); border-color: var(--neon-green); }
        
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
@@ -98,15 +98,13 @@
         .icon-btn-cpcb:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
         .btn-authorize { width: 100%; padding: 20px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 255, 136, 0.25)); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 18px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0,255,136,0.2); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-       
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
-        /* OLA API ETA POPUP FEEDBACK */
+        /* ETA FEEDBACK */
         .eta-feedback-box { display: none; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); padding: 12px; border-radius: 8px; margin-top: 10px; text-align: center; font-family: 'Orbitron'; font-size: 13px; font-weight: 700; color: var(--pure-white); box-shadow: 0 0 15px rgba(0,212,255,0.2); }
         .eta-highlight { color: var(--neon-gold); font-size: 16px; font-weight: 900; }
 
         .md-card { background: var(--md-glass-bg); border: 1px solid var(--md-border); border-radius: 20px; padding: 22px; box-shadow: 0 30px 70px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 212, 255, 0.2) inset; margin-bottom: 20px; position: relative; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-       
         .md-header-container { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(0, 212, 255, 0.4); padding-bottom: 15px; margin-bottom: 18px; gap: 5px;}
         .md-title-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 50%; }
         .md-header-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; font-family: 'Orbitron'; line-height: 1.2;}
@@ -145,6 +143,7 @@
         .export-dropdown button:hover { background: rgba(0, 212, 255, 0.25); color: var(--neon-blue); }
 
         footer { margin-top: auto; padding: 25px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.95); box-shadow: 0 -5px 20px rgba(0,0,0,0.5);}
+       
         #ai-scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .scanner-container { position: relative; width: 100%; max-width: 400px; border: 2px solid var(--neon-green); border-radius: 20px; overflow: hidden; box-shadow: 0 0 50px rgba(0, 255, 136, 0.5); background: #000; }
         #ai-video-feed { width: 100%; height: auto; display: block; object-fit: cover; }
@@ -152,9 +151,9 @@
         @keyframes scan-laser { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
         #kill-switch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
 
-        /* 🌟 ADAPTIVE GRID ARCHITECTURE (FOR LAPTOPS/DESKTOPS) 🌟 */
+        /* 🌟 ADAPTIVE GRID ARCHITECTURE (LAPTOP/DESKTOP FULL SCREEN) 🌟 */
         @media (min-width: 768px) {
-            .app-wrapper { max-width: 1200px; } /* Expand container */
+            .app-wrapper { max-width: 1200px; }
             .md-card { padding: 30px; }
             .ring-container { padding: 40px 0; gap: 30px; }
             .status-ring { width: 120px; height: 120px; font-size: 36px; border-width: 6px; }
@@ -199,7 +198,8 @@
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
-                    <input type="password" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="checkPIN(this.value)">
+                    <!-- 🌟 AUTO-FOCUS AND GOOGLE POPUP FIX (type="tel", autocomplete="off") 🌟 -->
+                    <input type="tel" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" autocomplete="off" oninput="checkPIN(this.value)">
                     <p style="font-size: 13px; color:var(--text-sub); margin-top: 20px; letter-spacing: 1.5px; font-weight:800; text-transform:uppercase;">Multi-Tenant Secure Cloud V2.0</p>
                 </div>
             </div>
@@ -228,22 +228,21 @@
                     <form id="radar-form">
                         <div class="input-group">
                             <label>INVOICE NUMBER</label>
-                            <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required>
+                            <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required autocomplete="off">
                         </div>
                         <div class="input-group">
                             <label>VEHICLE NUMBER</label>
-                            <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required>
+                            <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required autocomplete="off">
                         </div>
                         <div class="input-group">
                             <label>DESTINATION (PINCODE)</label>
                             <div class="scan-wrapper">
-                                <!-- Triggers Verify & Ola API ETA Fetch -->
-                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyPincodeLive(this.value)">
+                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyPincodeLive(this.value)" autocomplete="off">
                                 <span id="pincode-status-icon" style="position: absolute; right: 12px; font-size: 18px; font-weight: bold;"></span>
                             </div>
                             <div id="pincode-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
                            
-                            <!-- 🌟 PREDICTIVE ETA MATRIX FEEDBACK BOX 🌟 -->
+                            <!-- ETA PREDICTIVE MATRIX -->
                             <div id="eta-feedback" class="eta-feedback-box">
                                 Predictive Analytics Matrix Active<br>
                                 <span style="font-size: 11px; color: var(--text-sub);">Ola Engine ETA:</span> <span id="eta-display-text" class="eta-highlight">Calculating...</span>
@@ -254,7 +253,7 @@
                         <div class="input-group">
                             <label>E-WAY BILL NUMBER</label>
                             <div class="scan-wrapper">
-                                <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required style="padding-right: 45px;">
+                                <input type="number" id="EWay_Bill_No" placeholder="12 Digit No" required style="padding-right: 45px;" autocomplete="off">
                                 <span class="icon-btn" onclick="startNativeAiScanner('EWAY')">📷</span>
                             </div>
                         </div>
@@ -265,13 +264,13 @@
                         <div class="input-group">
                             <label>CPCB TRACEABILITY CODE (OPTIONAL)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode" style="padding-right: 45px;">
+                                <input type="text" id="CPCB_Barcode_ID" placeholder="Scan Barcode" style="padding-right: 45px;" autocomplete="off">
                                 <span class="icon-btn icon-btn-cpcb" onclick="startNativeAiScanner('CPCB')">📷</span>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>BAG WEIGHT (KG)</label>
-                            <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required>
+                            <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required autocomplete="off">
                         </div>
                         <button type="submit" class="btn-authorize" id="submit-btn"><span id="btn-text">AUTHORIZE DISPATCH</span></button>
                     </form>
@@ -377,6 +376,16 @@
         let currentClientKey = "Factory_Default";
         let globalClientData = [];
 
+        // 🌟 AUTO FOCUS LOGIC 🌟
+        window.onload = function() {
+            setTimeout(function() {
+                const pinInput = document.getElementById('auth-pin');
+                if(pinInput && document.getElementById('view-login').style.display !== 'none') {
+                    pinInput.focus();
+                }
+            }, 300);
+        };
+
         try {
             const firebaseConfig = {
                 apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
@@ -431,7 +440,9 @@
                 if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 setTimeout(() => { pinInput.classList.remove('shake-error'); }, 400);
             }
-            pinInput.value = ''; pinInput.disabled = false; pinInput.focus();
+            pinInput.value = ''; pinInput.disabled = false;
+            // Re-focus logic if failed
+            setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
         function bootMDDashboard(titleText) {
@@ -450,6 +461,8 @@
             document.getElementById('view-incharge').style.display = 'none';
             document.getElementById('view-md').style.display = 'none';
             switchTab('transit');
+            // Auto focus on logout
+            setTimeout(() => { document.getElementById('auth-pin').focus(); }, 300);
         }
 
         function switchTab(tabId) {
@@ -490,7 +503,7 @@
             try {
                 aiVideoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1280 } } });
                 video.srcObject = aiVideoStream;
-                if (!('BarcodeDetector' in window)) throw new Error("Hardware AI not supported.");
+                if (!('BarcodeDetector' in window)) throw new Error("Hardware Scanner not supported.");
                 const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
                
                 aiDetectionInterval = setInterval(async () => {
@@ -556,7 +569,7 @@
                         safeCount++;
                     }
 
-                    // 🌟 DISPLAYING ETA FROM FIREBASE TO MD DASHBOARD 🌟
+                    // 🌟 PREDICTIVE ETA DISPLAY MATRIX 🌟
                     let etaDisplayHTML = "";
                     if(d.Predictive_ETA && d.Predictive_ETA !== "Pending" && d.Predictive_ETA !== "Error") {
                         etaDisplayHTML = `<div style="font-size:12px; color:var(--neon-gold); font-weight:800; margin-top:8px; font-family:'Orbitron'; padding: 6px; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--neon-gold); border-radius: 6px; display: inline-block;">Predictive ETA: ${d.Predictive_ETA} Hrs</div>`;
@@ -639,7 +652,6 @@
 
         function playSuccessBeep() { try { const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); gainNode.gain.setValueAtTime(1, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1); } catch(e) {} }
 
-        // 🌟 UPDATED: VERIFY PINCODE & FETCH OLA ETA VIA CLOUDFLARE 🌟
         async function verifyPincodeLive(pincode) {
             const icon = document.getElementById('pincode-status-icon');
             const feedback = document.getElementById('pincode-feedback');
@@ -653,14 +665,12 @@
                 return;
             }
             if (pincode.length === 6) {
-                // Step 1: Verification
                 icon.innerHTML = "⏳"; feedback.style.color = "#00d4ff"; feedback.innerText = "Connecting Govt Server...";
                 try {
                     const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`); const data = await res.json();
                     if (data[0].Status === "Success") {
                         icon.innerHTML = "✅"; feedback.style.color = "#00ff88"; feedback.innerText = `Verified: ${data[0].PostOffice[0].District}, ${data[0].PostOffice[0].State}`;
                        
-                        // Step 2: Predictive Matrix Call (Cloudflare Ola API Worker)
                         etaFeedbackBox.style.display = "block";
                         etaDisplayText.innerText = "Scanning Live Traffic Matrix...";
                         try {
@@ -670,7 +680,6 @@
                                 if(olaData.etaHours) {
                                     etaDisplayText.innerText = `${olaData.etaHours} Hrs`;
                                     hiddenEta.value = olaData.etaHours;
-                                    // Visual Warning if ETA is high (optional smart logic)
                                     if(olaData.etaHours > 48) { etaDisplayText.style.color = "var(--danger-red)"; }
                                     else { etaDisplayText.style.color = "var(--neon-gold)"; }
                                 } else {
@@ -680,7 +689,6 @@
                                 throw new Error("Worker Error");
                             }
                         } catch(apiErr) {
-                            // Fallback if Cloudflare is down/sleeping
                             etaDisplayText.innerText = "24 Hrs (Standard Est.)";
                             hiddenEta.value = "24";
                         }
@@ -700,12 +708,11 @@
             const dispatchRef = database.ref(`Clients/${currentClientKey}/Alam_Radar_Dispatches`);
             const btnText = document.getElementById('btn-text'); btnText.innerText = 'SYNCING...';
            
-            // Passing the Predictive_ETA to Firebase Database
             const data = {
                 Invoice_Number: document.getElementById('Invoice_Number').value,
                 Vehicle_Number: document.getElementById('Vehicle_Number').value.toUpperCase(),
                 Destination_Pincode: document.getElementById('Destination_Info').value,
-                Predictive_ETA: document.getElementById('Hidden_Predictive_ETA').value, // 🌟 NEW AI DATA
+                Predictive_ETA: document.getElementById('Hidden_Predictive_ETA').value,
                 EWay_Bill_No: document.getElementById('EWay_Bill_No').value,
                 EWB_Expiry_Time: document.getElementById('EWB_Expiry_Time').value,
                 CPCB_Barcode_ID: document.getElementById('CPCB_Barcode_ID').value || "NA",
@@ -724,7 +731,12 @@
                 const sb = document.getElementById('status-box');
                 sb.innerHTML = "✅ SECURE SYNC COMPLETE"; sb.className = "status-success"; sb.style.display = "block";
                 btnText.innerText = 'AUTHORIZE DISPATCH';
-                setTimeout(() => { sb.style.display = "none"; }, 4000);
+               
+                // Re-focus after submit for fast entry
+                setTimeout(() => {
+                    sb.style.display = "none";
+                    document.getElementById('Invoice_Number').focus();
+                }, 4000);
             });
         });
 
