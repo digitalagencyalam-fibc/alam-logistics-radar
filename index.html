@@ -91,6 +91,14 @@
         .input-group input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 16px 15px; border-radius: 10px; font-size: 16px; transition: 0.3s; font-weight: 600;}
         .input-group input:focus { outline: none; border-color: var(--neon-green); box-shadow: 0 0 15px rgba(0,255,136,0.3) inset, 0 0 10px rgba(0,255,136,0.2);}
        
+        /* NUMBER SPINNER FIX */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] { -moz-appearance: textfield; }
+
         .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px 14px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 0 10px rgba(0,212,255,0.2); }
         .icon-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
         .icon-btn-cpcb { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 255, 136, 0.15); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
@@ -101,7 +109,6 @@
 
         #status-box { display: none; padding: 15px; border-radius: 10px; text-align: center; font-weight: 700; margin-top: 18px; border: 1px solid; font-family: 'Orbitron'; }
        
-        /* ETA FEEDBACK */
         .eta-feedback-box { display: none; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--neon-blue); padding: 12px; border-radius: 8px; margin-top: 10px; text-align: center; font-family: 'Orbitron'; font-size: 13px; font-weight: 700; color: var(--pure-white); box-shadow: 0 0 15px rgba(0,212,255,0.2); }
         .eta-highlight { color: var(--neon-gold); font-size: 16px; font-weight: 900; }
 
@@ -242,10 +249,8 @@
                             </div>
                             <div id="pincode-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
                            
-                            <!-- ETA PREDICTIVE MATRIX -->
                             <div id="eta-feedback" class="eta-feedback-box">
                                 Predictive Analytics Matrix Active<br>
-                                <!-- 🌟 WHITE-LABEL: OLA REMOVED PERMANENTLY 🌟 -->
                                 <span style="font-size: 11px; color: var(--text-sub);">Routing Matrix ETA:</span> <span id="eta-display-text" class="eta-highlight">Calculating...</span>
                             </div>
                             <input type="hidden" id="Hidden_Predictive_ETA" value="Pending">
@@ -430,7 +435,8 @@
                     setTimeout(() => { document.getElementById('Invoice_Number').focus(); }, 300);
                    
                 } else if (pin == pins.MD || pin === "9999") {
-                    currentClientKey = "Factory_VIP";
+                    // 🌟 CRITICAL FIX: MD ROOM SYNCED WITH INCHARGE ROOM 🌟
+                    currentClientKey = "Factory_Default";
                     bootMDDashboard("VIP COMMAND<br>CENTER");
                 } else if (pin == pins.Admin || pin === "7777") {
                     currentClientKey = "Factory_Default";
@@ -518,7 +524,10 @@
                         }
                     } catch (e) {}
                 }, 100);
-            } catch (err) { alert("Camera Error: " + err.message); closeAiScanner(); }
+            } catch (err) {
+                alert("SYSTEM ALERT: Camera permission denied or device not found. Please click the lock icon in your browser URL bar and 'Allow' camera access.");
+                closeAiScanner();
+            }
         }
 
         function closeAiScanner() {
