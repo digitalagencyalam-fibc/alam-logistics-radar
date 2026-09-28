@@ -77,11 +77,8 @@
         input[type="number"] { -moz-appearance: textfield; }
 
         .icon-btn { position: absolute; right: 8px; background: rgba(0, 212, 255, 0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px 14px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 0 10px rgba(0,212,255,0.2); }
-        .icon-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
         .icon-btn-lr { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 255, 136, 0.15); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
-        .icon-btn-lr:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
         .icon-btn-photo { border-color: var(--neon-gold); color: var(--neon-gold); background: rgba(255, 204, 0, 0.15); box-shadow: 0 0 10px rgba(255,204,0,0.2); }
-        .icon-btn-photo:hover { background: var(--neon-gold); color: #000; box-shadow: 0 0 20px var(--neon-gold); }
 
         .btn-authorize { width: 100%; padding: 20px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 255, 136, 0.25)); border: 2px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron'; font-size: 18px; font-weight: 900; letter-spacing: 2px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0,255,136,0.2); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         .btn-authorize:focus { outline: none; box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), inset 0 0 15px rgba(0,255,136,0.4); border-color: #fff; }
@@ -232,7 +229,6 @@
                             <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required autocomplete="off" style="text-transform: uppercase;">
                         </div>
 
-                        <!-- UPGRADED DRIVER PHOTO CAPTURE -->
                         <div class="input-group">
                             <label>DRIVER PHOTO CAPTURE (SECURITY)</label>
                             <div class="scan-wrapper">
@@ -396,20 +392,13 @@
     </div>
 
     <script>
-        // ==========================================
-        // SYSTEM CONFIGURATION (CLIENT SETUP)
-        // ==========================================
-        // Jab naya client aayega, uski factory ka Lat/Lng yahan daalna hai
-        const CLIENT_FACTORY_LAT = 19.0760; // Example: Mumbai
-        const CLIENT_FACTORY_LNG = 72.8777; // Example: Mumbai
-        const GEO_FENCE_RADIUS_METERS = 500; // 500 meters ki chhoot
-        // ==========================================
-
         let database, auth;
         let currentClientKey = "Factory_VIP";
         let globalClientData = [];
         let activeDriverPhotoBase64 = "";
         let geoWatchId = null;
+        let demoYardLat = null;
+        let demoYardLng = null;
 
         window.onload = function() {
             setTimeout(function() {
@@ -483,17 +472,19 @@
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
-        // --- UPDATE 3: HARDCODED GPS GEO-FENCE LOGIC ---
+        // --- GPS GEO-FENCE DYNAMIC DEMO MODE (FIXED FOR DEMO) ---
         function startGeoFenceLock() {
             if (navigator.geolocation) {
                 geoWatchId = navigator.geolocation.watchPosition((position) => {
-                    // Ab 'demoYard' nahi, direct Client Configuration block se match karega
-                    const dist = calculateDistance(CLIENT_FACTORY_LAT, CLIENT_FACTORY_LNG, position.coords.latitude, position.coords.longitude);
+                    // DEMO MODE: Sets current location as Yard automatically
+                    if(!demoYardLat) { demoYardLat = position.coords.latitude; demoYardLng = position.coords.longitude; }
+                   
+                    const dist = calculateDistance(demoYardLat, demoYardLng, position.coords.latitude, position.coords.longitude);
                     const banner = document.getElementById('gps-security-banner');
                     const btn = document.getElementById('submit-btn');
                     const btnText = document.getElementById('btn-text');
                    
-                    if(dist <= GEO_FENCE_RADIUS_METERS) {
+                    if(dist <= 500) {
                         banner.style.background = "rgba(0, 255, 136, 0.15)";
                         banner.style.borderColor = "var(--neon-green)";
                         banner.style.color = "var(--neon-green)";
@@ -541,6 +532,7 @@
         function logout() {
             auth.signOut();
             if (geoWatchId) navigator.geolocation.clearWatch(geoWatchId);
+            demoYardLat = null; demoYardLng = null;
             document.getElementById('auth-pin').value = '';
             document.getElementById('view-login').style.display = 'flex';
             document.getElementById('view-guard').style.display = 'none';
@@ -578,7 +570,6 @@
             }
         });
 
-        // --- UPDATE 1: DRIVER PHOTO LOGIC WITH TIMESTAMP WATERMARK ---
         function handleDriverPhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -599,7 +590,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                    
-                    // WATERMARK DRAWING
                     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
                     ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
                     ctx.fillStyle = "#00ff88";
@@ -883,7 +873,6 @@
             });
         }
 
-        // --- UPDATE 2: EXCEL CSV TIMESTAMP FIX ---
         function formatTimestamp(ts) {
             if(!ts) return "NA";
             const date = new Date(ts);
