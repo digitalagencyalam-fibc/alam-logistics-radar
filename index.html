@@ -839,13 +839,34 @@
             } catch(e) { etaDisplayText.innerText = "24 Hrs (Standard Est.)"; hiddenEta.value = "24"; }
         }
 
+      // THE JAVASCRIPT MATHEMATICS ENGINE
+        function checkEWayBillValid(ewayStr) {
+            if (!ewayStr || ewayStr.length !== 12) return false;
+            let sum = 0;
+            let isEven = false;
+            for (let i = ewayStr.length - 1; i >= 0; i--) {
+                let digit = parseInt(ewayStr.charAt(i), 10);
+                if (isEven) { digit *= 2; if (digit > 9) digit -= 9; }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return (sum % 10) === 0;
+        }
+
         document.getElementById('radar-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-           
+            e.preventDefault(); 
+            
+            // STRICT SECURITY GUARD CHECK
+            const ewayVal = document.getElementById('EWay_Bill_No').value;
+            if (!checkEWayBillValid(ewayVal)) {
+                alert("⚠️ SECURITY BLOCK: Invalid E-Way Bill number! Dispatch is locked by Mathematics Engine.");
+                return;
+            }
+            
             if(!activeDriverPhotoBase64) {
                 alert("⚠️ DRIVER PHOTO IS MANDATORY FOR CLEARANCE.");
                 return;
-            }
+            }  
 
             const dispatchRef = database.ref(`Clients/${currentClientKey}/Alam_Radar_Dispatches`);
             const btnText = document.getElementById('btn-text'); btnText.innerText = 'SYNCING...';
