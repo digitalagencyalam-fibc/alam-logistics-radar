@@ -478,50 +478,39 @@
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
+        // VIP DEMO MODE: GPS Fencing is OPEN for Client Testing
         function startGeoFenceLock() {
             if (navigator.geolocation) {
-                geoWatchId = navigator.geolocation.watchPosition((position) => {
+                // 'watchPosition' hata kar 'getCurrentPosition' kiya taaki red/green blink na ho
+                navigator.geolocation.getCurrentPosition((position) => {
                     globalLat = position.coords.latitude;
                     globalLng = position.coords.longitude;
-
-                    if(!demoYardLat) { demoYardLat = position.coords.latitude; demoYardLng = position.coords.longitude; }
                    
-                    const dist = calculateDistance(demoYardLat, demoYardLng, position.coords.latitude, position.coords.longitude);
                     const banner = document.getElementById('gps-security-banner');
                     const btn = document.getElementById('submit-btn');
                     const btnText = document.getElementById('btn-text');
                    
-                    if(dist <= 500) {
-                        banner.style.background = "rgba(0, 255, 136, 0.15)";
-                        banner.style.borderColor = "var(--neon-green)";
-                        banner.style.color = "var(--neon-green)";
-                        banner.style.boxShadow = "0 0 15px rgba(0,255,136,0.3)";
-                        banner.innerHTML = `✅ IN-ZONE: YARD GPS SECURED (${dist}m)`;
-                        // Enable button only if Checksum is also OK or empty initially
-                        const ewayFeed = document.getElementById('eway-feedback').innerText;
-                        if (!ewayFeed.includes("INVALID")) {
-                            btn.disabled = false;
-                            btn.classList.remove('btn-locked');
-                            btnText.innerText = "AUTHORIZE DISPATCH";
-                        }
-                    } else {
-                        banner.style.background = "rgba(255, 26, 77, 0.15)";
-                        banner.style.borderColor = "var(--danger-red)";
-                        banner.style.color = "var(--danger-red)";
-                        banner.style.boxShadow = "0 0 15px rgba(255,26,77,0.3)";
-                        banner.innerHTML = `⚠️ OUT OF ZONE: DISPATCH LOCKED (${dist}m)`;
-                        btn.disabled = true;
-                        btn.classList.add('btn-locked');
-                        btnText.innerText = "LOCKED BY GPS";
+                    // Always Green VIP Demo
+                    banner.style.background = "rgba(0, 255, 136, 0.15)";
+                    banner.style.borderColor = "var(--neon-green)";
+                    banner.style.color = "var(--neon-green)";
+                    banner.style.boxShadow = "0 0 15px rgba(0,255,136,0.3)";
+                    banner.innerHTML = `✅ VIP DEMO MODE: LOCATION SECURED`;
+                   
+                    // Button unlock karo (Agar Checksum ne lock nahi kiya hai)
+                    const ewayFeed = document.getElementById('eway-feedback') ? document.getElementById('eway-feedback').innerText : "";
+                    if (!ewayFeed.includes("INVALID")) {
+                        btn.disabled = false;
+                        btn.classList.remove('btn-locked');
+                        btnText.innerText = "AUTHORIZE DISPATCH";
                     }
                 }, (error) => {
                     const banner = document.getElementById('gps-security-banner');
-                    banner.innerHTML = "❌ GPS PERMISSION DENIED: DISPATCH LOCKED";
-                    document.getElementById('submit-btn').disabled = true;
-                    document.getElementById('submit-btn').classList.add('btn-locked');
+                    banner.innerHTML = "⚠️ DEMO MODE: PLEASE TURN ON MOBILE GPS/LOCATION";
                 }, { enableHighAccuracy: true });
             }
         }
+
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371e3;
