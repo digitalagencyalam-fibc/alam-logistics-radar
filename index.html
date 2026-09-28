@@ -149,7 +149,7 @@
             #vehicle-list-container, #lr-list-container, #yard-list-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         }
 
-        #photo-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100001; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
+        #photo-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100001; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
         .photo-modal-card { background: linear-gradient(145deg, rgba(10,15,25,0.95), rgba(0,0,0,1)); border: 2px solid var(--neon-blue); border-radius: 20px; padding: 25px; max-width: 90%; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0,212,255,0.2); position: relative; }
         .photo-modal-card::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--prism-silver); z-index: -1; border-radius: 22px; opacity: 0.3; animation: pulse-red 3s infinite; }
        
@@ -396,13 +396,20 @@
     </div>
 
     <script>
+        // ==========================================
+        // SYSTEM CONFIGURATION (CLIENT SETUP)
+        // ==========================================
+        // Jab naya client aayega, uski factory ka Lat/Lng yahan daalna hai
+        const CLIENT_FACTORY_LAT = 19.0760; // Example: Mumbai
+        const CLIENT_FACTORY_LNG = 72.8777; // Example: Mumbai
+        const GEO_FENCE_RADIUS_METERS = 500; // 500 meters ki chhoot
+        // ==========================================
+
         let database, auth;
         let currentClientKey = "Factory_VIP";
         let globalClientData = [];
         let activeDriverPhotoBase64 = "";
         let geoWatchId = null;
-        let demoYardLat = null;
-        let demoYardLng = null;
 
         window.onload = function() {
             setTimeout(function() {
@@ -476,17 +483,17 @@
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
+        // --- UPDATE 3: HARDCODED GPS GEO-FENCE LOGIC ---
         function startGeoFenceLock() {
             if (navigator.geolocation) {
                 geoWatchId = navigator.geolocation.watchPosition((position) => {
-                    if(!demoYardLat) { demoYardLat = position.coords.latitude; demoYardLng = position.coords.longitude; }
-                   
-                    const dist = calculateDistance(demoYardLat, demoYardLng, position.coords.latitude, position.coords.longitude);
+                    // Ab 'demoYard' nahi, direct Client Configuration block se match karega
+                    const dist = calculateDistance(CLIENT_FACTORY_LAT, CLIENT_FACTORY_LNG, position.coords.latitude, position.coords.longitude);
                     const banner = document.getElementById('gps-security-banner');
                     const btn = document.getElementById('submit-btn');
                     const btnText = document.getElementById('btn-text');
                    
-                    if(dist <= 500) {
+                    if(dist <= GEO_FENCE_RADIUS_METERS) {
                         banner.style.background = "rgba(0, 255, 136, 0.15)";
                         banner.style.borderColor = "var(--neon-green)";
                         banner.style.color = "var(--neon-green)";
@@ -534,7 +541,6 @@
         function logout() {
             auth.signOut();
             if (geoWatchId) navigator.geolocation.clearWatch(geoWatchId);
-            demoYardLat = null; demoYardLng = null;
             document.getElementById('auth-pin').value = '';
             document.getElementById('view-login').style.display = 'flex';
             document.getElementById('view-guard').style.display = 'none';
@@ -572,13 +578,13 @@
             }
         });
 
-        // --- UPGRADED: DRIVER PHOTO LOGIC ---
+        // --- UPDATE 1: DRIVER PHOTO LOGIC WITH TIMESTAMP WATERMARK ---
         function handleDriverPhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
            
             const statusInput = document.getElementById('Driver_Photo_Status');
-            statusInput.value = "⏳ Processing HD Image...";
+            statusInput.value = "⏳ Processing HD Image & Security Stamp...";
             statusInput.style.color = "var(--neon-blue)";
            
             const reader = new FileReader();
@@ -586,16 +592,24 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
+                    const MAX_WIDTH = 500;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                    
-                    activeDriverPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                    // WATERMARK DRAWING
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+                    ctx.fillStyle = "#00ff88";
+                    ctx.font = "bold 14px 'Orbitron', sans-serif";
+                    const nowString = new Date().toLocaleString('en-IN');
+                    ctx.fillText(`SECURE LOG: ${nowString}`, 15, canvas.height - 15);
+
+                    activeDriverPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                    
-                    statusInput.value = "✅ HD IDENTITY COMPRESSED & SECURED";
+                    statusInput.value = "✅ SECURE IDENTITY COMPRESSED";
                     statusInput.style.color = "var(--neon-green)";
                     statusInput.style.borderColor = "var(--neon-green)";
                     if(navigator.vibrate) navigator.vibrate(100);
@@ -799,7 +813,6 @@
                         etaDisplayHTML = `<div style="font-size:12px; color:var(--neon-gold); font-weight:800; margin-top:8px; font-family:'Orbitron'; padding: 6px; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--neon-gold); border-radius: 6px; display: inline-block;">Predictive ETA: ${d.Predictive_ETA} Hrs</div>`;
                     }
 
-                    // UPGRADED: MD DASHBOARD PHOTO BUTTON
                     let driverPhotoBtn = "";
                     if(d.Driver_Photo) {
                         driverPhotoBtn = `<button onclick="viewDriverPhoto('${d.Driver_Photo}')" style="background: rgba(0, 212, 255, 0.15); border: 2px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 15px; border-radius: 8px; font-family: 'Orbitron'; font-size: 13px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(0,212,255,0.4); transition: 0.3s; margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; width: 100%; justify-content: center;">📸 VIEW DRIVER HD</button>`;
@@ -851,14 +864,14 @@
                         const card = document.createElement('div');
                         card.className = isDelayed ? "critical-pulse" : "";
                         card.style = `border-left: 5px solid ${isDelayed ? '#ff1a4d' : '#ffcc00'}; background: rgba(10,15,25,0.9); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.8);`;
-                        const entryTime = new Date(v.IN).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        const entryTime = new Date(v.IN).toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
                         card.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:14px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">VEHICLE ID: ${qr.substring(0,12)}..</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:${isDelayed ? '#ff1a4d' : '#ffcc00'}; border: 1px solid ${isDelayed ? '#ff1a4d' : '#ffcc00'}; font-family:'Orbitron'; box-shadow: 0 0 10px ${isDelayed ? '#ff1a4d' : '#ffcc00'}40 inset;">${isDelayed ? '⚠️ DETENTION' : 'IN-YARD'}</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">Entry: <span style="color:#00d4ff;">${entryTime}</span> | Inside: <span style="color:#fff; font-weight:900;">${hoursInside.toFixed(1)} Hrs</span></div>`;
                         yContainer.prepend(card);
                     } else if (v.IN && v.OUT) {
                         clearedCount++;
                         const card = document.createElement('div');
                         card.style = `border-left: 5px solid #00ff88; background: rgba(10,15,25,0.9); padding: 18px; border-radius: 12px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.8);`;
-                        const outTime = new Date(v.OUT).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        const outTime = new Date(v.OUT).toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
                         card.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><strong style="font-family:'Orbitron'; font-size:14px; color:#fff; letter-spacing:1px; text-shadow: 0 1px 2px #000;">VEHICLE ID: ${qr.substring(0,12)}..</strong><span style="background:rgba(0,0,0,0.5); padding:5px 12px; border-radius:6px; font-size:11px; font-weight:900; color:#00ff88; border: 1px solid #00ff88; font-family:'Orbitron'; box-shadow: 0 0 10px #00ff8840 inset;">✅ CLEARED</span></div><div style="font-size:14px; color:var(--text-sub); font-weight:700;">Departed: <span style="color:#00ff88;">${outTime}</span></div>`;
                         yContainer.appendChild(card);
                     }
@@ -870,11 +883,22 @@
             });
         }
 
+        // --- UPDATE 2: EXCEL CSV TIMESTAMP FIX ---
+        function formatTimestamp(ts) {
+            if(!ts) return "NA";
+            const date = new Date(ts);
+            return date.toLocaleString('en-IN');
+        }
+
         function downloadClientCSV() {
             document.getElementById('export-menu').style.display = 'none';
             if(globalClientData.length === 0) return alert("No Data Found");
-            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Invoice_Number,Vehicle_Number,Origin_Pincode,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,LR_Number,Bag_Weight_KG,Predictive_ETA\n";
-            globalClientData.forEach(row => { csvContent += `${row.Timestamp},${row.Invoice_Number},${row.Vehicle_Number},${row.Origin_Pincode},${row.Destination_Pincode},${row.EWay_Bill_No},${row.EWB_Expiry_Time},${row.LR_Number || 'NA'},${row.Bag_Weight_KG},${row.Predictive_ETA || 'NA'}\r\n`; });
+            let csvContent = "data:text/csv;charset=utf-8,Date_Time,Invoice_Number,Vehicle_Number,Driver_Photo_Status,Origin_Pincode,Destination_Pincode,EWay_Bill_No,EWB_Expiry_Time,LR_Number,Bag_Weight_KG,Predictive_ETA\n";
+            globalClientData.forEach(row => {
+                const readableTime = formatTimestamp(row.Timestamp);
+                const hasPhoto = row.Driver_Photo ? "SECURED (View on Dashboard)" : "NOT SECURED";
+                csvContent += `"${readableTime}",${row.Invoice_Number},${row.Vehicle_Number},"${hasPhoto}",${row.Origin_Pincode},${row.Destination_Pincode},${row.EWay_Bill_No},${row.EWB_Expiry_Time},${row.LR_Number || 'NA'},${row.Bag_Weight_KG},${row.Predictive_ETA || 'NA'}\r\n`;
+            });
             var encodedUri = encodeURI(csvContent); var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", `Alam_Logistics_Report.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
@@ -896,3 +920,5 @@
     </script>
 </body>
 </html>
+
+ 
