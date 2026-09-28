@@ -191,10 +191,11 @@
 
         <div class="container">
            
+            <!-- UPDATE 1: PIN AUTOFOCUS FIX WITH NUMERIC KEYPAD -->
             <div id="view-login" style="display:flex;">
                 <div class="pin-box">
                     <h2>ENTER VIP PIN</h2>
-                    <input type="tel" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" autocomplete="off" oninput="checkPIN(this.value)">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="auth-pin" class="pin-input" maxlength="4" placeholder="••••" autocomplete="one-time-code" oninput="checkPIN(this.value)" autofocus>
                     <p style="font-size: 13px; color:var(--text-sub); margin-top: 20px; letter-spacing: 1.5px; font-weight:800; text-transform:uppercase;">Multi-Tenant Secure Cloud V2.0</p>
                 </div>
             </div>
@@ -224,11 +225,13 @@
                             <input type="text" id="Invoice_Number" placeholder="e.g. INV-2026-001" required autocomplete="off">
                         </div>
                        
+                        <!-- UPDATE 2: USER-FRIENDLY VEHICLE INPUT (No strict regex, just basic check) -->
                         <div class="input-group">
                             <label>VEHICLE NUMBER</label>
-                            <input type="text" id="Vehicle_Number" placeholder="e.g. MH-12-AB-1234" required autocomplete="off" style="text-transform: uppercase;">
+                            <input type="text" id="Vehicle_Number" placeholder="e.g. MH 12 AB 1234" required minlength="6" autocomplete="off" style="text-transform: uppercase;">
                         </div>
 
+                        <!-- UPDATE 3: DRIVER PHOTO CAPTURE -->
                         <div class="input-group">
                             <label>DRIVER PHOTO CAPTURE (SECURITY)</label>
                             <div class="scan-wrapper">
@@ -241,7 +244,7 @@
                         <div class="input-group">
                             <label>ORIGIN (STARTING PINCODE)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="Origin_Info" placeholder="Enter 6-digit Start Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
+                                <input type="text" id="Origin_Info" placeholder="Enter 6-digit Start Pincode" maxlength="6" pattern="^[0-9]{6}$" title="Must be exactly 6 digits" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
                                 <span id="origin-status-icon" style="position: absolute; right: 12px; font-size: 18px; font-weight: bold;"></span>
                             </div>
                             <div id="origin-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
@@ -250,7 +253,7 @@
                         <div class="input-group">
                             <label>DESTINATION (END PINCODE)</label>
                             <div class="scan-wrapper">
-                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit End Pincode" maxlength="6" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
+                                <input type="text" id="Destination_Info" placeholder="Enter 6-digit End Pincode" maxlength="6" pattern="^[0-9]{6}$" title="Must be exactly 6 digits" style="border-color: var(--neon-blue); padding-right: 45px;" required oninput="verifyBothPincodes()" autocomplete="off">
                                 <span id="pincode-status-icon" style="position: absolute; right: 12px; font-size: 18px; font-weight: bold;"></span>
                             </div>
                             <div id="pincode-feedback" style="font-size: 13px; margin-top: 8px; font-weight: 800;"></div>
@@ -284,7 +287,7 @@
 
                         <div class="input-group">
                             <label>TOTAL DISPATCH WEIGHT (KG)</label>
-                            <input type="number" step="0.01" id="Bag_Weight_KG" placeholder="e.g. 500" required autocomplete="off">
+                            <input type="number" step="0.01" min="0" id="Bag_Weight_KG" placeholder="e.g. 500" required autocomplete="off">
                         </div>
                        
                         <div id="gps-security-banner">
@@ -392,6 +395,14 @@
     </div>
 
     <script>
+        // ==========================================
+        // SYSTEM CONFIGURATION (CLIENT SETUP)
+        // ==========================================
+        const CLIENT_FACTORY_LAT = 19.0760;
+        const CLIENT_FACTORY_LNG = 72.8777;
+        const GEO_FENCE_RADIUS_METERS = 500;
+        // ==========================================
+
         let database, auth;
         let currentClientKey = "Factory_VIP";
         let globalClientData = [];
@@ -399,6 +410,10 @@
         let geoWatchId = null;
         let demoYardLat = null;
         let demoYardLng = null;
+       
+        // LIVE GPS GLOBAL VARIABLES FOR PHOTO WATERMARK
+        let globalLat = null;
+        let globalLng = null;
 
         window.onload = function() {
             setTimeout(function() {
@@ -472,13 +487,15 @@
             setTimeout(() => { if(document.getElementById('view-login').style.display !== 'none') pinInput.focus(); }, 100);
         }
 
-        // --- GPS GEO-FENCE DYNAMIC DEMO MODE (FIXED FOR DEMO) ---
         function startGeoFenceLock() {
             if (navigator.geolocation) {
                 geoWatchId = navigator.geolocation.watchPosition((position) => {
-                    // DEMO MODE: Sets current location as Yard automatically
+                    // Update global variables for photo watermark
+                    globalLat = position.coords.latitude;
+                    globalLng = position.coords.longitude;
+
+                    // Demo mode setup for testing
                     if(!demoYardLat) { demoYardLat = position.coords.latitude; demoYardLng = position.coords.longitude; }
-                   
                     const dist = calculateDistance(demoYardLat, demoYardLng, position.coords.latitude, position.coords.longitude);
                     const banner = document.getElementById('gps-security-banner');
                     const btn = document.getElementById('submit-btn');
@@ -570,6 +587,7 @@
             }
         });
 
+        // --- UPDATE 3: PERFECT PHOTO TIMESTAMP BURN-IN WITH GPS (FREE) ---
         function handleDriverPhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -588,14 +606,26 @@
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
+                   
+                    // 1. Photo draw karo
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                    
+                    // 2. Black Shadow Patti Draw karo (2 lines ke liye 50px height)
                     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-                    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+                    const stripHeight = 50;
+                    ctx.fillRect(0, canvas.height - stripHeight, canvas.width, stripHeight);
+                   
+                    // 3. Neon Green Text Draw karo (Time aur GPS dono)
                     ctx.fillStyle = "#00ff88";
-                    ctx.font = "bold 14px 'Orbitron', sans-serif";
+                    ctx.font = "bold 13px 'Orbitron', sans-serif";
+                   
+                    // Line 1: Time
                     const nowString = new Date().toLocaleString('en-IN');
-                    ctx.fillText(`SECURE LOG: ${nowString}`, 15, canvas.height - 15);
+                    ctx.fillText(`🕒 SECURE LOG: ${nowString}`, 10, canvas.height - 28);
+                   
+                    // Line 2: GPS Coordinates (Free & VIP)
+                    const gpsString = (globalLat && globalLng) ? `📍 GPS: ${globalLat.toFixed(5)}° N, ${globalLng.toFixed(5)}° E` : `📍 GPS: ACQUIRING SATELLITE...`;
+                    ctx.fillText(gpsString, 10, canvas.height - 10);
 
                     activeDriverPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                    
@@ -909,5 +939,3 @@
     </script>
 </body>
 </html>
-
- 
