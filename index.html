@@ -768,23 +768,25 @@
                     btn.classList.remove('btn-locked');
                     btnText.innerText = "AUTHORIZE DISPATCH";
                 }
-            } else {
-        // SMART UX FIX: Agar incharge ne number pura mita diya hai, toh system wapas normal state (evergreen) mein aa jayega
-        if (input.value.trim() === "") {
+      } else {
+        // ULTIMATE BULLETPROOF UX FIX
+        const exactEwayBox = document.getElementById('EWay_Bill_No');
+        
+        if (exactEwayBox && exactEwayBox.value.trim() === "") {
             feedback.innerText = "";
-            input.style.borderColor = "";
+            exactEwayBox.style.borderColor = "";
             btn.disabled = false;
             btn.classList.remove('btn-locked');
             btnText.innerText = "AUTHORIZE DISPATCH";
         } else {
             feedback.innerText = "❌ INVALID NUMBER: Checksum Failed!";
             feedback.style.color = "#ff1a4d";
-            input.style.borderColor = "var(--danger-red)";
+            if(exactEwayBox) exactEwayBox.style.borderColor = "var(--danger-red)";
             btn.disabled = true;
             btn.classList.add('btn-locked');
             btnText.innerText = "LOCKED: INVALID E-WAY BILL";
         }
-    }
+    }      
         }
 
         let originCode = ""; let destCode = ""; let isOriginValid = false; let isDestValid = false;
