@@ -668,7 +668,7 @@
            
             try {
                 const video = document.getElementById('ai-video-feed');
-                aiVideoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+               aiVideoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 }, advanced: [{ focusMode: "continuous" }] } });
                 video.srcObject = aiVideoStream;
                 const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13'] });
                
