@@ -832,22 +832,38 @@
             icon.innerHTML = ""; feedback.innerText = "";
         }
 
-        async function fetchLiveETA(origin, dest) {
+       async function fetchLiveETA(origin, dest) {
             const etaFeedbackBox = document.getElementById('eta-feedback');
             const etaDisplayText = document.getElementById('eta-display-text');
             const hiddenEta = document.getElementById('Hidden_Predictive_ETA');
-            etaFeedbackBox.style.display = "block"; etaDisplayText.style.color = "var(--pure-white)"; etaDisplayText.innerText = "Scanning Live Traffic Matrix...";
+           
+            etaFeedbackBox.style.display = "block";
+            etaDisplayText.style.color = "var(--pure-white)";
+            etaDisplayText.innerText = "📡 Fetching Live Routing...";
            
             try {
                 const cfRes = await fetch(`https://alam-routing-engine.digitalagencyalam.workers.dev/?origin=${origin}&destination=${dest}`);
-                if(cfRes.ok) {
-                    const cfData = await cfRes.json();
-                    if(cfData.etaHours) {
-                        etaDisplayText.innerText = `${cfData.etaHours} Hrs`; hiddenEta.value = cfData.etaHours;
-                        if(cfData.etaHours > 48) etaDisplayText.style.color = "var(--danger-red)"; else etaDisplayText.style.color = "var(--neon-gold)";
-                    } else throw new Error();
-                } else throw new Error();
-            } catch(e) { etaDisplayText.innerText = "24 Hrs (Standard Est.)"; hiddenEta.value = "24"; }
+                const cfData = await cfRes.json();
+               
+                if (cfRes.ok && cfData.etaHours && cfData.etaHours !== "N/A") {
+                    etaDisplayText.innerText = `${cfData.etaHours} Hrs`;
+                    hiddenEta.value = cfData.etaHours;
+                   
+                    if (cfData.etaHours > 48) {
+                        etaDisplayText.style.color = "var(--danger-red)";
+                    } else {
+                        etaDisplayText.style.color = "var(--neon-green)";
+                    }
+                } else {
+                    etaDisplayText.innerText = "Route Unavailable";
+                    hiddenEta.value = "Error";
+                    etaDisplayText.style.color = "var(--danger-red)";
+                }
+            } catch(e) {
+                etaDisplayText.innerText = "Network Error";
+                hiddenEta.value = "Error";
+                etaDisplayText.style.color = "var(--danger-red)";
+            }
         }
 
       // THE JAVASCRIPT MATHEMATICS ENGINE
