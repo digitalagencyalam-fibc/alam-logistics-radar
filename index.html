@@ -646,15 +646,39 @@
             reader.readAsDataURL(file);
         }
 
+        let isPhotoZoomed = false;
         function viewDriverPhoto(base64Data) {
-            document.getElementById('modal-driver-photo').src = base64Data;
+            const img = document.getElementById('modal-driver-photo');
+            img.src = base64Data;
+           
+            // W3C Standard CSS Transform Setup for Smooth Zoom
+            img.style.transform = "scale(1)";
+            img.style.transition = "transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)";
+            img.style.cursor = "zoom-in";
+            isPhotoZoomed = false;
+
+            // Tap/Click to HD Zoom Logic (Mobile & Desktop)
+            img.onclick = function() {
+                isPhotoZoomed = !isPhotoZoomed;
+                if(isPhotoZoomed) {
+                    img.style.transform = "scale(2.2)"; // 2.2x High HD Zoom
+                    img.style.cursor = "zoom-out";
+                } else {
+                    img.style.transform = "scale(1)"; // Back to normal
+                    img.style.cursor = "zoom-in";
+                }
+            };
+           
             document.getElementById('photo-modal-overlay').style.display = 'flex';
         }
 
         function closePhotoModal() {
+            const img = document.getElementById('modal-driver-photo');
+            img.style.transform = "scale(1)"; // Auto-reset zoom when closing
             document.getElementById('photo-modal-overlay').style.display = 'none';
-            document.getElementById('modal-driver-photo').src = "";
+            img.src = "";
         }
+
 
         let aiVideoStream = null; let aiDetectionInterval = null; let currentScanMode = '';
         async function startNativeAiScanner(mode) {
