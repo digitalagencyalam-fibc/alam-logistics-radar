@@ -646,50 +646,89 @@
             reader.readAsDataURL(file);
         }
 
-        let isPhotoZoomed = false;
-        let rotationAngle = 0; // Naya Smart Tracker 360 degree ke liye
+         let currentScale = 1;
+        let initialPinchDistance = null;
 
         function viewDriverPhoto(base64Data) {
             const img = document.getElementById('modal-driver-photo');
             img.src = base64Data;
            
-            // W3C Standard CSS Transform Setup for Smooth Zoom & Rotate
-            img.style.transform = "scale(1) rotate(0deg)";
-            img.style.transition = "transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)";
-            img.style.cursor = "zoom-in";
-           
-            isPhotoZoomed = false;
-            rotationAngle = 0;
+            // W3C Standard CSS setup
+            img.style.transform = "scale(1)";
+            img.style.transition = "transform 0.1s ease-out"; // Ungali ke sath smooth chalne ke liye
+            img.style.touchAction = "none"; // IMPORTANT: Background scroll rokne ke liye
+            currentScale = 1;
 
-            // MD-Friendly Logic: Tap to Zoom, Next Taps to Rotate 360
-            img.onclick = function() {
-                if (!isPhotoZoomed) {
-                    // Pehla Click: Zoom-In
-                    img.style.transform = `scale(2.2) rotate(${rotationAngle}deg)`;
-                    img.style.cursor = "alias";
-                    isPhotoZoomed = true;
-                } else {
-                    // Agle Clicks: 90 Degree Rotation har tap par (360 effect)
-                    rotationAngle += 90;
-                    img.style.transform = `scale(2.2) rotate(${rotationAngle}deg)`;
+            // TOUCH MATH: Do ungaliyon se Zoom In / Zoom Out ka logic
+            img.ontouchstart = function(e) {
+                if (e.touches.length === 2) {
+                    e.preventDefault();
+                    // Dono ungaliyon ke beech ki doori napna (Hypotenuse Math)
+                    initialPinchDistance = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
                 }
             };
-           
+
+            img.ontouchmove = function(e) {
+                if (e.touches.length === 2 && initialPinchDistance) {
+                    e.preventDefault();
+                    const currentDistance = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
+                   
+                    const scaleChange = currentDistance / initialPinchDistance;
+                    let newScale = currentScale * scaleChange;
+                   
+                    // Photo kitni badi hogi? (Min 1x, Max 5x Extreme HD Zoom)
+                    if (newScale < 1) newScale = 1;
+                    if (newScale > 5) newScale = 5;
+                   
+                    img.style.transform = `scale(${newScale})`;
+                }
+            };
+
+            img.ontouchend = function(e) {
+                if (e.touches.length < 2) {
+                    const match = img.style.transform.match(/scale\(([^)]+)\)/);
+                    if (match) currentScale = parseFloat(match[1]);
+                    initialPinchDistance = null;
+                }
+            };
+
+            // SMART FEATURE: Photo par Double-Tap (Do baar jaldi click) karne par photo wapas normal ho jayegi
+            let lastTap = 0;
+            img.onclick = function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                if (tapLength < 500 && tapLength > 0) {
+                    img.style.transform = "scale(1)";
+                    currentScale = 1;
+                }
+                lastTap = currentTime;
+            };
+
             document.getElementById('photo-modal-overlay').style.display = 'flex';
         }
 
         function closePhotoModal() {
             const img = document.getElementById('modal-driver-photo');
+            img.style.transform = "scale(1)";
            
-            // Auto-reset Zoom aur Rotation jab band karein
-            img.style.transform = "scale(1) rotate(0deg)";
+            // Memory Clear karna zaroori hai error se bachne ke liye
+            img.ontouchstart = null;
+            img.ontouchmove = null;
+            img.ontouchend = null;
+            img.onclick = null;
+           
             document.getElementById('photo-modal-overlay').style.display = 'none';
             img.src = "";
-           
-            isPhotoZoomed = false;
-            rotationAngle = 0;
+            currentScale = 1;
         }
 
+ 
 
         let aiVideoStream = null; let aiDetectionInterval = null; let currentScanMode = '';
         async function startNativeAiScanner(mode) {
