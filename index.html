@@ -14,6 +14,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
+        /* W3C GPU Hardware Acceleration (For Superfast VIP UI Rendering) */
+        .glass-card, .pin-box, .md-card, .btn-authorize, .vip-tabs {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform, opacity, box-shadow;
+        }
         :root {
             --bg-color: #000000;
             --glass-bg: rgba(10, 15, 25, 0.90);
