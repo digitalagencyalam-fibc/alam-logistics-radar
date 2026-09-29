@@ -763,12 +763,32 @@
             const feedback = document.getElementById('eway-feedback');
             const input = document.getElementById('EWay_Bill_No');
            
-            if (!ewayStr || ewayStr.length !== 12) {
+            // Safe check for GPS Banner to avoid errors
+            const gpsBannerElement = document.getElementById('gps-security-banner');
+            const gpsBanner = gpsBannerElement ? gpsBannerElement.innerText : "";
+           
+            // CONDITION 1: Agar box backspace se poora khali (empty) ho jaye
+            if (!ewayStr || ewayStr.trim() === "") {
+                feedback.innerText = "";
+                input.style.borderColor = "var(--neon-blue)";
+               
+                // Button ko wapas Green (Unlock) karo agar GPS secured hai
+                if (gpsBanner.includes("SECURED") || gpsBanner.includes("IN-ZONE")) {
+                    btn.disabled = false;
+                    btn.classList.remove('btn-locked');
+                    btnText.innerText = "AUTHORIZE DISPATCH";
+                }
+                return;
+            }
+
+            // CONDITION 2: Agar type kar raha hai aur 12 digit poore nahi hue
+            if (ewayStr.length !== 12) {
                 feedback.innerText = "";
                 input.style.borderColor = "var(--neon-blue)";
                 return;
             }
 
+            // CONDITION 3: Modulus-10 Checksum (Jab poore 12 digit type ho jayein)
             let sum = 0;
             let isEven = false;
             for (let i = ewayStr.length - 1; i >= 0; i--) {
@@ -787,31 +807,25 @@
                 feedback.innerText = "✅ Govt Format Verified (Checksum OK)";
                 feedback.style.color = "#00ff88";
                 input.style.borderColor = "var(--neon-green)";
-                if (document.getElementById('gps-security-banner').innerText.includes("IN-ZONE")) {
+               
+                if (gpsBanner.includes("SECURED") || gpsBanner.includes("IN-ZONE")) {
                     btn.disabled = false;
                     btn.classList.remove('btn-locked');
                     btnText.innerText = "AUTHORIZE DISPATCH";
                 }
-      } else {
-        // ULTIMATE BULLETPROOF UX FIX
-        const exactEwayBox = document.getElementById('EWay_Bill_No');
-        
-        if (exactEwayBox && exactEwayBox.value.trim() === "") {
-            feedback.innerText = "";
-            exactEwayBox.style.borderColor = "";
-            btn.disabled = false;
-            btn.classList.remove('btn-locked');
-            btnText.innerText = "AUTHORIZE DISPATCH";
-        } else {
-            feedback.innerText = "❌ INVALID NUMBER: Checksum Failed!";
-            feedback.style.color = "#ff1a4d";
-            if(exactEwayBox) exactEwayBox.style.borderColor = "var(--danger-red)";
-            btn.disabled = true;
-            btn.classList.add('btn-locked');
-            btnText.innerText = "LOCKED: INVALID E-WAY BILL";
+            } else {
+                feedback.innerText = "❌ INVALID NUMBER: Checksum Failed!";
+                feedback.style.color = "#ff1a4d";
+                input.style.borderColor = "var(--danger-red)";
+               
+                // Button ko permanently Lock karo
+                btn.disabled = true;
+                btn.classList.add('btn-locked');
+                btnText.innerText = "LOCKED: INVALID E-WAY BILL";
+            }
         }
-    }      
-        }
+
+ 
 
         let originCode = ""; let destCode = ""; let isOriginValid = false; let isDestValid = false;
         async function verifyBothPincodes() {
