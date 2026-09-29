@@ -647,25 +647,31 @@
         }
 
         let isPhotoZoomed = false;
+        let rotationAngle = 0; // Naya Smart Tracker 360 degree ke liye
+
         function viewDriverPhoto(base64Data) {
             const img = document.getElementById('modal-driver-photo');
             img.src = base64Data;
            
-            // W3C Standard CSS Transform Setup for Smooth Zoom
-            img.style.transform = "scale(1)";
-            img.style.transition = "transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)";
+            // W3C Standard CSS Transform Setup for Smooth Zoom & Rotate
+            img.style.transform = "scale(1) rotate(0deg)";
+            img.style.transition = "transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)";
             img.style.cursor = "zoom-in";
+           
             isPhotoZoomed = false;
+            rotationAngle = 0;
 
-            // Tap/Click to HD Zoom Logic (Mobile & Desktop)
+            // MD-Friendly Logic: Tap to Zoom, Next Taps to Rotate 360
             img.onclick = function() {
-                isPhotoZoomed = !isPhotoZoomed;
-                if(isPhotoZoomed) {
-                    img.style.transform = "scale(2.2)"; // 2.2x High HD Zoom
-                    img.style.cursor = "zoom-out";
+                if (!isPhotoZoomed) {
+                    // Pehla Click: Zoom-In
+                    img.style.transform = `scale(2.2) rotate(${rotationAngle}deg)`;
+                    img.style.cursor = "alias";
+                    isPhotoZoomed = true;
                 } else {
-                    img.style.transform = "scale(1)"; // Back to normal
-                    img.style.cursor = "zoom-in";
+                    // Agle Clicks: 90 Degree Rotation har tap par (360 effect)
+                    rotationAngle += 90;
+                    img.style.transform = `scale(2.2) rotate(${rotationAngle}deg)`;
                 }
             };
            
@@ -674,9 +680,14 @@
 
         function closePhotoModal() {
             const img = document.getElementById('modal-driver-photo');
-            img.style.transform = "scale(1)"; // Auto-reset zoom when closing
+           
+            // Auto-reset Zoom aur Rotation jab band karein
+            img.style.transform = "scale(1) rotate(0deg)";
             document.getElementById('photo-modal-overlay').style.display = 'none';
             img.src = "";
+           
+            isPhotoZoomed = false;
+            rotationAngle = 0;
         }
 
 
