@@ -1220,13 +1220,15 @@
                         const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                         const whatsappReadyMessage = `🚨 *EMERGENCY ALERT* 🚨\n📍 Location: ${googleMapsLink}\n🛠️ Smart Radar Data: ${rescueData}\nMD Sahab, Kripya driver ko turant call karein!`;
 
-                       // ORIGINAL LIFETIME FIX: Pushing data to Firebase Cloud
-                        firebase.database().ref("SOS_Emergency/Live_Alert").set({
+                        // ORIGINAL LIFETIME FIX: Await ke sath Cloud par bhejenge
+                        await firebase.database().ref("SOS_Emergency/Live_Alert").set({
                             mapsLink: googleMapsLink,
                             rescueData: rescueData,
                             whatsappMsg: whatsappReadyMessage,
                             timestamp: Date.now()
-                        }); 
+                        });
+
+                        // Premium Success Feedback (Green Button)
                         if(navigator.vibrate) navigator.vibrate(500);
                         sosFeedback.innerText = "✅ ALERT: MD Office ko Google Maps link bhej diya gaya hai!";
                         sosFeedback.style.color = "#00ff88";
@@ -1234,6 +1236,14 @@
                         sosBtn.style.background = "linear-gradient(135deg, #00cc66 0%, #008040 100%)";
                         sosBtn.style.boxShadow = "0 0 20px rgba(0, 204, 102, 0.6)";
                         sosBtn.style.color = "#ffffff";
+
+                        // ⏱️ VIP 5-SECOND AUTO-RESET ENGINE (Green to Red)
+                        setTimeout(() => {
+                            resetSOSBtn(sosBtn);
+                            sosFeedback.innerText = ""; // Success text hata dega
+                        }, 5000);
+
+ 
 
                     } catch (error) {
                         sosFeedback.innerText = "⚠️ Network problem, par offline location MD ko bhej di gayi hai.";
