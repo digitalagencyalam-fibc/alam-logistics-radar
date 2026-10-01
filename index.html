@@ -1234,13 +1234,29 @@
                             console.log("Location Engine load issue.");
                         }
 
-                        // 🚨 MD Popup Data (Simple, Clear, Transport English - 100% LIVE)
-                        const finalRescueData = `📍 LIVE DRIVER LOCATION:\n${exactAddress}\n\n🚨 NEARBY HELP (10KM):\n${rescueData}`;
+                        // 🚨 25KM Radius & Separate Police/Mechanic Live Count Update
+                        let policeCount = 0;
+                        let mechanicCount = 0;
+                        try {
+                            if (typeof data !== 'undefined' && data.elements) {
+                                data.elements.forEach(item => {
+                                    if (item.tags) {
+                                        if (item.tags.amenity === "police") policeCount++;
+                                        if (item.tags.shop === "car_repair" || item.tags.amenity === "car_repair") mechanicCount++;
+                                    }
+                                });
+                            }
+                        } catch (err) {
+                            console.log("Radar count error");
+                        }
+
+                        // 🚨 MD Popup Data (Simple, Clear, Transport English - 100% LIVE 25KM)
+                        const finalRescueData = `📍 LIVE DRIVER LOCATION:\n${exactAddress}\n\n🚨 NEARBY HELP (25KM):\n🚔 Police Stations: ${policeCount} Found\n🛠️ Mechanics/Repair: ${mechanicCount} Found`;
                        
                         const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                        
                         // WhatsApp Format (Ekdum clear aur direct)
-                        const whatsappReadyMessage = `*🚨 DRIVER EMERGENCY ALERT 🚨*\n\n📍 LIVE ADDRESS:\n${exactAddress}\n\n🗺️ GOOGLE MAPS LINK:\n${googleMapsLink}\n\n🛠 NEARBY HELP:\n${rescueData}`;
+                        const whatsappReadyMessage = `*🚨 DRIVER EMERGENCY ALERT 🚨*\n\n📍 LIVE ADDRESS:\n${exactAddress}\n\n🗺️ GOOGLE MAPS LINK:\n${googleMapsLink}\n\n🛠 NEARBY HELP (25KM):\n🚔 Police Stations: ${policeCount}\n🛠️ Mechanics: ${mechanicCount}`;
 
                         // ORIGINAL LIFETIME FIX: Await ke sath Cloud par bhejenge
                         await firebase.database().ref("SOS_Emergency/Live_Alert").set({
@@ -1250,6 +1266,7 @@
                             timestamp: Date.now()
                         });
 
+ 
 
                         // Premium Success Feedback (Green Button)
                         if(navigator.vibrate) navigator.vibrate(500);
