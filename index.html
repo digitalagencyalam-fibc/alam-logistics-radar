@@ -1335,6 +1335,15 @@
         document.getElementById('md-sos-overlay').style.display = "none";
         if(navigator.vibrate) navigator.vibrate(0);
     }
+    // ORIGINAL LIFETIME FIX: MD Dashboard listening to Firebase Cloud 24/7
+    firebase.database().ref("SOS_Emergency/Live_Alert").on("value", function(snapshot) {
+        const alertData = snapshot.val();
+        
+        // Agar cloud par naya emergency data aata hai, tabhi VIP Popup khulega
+        if(alertData && alertData.mapsLink) {
+            triggerMDAlertPopup(alertData.mapsLink, alertData.rescueData, alertData.whatsappMsg);
+        }
+    });
 </script>
 </body>
 </html>
