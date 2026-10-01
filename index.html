@@ -1388,10 +1388,18 @@
         }
     }
 
-    function closeMDAlert() {
-        document.getElementById('md-sos-overlay').style.display = "none";
-        if(navigator.vibrate) navigator.vibrate(0);
-    }
+   let vipAlarm = null; // Alarm ka Global Remote Control
+
+        function closeMDAlert() {
+            document.getElementById('md-sos-overlay').style.display = "none";
+            if(navigator.vibrate) navigator.vibrate(0);
+            
+            // 🚨 DISMISS dabate hi alarm turant band karne ka code
+            if(vipAlarm) {
+                vipAlarm.pause();
+                vipAlarm.currentTime = 0;
+            }
+        }
       // ORIGINAL LIFETIME FIX: MD Dashboard listening to Firebase Cloud 24/7
     firebase.database().ref("SOS_Emergency/Live_Alert").on("value", function(snapshot) {
         const alertData = snapshot.val();
@@ -1401,9 +1409,9 @@
         if(alertData && alertData.mapsLink && mdView && mdView.style.display !== "none") {
             
             // 🚨 VIP AIR FIGHTER SIREN ALARM (Hollywood Style Blast)
-            const vipAlarm = new Audio("https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg");
+            vipAlarm = new Audio("https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg");
+            vipAlarm.loop = true; // Alarm lagaatar bajega Dismiss hone tak
             vipAlarm.play().catch(err => console.log("Auto-play blocked"));
-
             // MD Popup Trigger
             triggerMDAlertPopup(alertData.mapsLink, alertData.rescueData, alertData.whatsappMsg);
         }
