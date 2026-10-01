@@ -1217,48 +1217,53 @@
                         }
 
                         // AI word removed, replaced with Smart Radar
-                       // 🚀 LIVE LOCATION ENGINE (Cloudflare Backend + Ola API)
-                        let exactAddress = "Live Location Attached"; // Default
+                       // 🚀 VIP MASTER ENGINE: OLA + RADAR + CLOUD
+                        // ==========================================
+                       
+                        // 1. OLA API - Live Address Fetch
+                        let exactAddress = "Live Location Attached";
                         try {
-                            // Driver ke UI par live trace feedback
                             sosBtn.innerText = "📍 LIVE LOCATION TRACE HO RAHA HAI...";
-                           
-                            // Hit your Secure Cloudflare Ola Engine
                             const geoResponse = await fetch(`https://alam-routing-engine.digitalagencyalam.workers.dev/?lat=${lat}&lng=${lng}`);
                             const geoData = await geoResponse.json();
-                           
-                            if(geoData.address) {
-                                exactAddress = geoData.address;
-                            }
+                            if(geoData.address) exactAddress = geoData.address;
                         } catch(error) {
-                            console.log("Location Engine load issue.");
+                            console.log("Ola Engine load issue.");
                         }
 
-                        // 🚨 25KM Radius & Separate Police/Mechanic Live Count Update
+                        // 2. VIP RADAR ENGINE - 25KM Police & Mechanic Fetch
                         let policeCount = 0;
                         let mechanicCount = 0;
                         try {
-                            if (typeof data !== 'undefined' && data.elements) {
-                                data.elements.forEach(item => {
+                            // 25000 meters = 25KM Radius
+                            const overpassQuery = `[out:json];(node["shop"="car_repair"](around:25000,${lat},${lng});node["amenity"="police"](around:25000,${lat},${lng}););out body;`;
+                           
+                            const radarResponse = await fetch("https://overpass-api.de/api/interpreter", {
+                                method: "POST",
+                                body: overpassQuery
+                            });
+                            const radarData = await radarResponse.json();
+                           
+                            if (radarData && radarData.elements) {
+                                radarData.elements.forEach(item => {
                                     if (item.tags) {
                                         if (item.tags.amenity === "police") policeCount++;
                                         if (item.tags.shop === "car_repair" || item.tags.amenity === "car_repair") mechanicCount++;
                                     }
                                 });
                             }
-                        } catch (err) {
-                            console.log("Radar count error");
+                        } catch(error) {
+                            console.log("Radar Engine issue.");
                         }
 
-                        // 🚨 MD Popup Data (Simple, Clear, Transport English - 100% LIVE 25KM)
+                        // 3. MD POPUP & WHATSAPP DATA FORMATTING
                         const finalRescueData = `📍 LIVE DRIVER LOCATION:\n${exactAddress}\n\n🚨 NEARBY HELP (25KM):\n🚔 Police Stations: ${policeCount} Found\n🛠️ Mechanics/Repair: ${mechanicCount} Found`;
                        
                         const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                        
-                        // WhatsApp Format (Ekdum clear aur direct)
                         const whatsappReadyMessage = `*🚨 DRIVER EMERGENCY ALERT 🚨*\n\n📍 LIVE ADDRESS:\n${exactAddress}\n\n🗺️ GOOGLE MAPS LINK:\n${googleMapsLink}\n\n🛠 NEARBY HELP (25KM):\n🚔 Police Stations: ${policeCount}\n🛠️ Mechanics: ${mechanicCount}`;
 
-                        // ORIGINAL LIFETIME FIX: Await ke sath Cloud par bhejenge
+                        // 4. FIREBASE CLOUD SYNC (Sending data to MD)
                         await firebase.database().ref("SOS_Emergency/Live_Alert").set({
                             mapsLink: googleMapsLink,
                             rescueData: finalRescueData,
@@ -1266,6 +1271,8 @@
                             timestamp: Date.now()
                         });
 
+ 
+                      
  
 
                         // Premium Success Feedback (Green Button)
