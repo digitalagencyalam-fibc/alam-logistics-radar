@@ -305,6 +305,11 @@
                         <button type="submit" class="btn-authorize btn-locked" id="submit-btn" disabled><span id="btn-text">AUTHORIZE DISPATCH (LOCKED)</span></button>
                     </form>
                     <div id="status-box"></div>
+                   <!-- VIP PREMIUM SOS EMERGENCY BUTTON -->
+<button id="sos-btn" type="button" onclick="triggerSOS()" style="width: 100%; margin-top: 20px; padding: 18px; background: linear-gradient(135deg, #ff0033 0%, #800000 100%); color: #ffffff; border: 1px solid #ff4d4d; border-radius: 10px; font-size: 18px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 20px rgba(255, 0, 51, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.3); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+    🚨 EMERGENCY
+</button>
+<div id="sos-feedback" style="text-align: center; margin-top: 12px; color: #ffcc00; font-size: 14px; font-weight: bold; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8);"></div> 
                 </div>
             </div>
 
@@ -1161,6 +1166,170 @@
                 }
             });
         });
+          // ==========================================
+        // VIP FEATURE: GROUND ZERO SOS RADAR ENGINE
+        // ==========================================
+        async function triggerSOS() {
+            const sosBtn = document.getElementById('sos-btn');
+            const sosFeedback = document.getElementById('sos-feedback');
+           
+            if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+            sosBtn.innerText = "⏳ LOCATION DHUNDH RAHA HAI...";
+            sosBtn.style.background = "linear-gradient(135deg, #ff9900 0%, #cc7a00 100%)";
+            sosBtn.style.boxShadow = "0 0 20px rgba(255, 153, 0, 0.6)";
+            sosBtn.disabled = true;
+
+            if (!navigator.geolocation) {
+                sosFeedback.innerText = "❌ ERROR: Aapke phone mein GPS support nahi hai!";
+                resetSOSBtn(sosBtn);
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                   
+                    sosBtn.innerText = "📡 MD KO MESSAGE BHEJ RAHA HAI...";
+
+                    try {
+                        const overpassQuery = `
+                            [out:json];
+                            (
+                              node["shop"="car_repair"](around:10000,${lat},${lng});
+                              node["amenity"="police"](around:10000,${lat},${lng});
+                            );
+                            out body;
+                        `;
+                       
+                        const response = await fetch("https://overpass-api.de/api/interpreter", {
+                            method: "POST",
+                            body: overpassQuery
+                        });
+                       
+                        let rescueData = "10KM mein local mechanic ki jankari nahi mili.";
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.elements && data.elements.length > 0) {
+                                rescueData = `10KM radius mein ${data.elements.length} Police/Mechanic trace hue hain!`;
+                            }
+                        }
+
+                        // AI word removed, replaced with Smart Radar
+                        const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                        const whatsappReadyMessage = `🚨 *EMERGENCY ALERT* 🚨\n📍 Location: ${googleMapsLink}\n🛠️ Smart Radar Data: ${rescueData}\nMD Sahab, Kripya driver ko turant call karein!`;
+
+                        console.log("🔥 MD DASHBOARD READY DATA: ", { lat, lng, mapsLink: googleMapsLink, whatsappMsg: whatsappReadyMessage });
+
+                        if(navigator.vibrate) navigator.vibrate(500);
+                        sosFeedback.innerText = "✅ ALERT: MD Office ko Google Maps link bhej diya gaya hai!";
+                        sosFeedback.style.color = "#00ff88";
+                        sosBtn.innerText = "🚨 MD NOTIFIED & TRACKING!";
+                        sosBtn.style.background = "linear-gradient(135deg, #00cc66 0%, #008040 100%)";
+                        sosBtn.style.boxShadow = "0 0 20px rgba(0, 204, 102, 0.6)";
+                        sosBtn.style.color = "#ffffff";
+
+                    } catch (error) {
+                        sosFeedback.innerText = "⚠️ Network problem, par offline location MD ko bhej di gayi hai.";
+                        resetSOSBtn(sosBtn);
+                    }
+                },
+                function(error) {
+                    sosFeedback.innerText = "❌ ERROR: Kripya phone ka GPS (Location) ON karein!";
+                    resetSOSBtn(sosBtn);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+
+        function resetSOSBtn(btn) {
+            btn.disabled = false;
+            btn.innerText = "🚨 EMERGENCY";
+            btn.style.background = "linear-gradient(135deg, #ff0033 0%, #800000 100%)";
+            btn.style.boxShadow = "0 0 20px rgba(255, 0, 51, 0.6)";
+            btn.style.color = "#ffffff";
+        }
+
     </script>
+    <!-- ========================================== -->
+<!-- VIP MD COMMAND CENTER: SOS RED ALERT POPUP -->
+<!-- ========================================== -->
+<style>
+    #md-sos-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 0, 0, 0.85);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        display: none; justify-content: center; align-items: center; z-index: 99999;
+    }
+    .vip-sos-box {
+        background: linear-gradient(160deg, rgba(255, 0, 51, 0.2), rgba(0, 0, 0, 0.9));
+        border: 2px solid #ff1a4d;
+        border-radius: 20px; width: 90%; max-width: 400px; padding: 25px;
+        box-shadow: 0 0 40px rgba(255, 0, 51, 0.5), inset 0 0 20px rgba(255, 26, 77, 0.3);
+        text-align: center; color: white; font-family: sans-serif;
+        animation: sosPulse 1s infinite alternate;
+    }
+    @keyframes sosPulse {
+        0% { box-shadow: 0 0 20px rgba(255,0,51,0.4); transform: scale(1); }
+        100% { box-shadow: 0 0 50px rgba(255,0,51,0.8); transform: scale(1.02); }
+    }
+    .sos-title { color: #ff3366; font-size: 24px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 10px #ff3366; margin-bottom: 10px; text-transform: uppercase; }
+    .sos-data-text { font-size: 15px; color: #f0f0f0; margin-bottom: 20px; line-height: 1.5; font-weight: bold; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; border: 1px solid #ff4d4d; }
+    .md-action-btn { width: 100%; margin-top: 10px; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-maps { background: linear-gradient(135deg, #005ce6, #003380); color: white; box-shadow: 0 0 15px rgba(0, 92, 230, 0.5); }
+    .btn-wa { background: linear-gradient(135deg, #00cc66, #008040); color: white; box-shadow: 0 0 15px rgba(0, 204, 102, 0.5); }
+    .btn-dismiss { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; margin-top: 15px; }
+</style>
+
+<div id="md-sos-overlay">
+    <div class="vip-sos-box">
+        <div class="sos-title">🚨 EMERGENCY ALERT 🚨</div>
+        <div id="md-sos-details" class="sos-data-text">
+            Waiting for driver data...
+        </div>
+        <button class="md-action-btn btn-maps" onclick="openSOSGoogleMaps()">📍 VIEW ON MAPS</button>
+        <button class="md-action-btn btn-wa" onclick="sendSOSWhatsApp()">🟢 WHATSAPP LOCAL HELP</button>
+        <button class="md-action-btn btn-dismiss" onclick="closeMDAlert()">❌ DISMISS ALERT</button>
+    </div>
+</div>
+
+<script>
+    let currentSOSMapsLink = "";
+    let currentSOSWhatsAppMsg = "";
+
+    function triggerMDAlertPopup(mapsLink, rescueDataText, whatsappMessage) {
+        currentSOSMapsLink = mapsLink;
+        currentSOSWhatsAppMsg = whatsappMessage;
+       
+        // AI word removed
+        document.getElementById('md-sos-details').innerHTML = `
+            <span style="color:#ffcc00;">Live Smart Radar:</span><br>
+            ${rescueDataText}
+        `;
+       
+        document.getElementById('md-sos-overlay').style.display = "flex";
+
+        if(navigator.vibrate) {
+            navigator.vibrate([500, 300, 500, 300, 800]);
+        }
+    }
+
+    function openSOSGoogleMaps() {
+        if(currentSOSMapsLink) window.open(currentSOSMapsLink, '_blank');
+    }
+
+    function sendSOSWhatsApp() {
+        if(currentSOSWhatsAppMsg) {
+            const waUrl = `https://wa.me/?text=${encodeURIComponent(currentSOSWhatsAppMsg)}`;
+            window.open(waUrl, '_blank');
+        }
+    }
+
+    function closeMDAlert() {
+        document.getElementById('md-sos-overlay').style.display = "none";
+        if(navigator.vibrate) navigator.vibrate(0);
+    }
+</script>
 </body>
 </html>
