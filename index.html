@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
     <style>
         /* W3C GPU Hardware Acceleration (For Superfast VIP UI Rendering) */
         .glass-card, .pin-box, .md-card, .btn-authorize, .vip-tabs {
@@ -1436,5 +1436,38 @@
         }
     });
 </script>
+    <!-- ========================================== -->
+<!-- 🔔 VIP NOTIFICATION PERMISSION SYSTEM -->
+<!-- ========================================== -->
+<script>
+async function requestMDNotificationPermission() {
+    try {
+        const messaging = firebase.messaging();
+        const permission = await Notification.requestPermission();
+       
+        if (permission === 'granted') {
+            console.log('VIP Notification permission granted by MD.');
+           
+            // 🔥 YAHAN APNI ASLI VAPID KEY DALO!
+            const token = await messaging.getToken({
+                vapidKey: 'BKkD9PGcPYGpL8jUWDI-epl-JkDF1Uq83--YxxZZnZH1J7nHMHgLPIGfEGBpYpvx0HNosI-D8iV72HYHa1nSSsE'
+            });
+           
+            if (token) {
+                console.log('FCM Device Token Ready:', token);
+            }
+        } else {
+            console.log('Notification permission denied.');
+        }
+    } catch (error) {
+        console.warn('Notification system error (App is safe):', error);
+    }
+}
+
+if ('Notification' in window) {
+    requestMDNotificationPermission();
+}
+</script>
+
 </body>
 </html>
