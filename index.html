@@ -1220,8 +1220,13 @@
                         const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                         const whatsappReadyMessage = `🚨 *EMERGENCY ALERT* 🚨\n📍 Location: ${googleMapsLink}\n🛠️ Smart Radar Data: ${rescueData}\nMD Sahab, Kripya driver ko turant call karein!`;
 
-                        console.log("🔥 MD DASHBOARD READY DATA: ", { lat, lng, mapsLink: googleMapsLink, whatsappMsg: whatsappReadyMessage });
-
+                       // ORIGINAL LIFETIME FIX: Pushing data to Firebase Cloud
+                        firebase.database().ref("SOS_Emergency/Live_Alert").set({
+                            mapsLink: googleMapsLink,
+                            rescueData: rescueData,
+                            whatsappMsg: whatsappReadyMessage,
+                            timestamp: Date.now()
+                        }); 
                         if(navigator.vibrate) navigator.vibrate(500);
                         sosFeedback.innerText = "✅ ALERT: MD Office ko Google Maps link bhej diya gaya hai!";
                         sosFeedback.style.color = "#00ff88";
