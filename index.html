@@ -1217,16 +1217,39 @@
                         }
 
                         // AI word removed, replaced with Smart Radar
+                       // 🚀 LIVE LOCATION ENGINE (Cloudflare Backend + Ola API)
+                        let exactAddress = "Live Location Attached"; // Default
+                        try {
+                            // Driver ke UI par live trace feedback
+                            sosBtn.innerText = "📍 LIVE LOCATION TRACE HO RAHA HAI...";
+                           
+                            // Hit your Secure Cloudflare Ola Engine
+                            const geoResponse = await fetch(`https://alam-routing-engine.digitalagencyalam.workers.dev/?lat=${lat}&lng=${lng}`);
+                            const geoData = await geoResponse.json();
+                           
+                            if(geoData.address) {
+                                exactAddress = geoData.address;
+                            }
+                        } catch(error) {
+                            console.log("Location Engine load issue.");
+                        }
+
+                        // 🚨 MD Popup Data (Simple, Clear, Transport English - 100% LIVE)
+                        const finalRescueData = `📍 LIVE DRIVER LOCATION:\n${exactAddress}\n\n🚨 NEARBY HELP (10KM):\n${rescueData}`;
+                       
                         const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
-                        const whatsappReadyMessage = `🚨 *EMERGENCY ALERT* 🚨\n📍 Location: ${googleMapsLink}\n🛠️ Smart Radar Data: ${rescueData}\nMD Sahab, Kripya driver ko turant call karein!`;
+                       
+                        // WhatsApp Format (Ekdum clear aur direct)
+                        const whatsappReadyMessage = `*🚨 DRIVER EMERGENCY ALERT 🚨*\n\n📍 LIVE ADDRESS:\n${exactAddress}\n\n🗺️ GOOGLE MAPS LINK:\n${googleMapsLink}\n\n🛠 NEARBY HELP:\n${rescueData}`;
 
                         // ORIGINAL LIFETIME FIX: Await ke sath Cloud par bhejenge
                         await firebase.database().ref("SOS_Emergency/Live_Alert").set({
                             mapsLink: googleMapsLink,
-                            rescueData: rescueData,
+                            rescueData: finalRescueData,
                             whatsappMsg: whatsappReadyMessage,
                             timestamp: Date.now()
                         });
+
 
                         // Premium Success Feedback (Green Button)
                         if(navigator.vibrate) navigator.vibrate(500);
