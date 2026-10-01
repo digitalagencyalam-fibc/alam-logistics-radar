@@ -1231,18 +1231,36 @@
                             console.log("Ola Engine load issue.");
                         }
 
-                        // 2. VIP RADAR ENGINE - 25KM Police & Mechanic Fetch
+                         // 2. VIP RADAR ENGINE (UNSTOPPABLE MULTI-SERVER) - 25KM
                         let policeCount = 0;
                         let mechanicCount = 0;
                         try {
-                            // 25000 meters = 25KM Radius
                             const overpassQuery = `[out:json];(node["shop"="car_repair"](around:25000,${lat},${lng});node["amenity"="police"](around:25000,${lat},${lng}););out body;`;
                            
-                            const radarResponse = await fetch("https://overpass-api.de/api/interpreter", {
-                                method: "POST",
-                                body: overpassQuery
-                            });
-                            const radarData = await radarResponse.json();
+                            // 🚀 3 alag-alag free server ki list (MNC Load Balancing)
+                            const radarServers = [
+                                "https://lz4.overpass-api.de/api/interpreter",
+                                "https://z.overpass-api.de/api/interpreter",
+                                "https://overpass-api.de/api/interpreter"
+                            ];
+                           
+                            let radarData = null;
+                           
+                            // Ek server fail hoga toh app doosre par auto-shift karega
+                            for(let server of radarServers) {
+                                try {
+                                    const radarResponse = await fetch(server, {
+                                        method: "POST",
+                                        body: overpassQuery
+                                    });
+                                    if(radarResponse.ok) {
+                                        radarData = await radarResponse.json();
+                                        break; // Data milte hi loop rok do!
+                                    }
+                                } catch(e) {
+                                    console.log("Server busy, shifting to next...");
+                                }
+                            }
                            
                             if (radarData && radarData.elements) {
                                 radarData.elements.forEach(item => {
@@ -1253,9 +1271,10 @@
                                 });
                             }
                         } catch(error) {
-                            console.log("Radar Engine issue.");
+                            console.log("All Radar Engines failed.");
                         }
 
+ 
                         // 3. MD POPUP & WHATSAPP DATA FORMATTING
                         const finalRescueData = `📍 LIVE DRIVER LOCATION:\n${exactAddress}\n\n🚨 NEARBY HELP (25KM):\n🚔 Police Stations: ${policeCount} Found\n🛠️ Mechanics/Repair: ${mechanicCount} Found`;
                        
