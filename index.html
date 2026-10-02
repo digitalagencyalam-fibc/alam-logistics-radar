@@ -1451,9 +1451,15 @@ async function requestMDNotificationPermission() {
             console.log('VIP Notification permission granted by MD.');
            
             // 🔥 YAHAN APNI ASLI VAPID KEY DALO!
-            const token = await messaging.getToken({
-                vapidKey: 'BKkD9PGcPYGpL8jUWDI-epl-JkDF1Uq83--YxxZZnZH1J7nHMHgLPIGfEGBpYpvx0HNosI-D8iV72HYHa1nSSsE'
-            });
+           // 1. Firebase ko sw.js ka sahi rasta batao
+const swReg = await navigator.serviceWorker.register('/alam-logistics-radar/sw.js');
+
+// 2. Token nikalte waqt yeh rasta (swReg) aur tumhari asli VAPID key pass karo
+const token = await messaging.getToken({
+  vapidKey: 'BKkD9PGcPYGpL8jUWDI-ep1-JkDF1Uq83--YxxZZnZH1J7nHMHgLPiGFEGBpYpvxOHNosI-D8iV72HYHa1nSSsE',
+  serviceWorkerRegistration: swReg
+});
+
            
             if (token) {
                 console.log('FCM Device Token Ready:', token);
