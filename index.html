@@ -428,11 +428,13 @@
 
         try {
             const firebaseConfig = {
-                apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
-                authDomain: "alam-enterprise-engine.firebaseapp.com",
-                databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
-                projectId: "alam-enterprise-engine"
-            };
+    apiKey: "AIzaSyCsJ4F0cnb_6qLjxqAq0zxqrAOYkdSIp6Q",
+    authDomain: "alam-enterprise-engine.firebaseapp.com",
+    databaseURL: "https://alam-enterprise-engine-default-rtdb.firebaseio.com",
+    projectId: "alam-enterprise-engine",
+    messagingSenderId: "627072782594",
+    appId: "1:627072782594:web:bb6b14e4010051d55d321b"
+};
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             auth = firebase.auth();
