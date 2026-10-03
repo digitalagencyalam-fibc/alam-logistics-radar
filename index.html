@@ -1440,7 +1440,6 @@
 </script>
     <!-- ========================================== -->
 <!-- 🔔 VIP NOTIFICATION PERMISSION SYSTEM -->
-<!-- ========================================== -->
 <script>
 async function requestMDNotificationPermission() {
     try {
@@ -1450,16 +1449,13 @@ async function requestMDNotificationPermission() {
         if (permission === 'granted') {
             console.log('VIP Notification permission granted by MD.');
            
-            // 🔥 YAHAN APNI ASLI VAPID KEY DALO!
-           // 1. Firebase ko sw.js ka sahi rasta batao
-const swReg = await navigator.serviceWorker.register('/alam-logistics-radar/sw.js');
+            // 🔥 UPDATE: GitHub Pages ke liye path ko './sw.js' kiya gaya hai
+            const swReg = await navigator.serviceWorker.register('./sw.js');
 
-// 2. Token nikalte waqt yeh rasta (swReg) aur tumhari asli VAPID key pass karo
-const token = await messaging.getToken({
-  vapidKey: 'BKkD9PGcPYGpL8jUWDI-ep1-JkDF1Uq83--YxxZZnZH1J7nHMHgLPiGFEGBpYpvxOHNosI-D8iV72HYHa1nSSsE',
-  serviceWorkerRegistration: swReg
-});
-
+            const token = await messaging.getToken({
+              vapidKey: 'BKkD9PGcPYGpL8jUWDI-ep1-JkDF1Uq83--YxxZZnZH1J7nHMHgLPiGFEGBpYpvxOHNosI-D8iV72HYHa1nSSsE',
+              serviceWorkerRegistration: swReg
+            });
            
             if (token) {
                 console.log('FCM Device Token Ready:', token);
@@ -1476,6 +1472,5 @@ if ('Notification' in window) {
     requestMDNotificationPermission();
 }
 </script>
-
 </body>
 </html>
