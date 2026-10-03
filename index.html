@@ -1449,13 +1449,14 @@ async function requestMDNotificationPermission() {
         if (permission === 'granted') {
             console.log('VIP Notification permission granted by MD.');
            
-            // 🔥 UPDATE: GitHub Pages ke liye path ko './sw.js' kiya gaya hai
-            const swReg = await navigator.serviceWorker.register('./sw.js');
+            // 🔥 SCOPE FIX: GitHub Pages sub-folder compatibility
+const swReg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
 
-            const token = await messaging.getToken({
-              vapidKey: 'BKkD9PGcPYGpL8jUWDI-ep1-JkDF1Uq83--YxxZZnZH1J7nHMHgLPiGFEGBpYpvxOHNosI-D8iV72HYHa1nSSsE',
-              serviceWorkerRegistration: swReg
-            });
+const token = await messaging.getToken({
+  vapidKey: 'BKkD9PGcPYGpL8jUWDI-ep1-JkDF1Uq83--YxxZZnZH1J7nHMHgLPiGFEGBpYpvxOHNosI-D8iV72HYHa1nSSsE',
+  serviceWorkerRegistration: swReg
+});
+
            
             if (token) {
                 console.log('FCM Device Token Ready:', token);
