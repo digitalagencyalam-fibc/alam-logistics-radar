@@ -2,9 +2,9 @@
 // 🚀 VIP UNIFIED SERVICE WORKER (PWA Cache + FCM Background Push)
 // ==========================================
 
-// 1. Firebase Background Messaging ke liye official scripts import karna
-importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
+// 🔥 UPDATE: Version 10.8.0 (Matched with index.html to fix 401 error)
+importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
 
 // 2. Firebase Live Database Initialization
 firebase.initializeApp({
@@ -18,7 +18,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 3. FCM BACKGROUND PUSH NOTIFICATION LISTENER (Jab app band ya background me ho)
+// 3. FCM BACKGROUND PUSH NOTIFICATION LISTENER
 messaging.onBackgroundMessage((payload) => {
   console.log('[sw.js] Background Message received: ', payload);
  
@@ -39,7 +39,7 @@ messaging.onBackgroundMessage((payload) => {
 // 📦 PWA CACHING & NETWORK ENGINE (Your Original Verified Code)
 // ==========================================
 
-const CACHE_NAME = 'alam-vip-radar-v2';
+const CACHE_NAME = 'alam-vip-radar-v3'; // Version bumped to clear old cache
 const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json'
@@ -47,7 +47,7 @@ const ASSETS_TO_CACHE = [
 
 // 1. INSTALLATION: Mobile mein app ka core data save karna
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Purane update ko turant replace karne ke liye
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -78,5 +78,3 @@ self.addEventListener('fetch', event => {
     fetch(event.request).catch(() => caches.match(event.request))
   );
 });
-
- 
